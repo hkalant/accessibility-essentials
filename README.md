@@ -4,6 +4,12 @@ A 90-minute CPD course on UK digital accessibility law and practice (PSBAR 2018,
 
 Built with React 19, TypeScript, Tailwind CSS v4 and Vite, from the Claude Design prototype in [`project/`](project/). The design conversations are in [`chats/`](chats/).
 
+## Live site
+
+https://hkalant.github.io/accessibility-essentials/
+
+Every push to `main` rebuilds and redeploys it via GitHub Actions (`.github/workflows/pages.yml`).
+
 ## Run it
 
 ```sh
