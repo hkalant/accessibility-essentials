@@ -1,25 +1,41 @@
-# CODING AGENTS: READ THIS FIRST
+# Accessibility Essentials
 
-This is a **handoff bundle** from Claude Design (claude.ai/design).
+A 90-minute CPD course on UK digital accessibility law and practice (PSBAR 2018, the Equality Act 2010 and WCAG 2.2) for teaching staff in UK higher education.
 
-A user mocked up designs in HTML/CSS/JS using an AI design tool, then exported this bundle so a coding agent can implement the designs for real.
+Built with React 19, TypeScript, Tailwind CSS v4 and Vite, from the Claude Design prototype in [`project/`](project/). The design conversations are in [`chats/`](chats/).
 
-## What you should do — IMPORTANT
+## Run it
 
-**Read the chat transcripts first.** There are 3 chat transcript(s) in `chats/`. The transcripts show the full back-and-forth between the user and the design assistant — they tell you **what the user actually wants** and **where they landed** after iterating. Don't skip them. The final HTML files are the output, but the chat is where the intent lives.
+```sh
+npm install
+npm run dev        # local dev server
+npm run build      # type-check, then build static files into dist/
+npm run preview    # serve the production build
+```
 
-**Read `project/Home.dc.html` in full.** The user had this file open when they triggered the handoff, so it's almost certainly the primary design they want built. Read it top to bottom — don't skim. Then **follow its imports**: open every file it pulls in (shared components, CSS, scripts) so you understand how the pieces fit together before you start implementing.
+The build is plain static HTML, CSS and JS with relative URLs, so `dist/` can be hosted from any folder: a web server, SharePoint, or a Moodle File/Folder resource or iframe. No requests go to third-party servers. Fonts and icons are bundled.
 
-**If anything is ambiguous, ask the user to confirm before you start implementing.** It's much cheaper to clarify scope up front than to build the wrong thing.
+## Pages
 
-## About the design files
+Each page is its own HTML file, so you can deep-link to any lesson from Moodle.
 
-The design medium is **HTML/CSS/JS** — these are prototypes, not production code. Your job is to **recreate them pixel-perfectly** in whatever technology makes sense for the target codebase (React, Vue, native, whatever fits). Match the visual output; don't copy the prototype's internal structure unless it happens to fit.
+| URL | Page |
+| --- | --- |
+| `index.html` | Course home: hero, progress and course outline |
+| `lesson-1.html` … `lesson-6.html` | The six lessons |
+| `glossary.html` | Searchable A–Z glossary |
+| `progress.html` | Progress summary, digital badge and completion certificate |
+| `home-print.html` | Printable course outline |
 
-**Don't render these files in a browser or take screenshots unless the user asks you to.** Everything you need — dimensions, colors, layout rules — is spelled out in the source. Read the HTML and CSS directly; a screenshot won't tell you anything they don't.
+## Code map
 
-## Bundle contents
+- `src/lib/data.ts`: course content. Lessons, outcomes, glossary, do's and don'ts, resources and knowledge-check questions.
+- `src/lib/ae.ts`: runtime. Progress and display preferences (stored in `localStorage`), text-to-speech with word highlighting, reading ruler, downloads (plain text, EPUB, print to PDF), glossary look-up on selected text, and keyboard shortcuts. Components keep in sync through `ae:*` window events.
+- `src/components/`: shared chrome. Top bar, floating bar (mobile), sidebar, footer, Display panel, search (Ctrl/⌘ + K), lesson intro and end, do's and don'ts, and the knowledge check.
+- `src/pages/`: one component per page. `src/entries/` mounts each page into its HTML file.
+- `src/styles/course.css`: design tokens, themes (light, dark, high contrast, sepia), preference hooks (`html[data-*]`) and responsive layout rules. Tailwind runs **without preflight**, because the design relies on browser defaults for lists, paragraphs and form controls.
 
-- `README.md` — this file
-- `chats/` — conversation transcripts (read these!)
-- `project/` — the `Accessibility Essentials Opus 5.5` project files (HTML prototypes, assets, components)
+## Before release
+
+- Review the legal content. "Northbridge University" is a fictional institution; replace it with your own.
+- Progress and settings are stored per browser, not per account.
