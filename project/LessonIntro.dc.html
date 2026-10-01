@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div>
+<header style="background:var(--surface);border-bottom:1px solid var(--line)">
+  <div style="max-width:var(--measure);margin:0 auto;padding:2rem 1.25rem 1.75rem;display:flex;flex-direction:column;gap:1rem">
+    <nav aria-label="Breadcrumb" data-noread="" style="font-size:.875rem">
+      <ol style="list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;color:var(--muted)">
+        <li><a href="Home.dc.html">Accessibility Essentials</a></li>
+        <li aria-hidden="true"><i class="fa-solid fa-chevron-right" style="font-size:.7rem"></i></li>
+        <li aria-current="page">{{ crumb }}</li>
+      </ol>
+    </nav>
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;font-size:.875rem;font-weight:600;color:var(--muted)">
+      <span style="color:var(--accent-text);font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.8125rem">{{ eyebrow }}</span>
+      <span aria-hidden="true">·</span>
+      <span style="display:inline-flex;gap:.35rem;align-items:center"><i class="fa-regular fa-clock" aria-hidden="true"></i>{{ mins }}</span>
+    </div>
+    <h1 style="font-size:clamp(2rem,1.4rem + 2.2vw,2.875rem);font-weight:700;letter-spacing:-.01em">{{ title }}</h1>
+    <p style="margin:0;font-size:1.1875rem;color:var(--muted);max-width:40rem">{{ summary }}</p>
+    <div data-gamify="" data-noread="" style="display:flex;align-items:center;gap:.6rem;font-size:.9rem;color:var(--muted)">
+      <span aria-hidden="true" style="width:2rem;height:2rem;border-radius:50%;display:grid;place-items:center;background:{{ badgeBg }};color:{{ badgeInk }};font-size:.85rem"><i class="fa-solid {{ icon }}"></i></span>
+      <span>{{ badgeText }}</span>
+    </div>
+    <div data-noread="" data-noprint="" role="region" aria-label="Audio version of this lesson" style="display:flex;flex-wrap:wrap;align-items:center;gap:.75rem 1rem;margin-top:.5rem;padding:.75rem .9rem;border:1px solid var(--line);border-radius:1rem;background:var(--surface-2)">
+      <button type="button" onClick="{{ playPause }}" disabled="{{ noTts }}" aria-label="{{ playLabel }}" style="flex:none;width:3rem;height:3rem;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);cursor:pointer;font-size:1.05rem;display:grid;place-items:center"><i class="fa-solid {{ playIcon }}" aria-hidden="true"></i></button>
+      <div style="flex:1 1 calc(100% - 4.5rem);min-width:0;display:flex;flex-direction:column;gap:.3rem">
+        <span style="font-weight:700;font-size:.9375rem">{{ audioTitle }}</span>
+        <div aria-hidden="true" style="height:.3rem;border-radius:999px;background:var(--line);overflow:hidden"><div style="height:100%;width:{{ audioPct }};background:var(--accent);transition:width .3s"></div></div>
+        <span aria-live="polite" style="font-size:.8125rem;color:var(--muted)">{{ audioStatus }}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:.35rem">
+        <button type="button" onClick="{{ back }}" aria-label="Previous paragraph" disabled="{{ idle }}" style="width:2.5rem;height:2.5rem;border-radius:.6rem;border:1px solid var(--line);background:var(--surface);cursor:pointer;color:var(--ink)"><i class="fa-solid fa-backward-step" aria-hidden="true"></i></button>
+        <button type="button" onClick="{{ fwd }}" aria-label="Next paragraph" disabled="{{ idle }}" style="width:2.5rem;height:2.5rem;border-radius:.6rem;border:1px solid var(--line);background:var(--surface);cursor:pointer;color:var(--ink)"><i class="fa-solid fa-forward-step" aria-hidden="true"></i></button>
+        <button type="button" onClick="{{ stop }}" aria-label="Stop" disabled="{{ idle }}" style="width:2.5rem;height:2.5rem;border-radius:.6rem;border:1px solid var(--line);background:var(--surface);cursor:pointer;color:var(--ink)"><i class="fa-solid fa-stop" aria-hidden="true"></i></button>
+        <label style="display:flex;align-items:center;gap:.35rem;font-size:.8125rem;font-weight:600;margin-left:.25rem">Speed
+          <select value="{{ rate }}" onChange="{{ setRate }}" style="min-height:2.5rem;border-radius:.6rem;border:1px solid var(--line);background:var(--surface);padding:0 .4rem"><option value="0.75">0.75×</option><option value="1">1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2×</option></select>
+        </label>
+      </div>
+      <div style="display:flex;gap:.35rem;flex-wrap:wrap">
+        <button type="button" onClick="{{ print }}" style="display:flex;align-items:center;gap:.4rem;min-height:2.5rem;padding:.4rem .75rem;border-radius:.6rem;border:1px solid var(--line);background:var(--surface);cursor:pointer;color:var(--ink);font-weight:600;font-size:.875rem"><i class="fa-solid fa-print" aria-hidden="true"></i>Print</button>
+        <button type="button" onClick="{{ more }}" style="display:flex;align-items:center;gap:.4rem;min-height:2.5rem;padding:.4rem .75rem;border-radius:.6rem;border:1px solid var(--line);background:var(--surface);cursor:pointer;color:var(--ink);font-weight:600;font-size:.875rem"><i class="fa-solid fa-download" aria-hidden="true"></i>Other formats</button>
+      </div>
+    </div>
+  </div>
+</header>
+<div style="max-width:var(--measure);margin:0 auto;padding:2rem 1.25rem 0">
+  <section aria-labelledby="lo-title" style="display:flex;gap:1rem;align-items:flex-start;padding:1.25rem 1.25rem 1.1rem;border-radius:1rem;background:var(--accent-soft);border:1px solid var(--accent-line)">
+    <span aria-hidden="true" style="flex:none;width:2.5rem;height:2.5rem;border-radius:.75rem;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center"><i class="fa-solid fa-star"></i></span>
+    <div style="flex:1;min-width:0">
+      <h2 id="lo-title" style="font-family:var(--font-body);font-size:1.125rem;font-weight:700;margin-bottom:.2rem">Learning outcomes</h2>
+      <p style="margin:0 0 .6rem;color:var(--muted);font-size:.9375rem">By the end of this lesson you will be able to:</p>
+      <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.45rem">
+        <sc-for list="{{ outcomes }}" as="o" hint-placeholder-count="4">
+          <li style="display:flex;gap:.65rem;align-items:baseline"><span aria-hidden="true" style="flex:none;width:.5rem;height:.5rem;border-radius:50%;background:var(--accent);transform:translateY(-.1rem)"></span><span>{{ o }}</span></li>
+        </sc-for>
+      </ul>
+    </div>
+  </section>
+</div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;lesson&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:1,&quot;min&quot;:1,&quot;max&quot;:6,&quot;tsType&quot;:&quot;number&quot;}}">
+class Component extends DCLogic {
+  state = { status:'idle', i:0, total:0 };
+  componentDidMount(){
+    this._u=()=>this.forceUpdate();
+    this._t=e=>this.setState(e.detail);
+    ['ae:ready','ae:progress','ae:prefs'].forEach(n=>window.addEventListener(n,this._u));
+    window.addEventListener('ae:tts',this._t);
+    const go=()=>window.AE&&window.AE.progress.setLast(Number(this.props.lesson||1));
+    if(window.AE) go(); else window.addEventListener('ae:ready',go,{once:true});
+  }
+  componentWillUnmount(){ ['ae:ready','ae:progress','ae:prefs'].forEach(n=>window.removeEventListener(n,this._u)); window.removeEventListener('ae:tts',this._t); }
+  renderVals(){
+    const AE=window.AE; const n=Number(this.props.lesson||1);
+    if(!AE) return {};
+    const L=AE.lessons[n-1]; const done=!!(AE.progress.lesson(n).done);
+    const {status,i,total}=this.state; const sup=AE.tts.supported;
+    return {
+      crumb:'Lesson '+n, eyebrow:'Lesson '+n+' of 6', mins:L.mins+' minutes', title:L.title, summary:L.summary, outcomes:L.outcomes, icon:L.icon,
+      badgeBg:done?'var(--accent)':'var(--accent-soft)', badgeInk:done?'var(--accent-ink)':'var(--accent)',
+      badgeText:done?('You earned the '+L.badge+' badge'):('Pass the knowledge check to earn the '+L.badge+' badge'),
+      noTts:!sup, idle:status==='idle',
+      playIcon:status==='playing'?'fa-pause':'fa-play', playLabel:status==='playing'?'Pause audio':(status==='paused'?'Resume audio':'Listen to this lesson'),
+      audioTitle:sup?'Listen to this lesson':'Audio isn’t available in this browser',
+      audioStatus:!sup?'Try Chrome, Edge or Safari, or use your own screen reader.':(status==='idle'?'About '+L.mins+' minutes · uses your device’s voice · Alt+Shift+L':(status==='paused'?'Paused':'Reading')+' — section '+(i+1)+' of '+total),
+      audioPct:total?Math.round((i+1)/total*100)+'%':'0%',
+      playPause:()=>AE.tts.toggle(), stop:()=>AE.tts.stop(), back:()=>AE.tts.skip(-1), fwd:()=>AE.tts.skip(1),
+      rate:String(AE.prefs.get().ttsRate), setRate:e=>AE.prefs.set({ttsRate:Number(e.target.value)}),
+      print:()=>window.print(), more:()=>AE.openPanel()
+    };
+  }
+}
+</script>
+</body>
+</html>

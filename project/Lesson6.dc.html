@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 6: Inclusive teaching &amp; VLE practice · Accessibility Essentials</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&amp;display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="course.css">
+<script src="course.js"></script>
+</helmet>
+<div data-lesson="6" style="min-height:100vh;display:flex;flex-direction:column">
+<dc-import name="Topbar" active="course" hint-size="100%,4rem"></dc-import>
+<div class="ae-lesson-layout" style="flex:1">
+<dc-import name="Sidebar" current="6" hint-size="0,0"></dc-import>
+<main id="main" data-read-root="" tabindex="-1" style="min-width:0;outline:none">
+<dc-import name="LessonIntro" lesson="6" hint-size="100%,26rem"></dc-import>
+<div style="max-width:var(--measure);margin:0 auto;padding:0 1.25rem 2rem">
+
+<section id="udl" aria-labelledby="h-udl" style="padding:2.5rem 0;margin-top:2rem;border-top:1px solid var(--line)">
+  <h2 id="h-udl" style="font-size:1.75rem;margin-bottom:.5rem">Universal Design for Learning</h2>
+  <p style="margin:0 0 1.25rem;font-size:1.0625rem">UDL is the anticipatory duty turned into a teaching method: design for the range of students you’ll actually have, so fewer need individual adjustments. Plan one week of your module — choose at least one option under each principle.</p>
+  <div class="ae-3col" style="gap:.9rem">
+    <sc-for list="{{ udl }}" as="u" hint-placeholder-count="3">
+      <fieldset style="margin:0;display:flex;flex-direction:column;gap:.6rem;padding:1.1rem;border-radius:1.1rem;background:var(--surface);border:1px solid {{ u.line }};min-width:0">
+        <legend class="sr-only">{{ u.name }}</legend>
+        <span aria-hidden="true" style="width:2.5rem;height:2.5rem;border-radius:.75rem;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center"><i class="fa-solid {{ u.icon }}"></i></span>
+        <h3 style="font-family:var(--font-body);font-size:1.0625rem;font-weight:700">{{ u.name }}</h3>
+        <p style="margin:0;font-size:.875rem;color:var(--muted)">{{ u.q }}</p>
+        <div style="display:flex;flex-direction:column;gap:.35rem">
+          <sc-for list="{{ u.opts }}" as="o" hint-placeholder-count="3">
+            <label style="display:flex;gap:.6rem;align-items:flex-start;padding:.5rem .6rem;border-radius:.6rem;background:{{ o.bg }};cursor:pointer;font-size:.9375rem"><input type="checkbox" checked="{{ o.on }}" onChange="{{ o.toggle }}" style="accent-color:var(--accent);width:1.05rem;height:1.05rem;margin:.2rem 0 0;flex:none">{{ o.t }}</label>
+          </sc-for>
+        </div>
+      </fieldset>
+    </sc-for>
+  </div>
+  <p aria-live="polite" style="margin:1rem 0 0;padding:.9rem 1rem;border-radius:.75rem;background:{{ udlBg }};font-weight:600">{{ udlSummary }}</p>
+</section>
+
+<section id="moodle" aria-labelledby="h-moodle" style="padding:2.5rem 0;border-top:1px solid var(--line)">
+  <h2 id="h-moodle" style="font-size:1.75rem;margin-bottom:.5rem">A predictable Moodle course</h2>
+  <p style="margin:0 0 1.25rem;font-size:1.0625rem">Consistency is an accessibility feature (WCAG 3.2.3–3.2.6). When every week follows the same pattern, screen reader users, students with ADHD or anxiety, and anyone short on time can find things fast.</p>
+  <div style="background:var(--surface);border:1px solid var(--line);border-radius:1.25rem;box-shadow:var(--shadow);overflow:hidden">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1rem 1.25rem;border-bottom:1px solid var(--line);flex-wrap:wrap">
+      <p style="margin:0;font-weight:700">Course index</p>
+      <div role="radiogroup" aria-label="Version" style="display:flex;padding:.25rem;border-radius:999px;background:var(--surface-2);border:1px solid var(--line)">
+        <button type="button" role="radio" aria-checked="{{ messySel }}" onClick="{{ showMessy }}" style="min-height:2.5rem;padding:.4rem 1rem;border-radius:999px;border:0;font-weight:700;cursor:pointer;background:{{ messyBg }};color:{{ messyInk }}">Ad hoc</button>
+        <button type="button" role="radio" aria-checked="{{ tidySel }}" onClick="{{ showTidy }}" style="min-height:2.5rem;padding:.4rem 1rem;border-radius:999px;border:0;font-weight:700;cursor:pointer;background:{{ tidyBg }};color:{{ tidyInk }}">Consistent</button>
+      </div>
+    </div>
+    <div class="ae-3col" style="gap:.75rem;padding:1.25rem">
+      <sc-for list="{{ weeks }}" as="w" hint-placeholder-count="3">
+        <div style="border:1px solid var(--line);border-radius:.875rem;overflow:hidden;background:var(--surface-2)">
+          <p style="margin:0;padding:.6rem .8rem;font-weight:700;background:var(--surface);border-bottom:1px solid var(--line)">{{ w.title }}</p>
+          <ul style="list-style:none;margin:0;padding:.5rem .8rem .75rem;display:flex;flex-direction:column;gap:.4rem;font-size:.875rem">
+            <sc-for list="{{ w.items }}" as="i" hint-placeholder-count="3"><li style="display:flex;gap:.5rem;align-items:flex-start"><i class="fa-solid {{ i.icon }}" aria-hidden="true" style="color:var(--muted);margin-top:.2rem;width:1rem;text-align:center"></i><span>{{ i.t }}</span></li></sc-for>
+          </ul>
+        </div>
+      </sc-for>
+    </div>
+    <p aria-live="polite" style="margin:0;padding:0 1.25rem 1.25rem;font-size:.9375rem;color:var(--muted)">{{ weeksNote }}</p>
+  </div>
+</section>
+
+<section id="audit" aria-labelledby="h-audit" style="padding:2.5rem 0;border-top:1px solid var(--line)">
+  <h2 id="h-audit" style="font-size:1.75rem;margin-bottom:.5rem">Audit this section</h2>
+  <p style="margin:0 0 .4rem;font-size:1.0625rem">Here’s a real-looking Week 4 section. Choose the fixes that remove barriers — each one updates the section. Some options won’t help.</p>
+  <p aria-live="polite" style="margin:0 0 1rem;font-weight:700;color:var(--accent-text)">{{ auditScore }}</p>
+  <div class="ae-2col" style="gap:1rem;align-items:start">
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:1.25rem;box-shadow:var(--shadow);overflow:hidden">
+      <div style="padding:.85rem 1.1rem;border-bottom:1px solid var(--line);background:var(--surface-2);display:flex;align-items:center;gap:.5rem"><i class="fa-solid fa-graduation-cap" aria-hidden="true" style="color:var(--accent)"></i><span style="font-weight:700">LAW2203 · Week 4: Contract formation</span></div>
+      <ul style="list-style:none;margin:0;padding:.5rem;display:flex;flex-direction:column;gap:.25rem">
+        <sc-for list="{{ items }}" as="i" hint-placeholder-count="6">
+          <li style="display:flex;gap:.75rem;align-items:flex-start;padding:.65rem .7rem;border-radius:.65rem;background:{{ i.bg }};transition:background .3s">
+            <i class="fa-solid {{ i.icon }}" aria-hidden="true" style="margin-top:.25rem;width:1.1rem;text-align:center;color:{{ i.iconInk }}"></i>
+            <span style="flex:1;display:flex;flex-direction:column;gap:.1rem;min-width:0"><span style="font-weight:600;color:{{ i.ink }};text-decoration:{{ i.deco }};overflow-wrap:anywhere">{{ i.label }}</span><span style="font-size:.8125rem;color:var(--muted)">{{ i.meta }}</span></span>
+            <span style="flex:none;font-size:.75rem;font-weight:800;padding:.15rem .5rem;border-radius:999px;background:{{ i.tagBg }};color:{{ i.tagInk }}">{{ i.tag }}</span>
+          </li>
+        </sc-for>
+      </ul>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:.5rem">
+      <p style="margin:0 0 .25rem;font-weight:700">Fixes</p>
+      <sc-for list="{{ fixes }}" as="f" hint-placeholder-count="8">
+        <button type="button" onClick="{{ f.pick }}" disabled="{{ f.done }}" style="display:flex;gap:.7rem;align-items:flex-start;padding:.75rem .85rem;border-radius:.75rem;border:1px solid {{ f.line }};background:{{ f.bg }};cursor:pointer;text-align:left;color:var(--ink);font-size:.9375rem">
+          <span aria-hidden="true" style="flex:none;width:1.9rem;height:1.9rem;border-radius:50%;background:{{ f.dotBg }};color:{{ f.dotInk }};display:grid;place-items:center;font-size:.8rem"><i class="fa-solid fa-arrow-left ae-desk-s" style="display:{{ f.arrowDisp }}"></i><i class="fa-solid fa-arrow-up ae-mob-s" style="display:{{ f.arrowDisp }}"></i><i class="fa-solid {{ f.stateIcon }}" style="display:{{ f.stateDisp }}"></i></span>
+          <span style="display:flex;flex-direction:column;gap:.15rem"><span style="font-weight:600">{{ f.t }}</span><span style="font-size:.8125rem;color:{{ f.fbInk }};display:{{ f.fbDisp }}">{{ f.fb }}</span></span>
+        </button>
+      </sc-for>
+      <button type="button" onClick="{{ resetAudit }}" style="align-self:flex-start;background:none;border:0;color:var(--accent);font-weight:700;cursor:pointer;text-decoration:underline;padding:.5rem 0">Start again</button>
+    </div>
+  </div>
+</section>
+
+<section id="requests" aria-labelledby="h-requests" style="padding:2.5rem 0;border-top:1px solid var(--line)">
+  <h2 id="h-requests" style="font-size:1.75rem;margin-bottom:.5rem">Responding to requests</h2>
+  <p style="margin:0 0 1.25rem;font-size:1.0625rem">Even a well-designed module will get individual requests. Choose one to see a good response. Throughout: act promptly, don’t ask the student to justify their need, and keep a record so it carries forward.</p>
+  <div role="tablist" aria-label="Request type" onKeyDown="{{ reqKey }}" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(10rem,1fr));gap:.5rem;margin-bottom:.9rem">
+    <sc-for list="{{ reqs }}" as="r" hint-placeholder-count="4">
+      <button type="button" role="tab" id="{{ r.id }}" aria-selected="{{ r.sel }}" aria-controls="req-panel" tabindex="{{ r.ti }}" onClick="{{ r.pick }}" style="display:flex;align-items:center;gap:.6rem;min-height:3.25rem;padding:.6rem .8rem;border-radius:.75rem;border:2px solid {{ r.line }};background:{{ r.bg }};cursor:pointer;text-align:left;color:var(--ink);font-weight:700;font-size:.9375rem"><i class="fa-solid {{ r.icon }}" aria-hidden="true" style="color:var(--accent)"></i>{{ r.name }}</button>
+    </sc-for>
+  </div>
+  <div role="tabpanel" id="req-panel" aria-labelledby="{{ reqTab }}" style="padding:1.25rem;border-radius:1rem;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow)">
+    <p style="margin:0 0 .75rem;font-style:italic;color:var(--muted)">{{ req.quote }}</p>
+    <ol style="margin:0;padding-left:1.25rem;display:flex;flex-direction:column;gap:.5rem">
+      <sc-for list="{{ req.steps }}" as="s" hint-placeholder-count="4"><li>{{ s }}</li></sc-for>
+    </ol>
+  </div>
+</section>
+
+<dc-import name="DosDonts" lesson="6" hint-size="100%,20rem"></dc-import>
+<dc-import name="KnowledgeCheck" lesson="6" hint-size="100%,32rem"></dc-import>
+<dc-import name="LessonEnd" lesson="6" hint-size="100%,24rem"></dc-import>
+</div>
+</main>
+</div>
+<dc-import name="Footer" hint-size="100%,12rem"></dc-import>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { u:{}, tidy:false, fixed:{}, tried:{}, req:0 };
+  renderVals(){
+    const s=this.state, on=b=>b?'true':'false';
+    const U=[['Engagement','fa-heart','The “why” of learning: how will you motivate and sustain interest?',['Link the topic to a real case or career','Offer a choice of seminar question','Break the task into weekly checkpoints']],
+      ['Representation','fa-eye','The “what”: how will you present information?',['Captioned recording plus a Moodle Page summary','Key terms defined in a glossary','A diagram with a text description']],
+      ['Action & expression','fa-pen-nib','The “how”: how can students show what they know?',['Choice of essay or recorded presentation','A formative quiz with unlimited attempts','Templates and worked examples']]];
+    let total=0, cats=0;
+    const udl=U.map((u,i)=>{ const sel=s.u[i]||{}; const n=Object.values(sel).filter(Boolean).length; total+=n; if(n) cats++;
+      return {name:u[0],icon:u[1],q:u[2],line:n?'var(--accent)':'var(--line)',opts:u[3].map((t,j)=>{ const o=!!sel[j]; return {t,on:o,bg:o?'var(--accent-soft)':'transparent',toggle:()=>this.setState(x=>{ const c=Object.assign({},x.u); c[i]=Object.assign({},c[i]||{},{[j]:!o}); return {u:c}; })}; })}; });
+    const udlSummary=cats===3?'Your week covers all three principles with '+total+' inclusive choices. That’s the anticipatory duty in practice — many students will never need to ask.':(total?('You’ve chosen '+total+' option'+(total>1?'s':'')+'. Add at least one under each principle.'):'Choose options above to plan your week.');
+    const seg=b=>({bg:b?'var(--accent)':'transparent',ink:b?'var(--accent-ink)':'var(--ink)'});
+    const MS=seg(!s.tidy), TD=seg(s.tidy);
+    const W=s.tidy?[
+      ['Week 1: What is a contract?',[['fa-bullseye','Learning outcomes'],['fa-video','Lecture recording (captioned, 48 min)'],['fa-book-open','Reading: Chapter 1 (Moodle Book)'],['fa-comments','Seminar questions (Moodle Page)'],['fa-circle-question','Check your understanding (quiz)']]],
+      ['Week 2: Offer and acceptance',[['fa-bullseye','Learning outcomes'],['fa-video','Lecture recording (captioned, 51 min)'],['fa-book-open','Reading: Chapter 2 (Moodle Book)'],['fa-comments','Seminar questions (Moodle Page)'],['fa-circle-question','Check your understanding (quiz)']]],
+      ['Week 3: Consideration',[['fa-bullseye','Learning outcomes'],['fa-video','Lecture recording (captioned, 45 min)'],['fa-book-open','Reading: Chapter 3 (Moodle Book)'],['fa-comments','Seminar questions (Moodle Page)'],['fa-circle-question','Check your understanding (quiz)']]]]:[
+      ['Topic 1',[['fa-file','intro slides.pptx'],['fa-link','Click here'],['fa-video','recording']]],
+      ['Week 2 - IMPORTANT!!',[['fa-comments','Forum: read this first'],['fa-file-pdf','scan0034.pdf'],['fa-file','Week2_final_FINAL.docx'],['fa-link','https://tinyurl.com/x8f2']]],
+      ['Consideration',[['fa-video','Lecture'],['fa-file-pdf','handout.pdf'],['fa-circle-question','Quiz']]]];
+    const weeks=W.map(w=>({title:w[0],items:w[1].map(i=>({icon:i[0],t:i[1]}))}));
+    const IT=[['fa-link','Click here','Link','Week 4 seminar questions (Moodle Page)','Link'],['fa-file-pdf','lec4_FINAL_v3.pdf','File','Lecture 4 slides (PDF, 2 MB, tagged)','File · 2 MB'],['fa-image','IMG_2034.jpg','Image, no alt text','Carlill v Carbolic Smoke Ball advert, 1892','Image · alt text added'],['fa-video','Lecture 4 recording','Video · automatic captions','Lecture 4 recording (48 min)','Video · edited captions'],['fa-font','Essay due Friday','Text in red only','Deadline: essay due 12 noon, Friday 14 March','Text · bold, labelled'],['fa-file-pdf','reading.pdf','Scanned image, no text','Reading: Treitel ch. 2 (accessible copy)','PDF · OCR, from the library']];
+    const items=IT.map((it,i)=>{ const f=!!s.fixed[i]; return {icon:it[0],label:f?it[3]:it[1],meta:f?it[4]:it[2],bg:f?'var(--ok-soft)':'transparent',iconInk:f?'var(--ok)':'var(--muted)',ink:f?'var(--ink)':(i===4?'#c4271b':(i===0?'var(--accent)':'var(--ink)')),deco:(i===0&&!f)?'underline':'none',tag:f?'Fixed':'Issue',tagBg:f?'var(--ok)':'var(--bad-soft)',tagInk:f?'#fff':'var(--bad)'}; });
+    const FX=[[0,'Rename the link to describe where it goes',null],[7,'Change the course theme to the university’s brand colours','This doesn’t remove any barrier.'],[1,'Rename the file and include type and size — and check it’s tagged',null],[2,'Add alt text describing the advert’s relevance',null],[8,'Add a banner saying “This course is accessible”','Claims don’t fix barriers — and may mislead.'],[3,'Review and edit the automatic captions',null],[4,'Add the word “Deadline:” and make the date bold',null],[5,'Request an accessible digitised copy from the library',null]];
+    const fixes=FX.map((f,j)=>{ const real=f[2]==null; const done=real?!!s.fixed[f[0]]:!!s.tried[j];
+      return {t:f[1],done,pick:()=>{ if(real) this.setState(x=>({fixed:Object.assign({},x.fixed,{[f[0]]:true})})); else this.setState(x=>({tried:Object.assign({},x.tried,{[j]:true})})); },
+        line:done?(real?'var(--ok)':'var(--warn)'):'var(--line)',bg:done?(real?'var(--ok-soft)':'var(--warn-soft)'):'var(--surface)',dotBg:done?(real?'var(--ok)':'var(--warn)'):'var(--accent-soft)',dotInk:done?'#fff':'var(--accent)',
+        arrowDisp:done?'none':'inline',stateDisp:done?'inline':'none',stateIcon:real?'fa-check':'fa-xmark',fbDisp:done?'inline':'none',fbInk:real?'var(--ok)':'var(--warn)',fb:real?'Applied to the section.':f[2]}; });
+    const nf=Object.keys(s.fixed).length;
+    const R=[['Accessible slides','fa-person-chalkboard','“I use a screen reader. The lecture slides are image-only PDFs — can I get a version I can read?”',['Reply the same day to acknowledge the request.','Share the original PowerPoint, which is usually more accessible than the PDF.','Fix the source (titles, alt text, reading order), then export a tagged PDF.','Upload the fixed version for everyone — not just this student.']],
+      ['Extra time on a quiz','fa-stopwatch','“My support plan says I get 25% extra time. The Week 6 quiz is timed.”',['Check your institution’s process: many use a Moodle group for everyone with extra time.','In the quiz, open More › Overrides and add a group or user override for the time limit.','Apply it once, for every timed quiz in the module, so the student doesn’t have to ask again.','Keep a note in the module’s handover so next year’s team applies it too.']],
+      ['Captions on a recording','fa-closed-captioning','“The captions on last week’s lecture are really inaccurate. I’m deaf and can’t follow it.”',['Apologise and fix it — pre-recorded media must have accurate captions under PSBAR.','Edit the automatic captions in your lecture capture tool, focusing on technical terms.','Tell the student when it’s done, and check future recordings before release.','If you can’t edit in time, ask your digital or disability team about captioning support.']],
+      ['Reading in another format','fa-book','“Is there an e-book or accessible version of the core textbook chapter?”',['Pass the request to your library’s accessibility or alternative formats service.','Check whether the publisher offers an accessible e-book, or request one via RNIB Bookshare where eligible.','If you scanned it yourself, run OCR — or ask the library to digitise it properly.','Add the accessible version to the reading list for everyone.']]];
+    const reqs=R.map((r,i)=>{ const sel=i===s.req; return {id:'req-tab-'+i,name:r[0],icon:r[1],sel:on(sel),ti:sel?0:-1,pick:()=>this.setState({req:i}),line:sel?'var(--accent)':'var(--line)',bg:sel?'var(--accent-soft)':'var(--surface)'}; });
+    return {
+      udl, udlSummary, udlBg:cats===3?'var(--ok-soft)':'var(--surface-2)',
+      messySel:on(!s.tidy), tidySel:on(s.tidy), messyBg:MS.bg, messyInk:MS.ink, tidyBg:TD.bg, tidyInk:TD.ink,
+      showMessy:()=>this.setState({tidy:false}), showTidy:()=>this.setState({tidy:true}), weeks,
+      weeksNote:s.tidy?'Every week: descriptive title, the same five items in the same order, formats and durations in the link text.':'Vague titles, a different structure each week, meaningless file names and raw links. Everyone has to hunt.',
+      items, fixes, auditScore:nf===6?'All six barriers fixed. Start with quick wins like these — they help everyone.':('Barriers fixed: '+nf+' of 6'),
+      resetAudit:()=>this.setState({fixed:{},tried:{}}),
+      reqs, reqTab:'req-tab-'+s.req, req:{quote:R[s.req][2],steps:R[s.req][3]},
+      reqKey:e=>{ if(e.key!=='ArrowRight'&&e.key!=='ArrowLeft') return; e.preventDefault(); const nx=(s.req+(e.key==='ArrowRight'?1:3))%4; this.setState({req:nx},()=>{ const b=document.getElementById('req-tab-'+nx); b&&b.focus(); }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

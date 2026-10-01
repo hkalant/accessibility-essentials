@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<nav aria-label="Quick navigation" data-chrome="fab" class="ae-mob" onMouseLeave="{{ leave }}" style="position:fixed;left:50%;bottom:calc(1rem + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:70;width:min(26rem,calc(100vw - 1.5rem));padding:.375rem;border-radius:999px;background:var(--glass);backdrop-filter:blur(20px) saturate(1.6);-webkit-backdrop-filter:blur(20px) saturate(1.6);border:1px solid var(--fab-line,rgba(255,255,255,.55));box-shadow:0 12px 32px rgba(20,10,20,.18),inset 0 1px 0 var(--fab-hl,rgba(255,255,255,.6))">
+  <div style="position:relative;display:grid;grid-template-columns:repeat(5,minmax(0,1fr))">
+    <span aria-hidden="true" style="position:absolute;top:0;bottom:0;left:0;width:20%;border-radius:999px;background:var(--accent);opacity:{{ pillOp }};transform:{{ pillTf }};transition:transform .55s cubic-bezier(.34,1.5,.5,1),opacity .25s ease;box-shadow:inset 0 1px 0 rgba(255,255,255,.4),inset 0 -1px 0 rgba(0,0,0,.12),0 6px 16px rgba(209,3,115,.35)"></span>
+    <sc-for list="{{ links }}" as="it" hint-placeholder-count="3">
+      <a href="{{ it.href }}" aria-current="{{ it.current }}" onMouseEnter="{{ it.enter }}" onFocus="{{ it.enter }}" onBlur="{{ leave }}" style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2rem;min-height:3.25rem;padding:.4rem 0;text-decoration:none;font-size:.75rem;font-weight:700;border-radius:999px;color:{{ it.color }};transition:color .3s ease"><i class="fa-solid {{ it.icon }}" aria-hidden="true" style="font-size:1.1rem"></i><span>{{ it.label }}</span></a>
+    </sc-for>
+    <button type="button" onClick="{{ openPanel }}" aria-expanded="{{ panelOpen }}" aria-controls="ae-panel" onMouseEnter="{{ dispEnter }}" onFocus="{{ dispEnter }}" onBlur="{{ leave }}" style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2rem;min-height:3.25rem;padding:.4rem 0;border:0;background:none;cursor:pointer;font-size:.75rem;font-weight:700;border-radius:999px;color:{{ dispColor }};transition:color .3s ease"><i class="fa-solid fa-universal-access" aria-hidden="true" style="font-size:1.1rem"></i><span>Display</span></button>
+    <button type="button" onClick="{{ toTop }}" onMouseEnter="{{ topEnter }}" onFocus="{{ topEnter }}" onBlur="{{ leave }}" style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2rem;min-height:3.25rem;padding:.4rem 0;border:0;background:none;cursor:pointer;font-size:.75rem;font-weight:700;border-radius:999px;color:{{ topColor }};transition:color .3s ease"><i class="fa-solid fa-circle-arrow-up" aria-hidden="true" style="font-size:1.1rem"></i><span>Top</span></button>
+  </div>
+</nav>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;active&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;course&quot;,&quot;glossary&quot;,&quot;badge&quot;],&quot;default&quot;:&quot;course&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { hover: null, moving: false, panelOpen: false };
+  componentDidMount(){ this._p=e=>this.setState({panelOpen:!!(e.detail&&e.detail.open)}); window.addEventListener('ae:panel-state',this._p); }
+  setHover(i){
+    if(i===this.state.hover) return;
+    this.setState({hover:i,moving:true});
+    clearTimeout(this._t); this._t=setTimeout(()=>this.setState({moving:false}),260);
+  }
+  componentWillUnmount(){ clearTimeout(this._t); window.removeEventListener('ae:panel-state',this._p); }
+  renderVals(){
+    const ids=['course','glossary','badge'];
+    const activeIdx=ids.indexOf(this.props.active||'course');
+    const pos=this.state.hover!=null?this.state.hover:activeIdx;
+    const defs=[['Home.dc.html','Course','fa-house'],['Glossary.dc.html','Glossary','fa-book'],['Badge.dc.html','Progress','fa-chart-simple']];
+    const links=defs.map(([href,label,icon],i)=>({href,label,icon,current:i===activeIdx?'page':undefined,color:i===pos?'#fff':'var(--ink)',enter:()=>this.setHover(i)}));
+    return {
+      links,
+      pillOp: pos<0?0:1,
+      pillTf: `translateX(${Math.max(pos,0)*100}%) scale(${this.state.moving?'1.1, 0.94':'1, 1'})`,
+      dispColor: pos===3?'#fff':'var(--ink)',
+      dispEnter: ()=>this.setHover(3),
+      panelOpen: this.state.panelOpen?'true':'false',
+      openPanel: ()=>window.dispatchEvent(new CustomEvent('ae:panel',{detail:{toggle:true}})),
+      topColor: pos===4?'#fff':'var(--ink)',
+      topEnter: ()=>this.setHover(4),
+      leave: ()=>this.setHover(null),
+      toTop: ()=>{ const rm=window.AE&&window.AE.prefs.reducedMotion(); window.scrollTo({top:0,behavior:rm?'auto':'smooth'}); const m=document.getElementById('main'); if(m){ m.setAttribute('tabindex','-1'); setTimeout(()=>m.focus({preventScroll:true}),rm?0:400); } }
+    };
+  }
+}
+</script>
+</body>
+</html>

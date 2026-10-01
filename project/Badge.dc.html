@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your progress · Accessibility Essentials</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&amp;display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="course.css">
+<style>@keyframes ae-sheen{from{transform:translateX(-100%)}to{transform:translateX(100%)}}</style>
+<script src="course.js"></script>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+<dc-import name="Topbar" active="badge" hint-size="100%,4rem"></dc-import>
+<main id="main" data-read-root="" tabindex="-1" style="flex:1;outline:none">
+  <header style="background:var(--surface);border-bottom:1px solid var(--line)">
+    <div style="max-width:64rem;margin:0 auto;padding:3rem 1.25rem 2.25rem;display:flex;flex-direction:column;gap:.9rem">
+      <nav aria-label="Breadcrumb" style="font-size:.875rem"><a href="Home.dc.html">Accessibility Essentials</a> <i class="fa-solid fa-chevron-right" aria-hidden="true" style="font-size:.7rem;color:var(--muted)"></i> <span style="color:var(--muted)">Progress</span></nav>
+      <h1 style="font-size:clamp(2.25rem,1.6rem + 2.5vw,3.5rem)">Your progress</h1>
+      <p style="margin:0;font-size:1.1875rem;color:var(--muted);max-width:42rem">Track your progress through all six lessons. Complete each knowledge check to earn a lesson badge, then finish all six to unlock your Accessibility Essentials digital badge — ready for LinkedIn, your CV or a teaching portfolio.</p>
+    </div>
+  </header>
+  <div style="max-width:64rem;margin:0 auto;padding:2.5rem 1.25rem 3rem;display:flex;flex-direction:column;gap:2.5rem">
+    <section ref="{{ sumRef }}" aria-labelledby="sum-title" data-gamify="" style="display:flex;flex-direction:column;gap:1.75rem;padding:clamp(1.25rem,.9rem + 1.6vw,2.5rem);border-radius:1.5rem;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow)">
+      <div style="display:flex;flex-direction:column;gap:.6rem">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem">
+          <span style="display:inline-flex;align-items:center;gap:.45rem;padding:.3rem .8rem;border-radius:999px;font-size:.75rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:{{ pillBg }};color:{{ pillInk }};border:1px solid {{ pillLine }}"><span aria-hidden="true" style="width:.45rem;height:.45rem;border-radius:50%;background:currentColor"></span>{{ pillLabel }}</span>
+          <span style="font-size:.875rem;color:var(--muted)">Saved in your&nbsp;browser</span>
+        </div>
+        <h2 id="sum-title" style="font-size:2rem">Course progress summary</h2>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1rem">
+        <div style="display:flex;flex-direction:column;gap:.4rem">
+          <p aria-hidden="true" style="margin:0;font-family:var(--font-head);font-size:clamp(3.25rem,2.6rem + 2.8vw,4.75rem);font-weight:700;line-height:.95;letter-spacing:-.02em;color:var(--accent-text);font-variant-numeric:tabular-nums">{{ shownPct }}</p>
+          <p style="margin:0;font-size:.8125rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">{{ doneCaption }}</p>
+        </div>
+        <div role="progressbar" aria-label="Course completion" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ pctNum }}" aria-valuetext="{{ pctText }}" style="position:relative;height:1.25rem;border-radius:999px;background:var(--line);overflow:hidden">
+          <div style="position:absolute;top:0;bottom:0;left:0;width:{{ fillW }};background:var(--accent);border-radius:999px;overflow:hidden">{{ sheen }}</div>
+          <span aria-hidden="true" style="position:absolute;top:0;bottom:0;left:25%;width:2px;margin-left:-1px;background:var(--surface)"></span>
+          <span aria-hidden="true" style="position:absolute;top:0;bottom:0;left:50%;width:2px;margin-left:-1px;background:var(--surface)"></span>
+          <span aria-hidden="true" style="position:absolute;top:0;bottom:0;left:75%;width:2px;margin-left:-1px;background:var(--surface)"></span>
+        </div>
+        <div aria-hidden="true" style="position:relative;height:1.25rem;font-size:.8125rem;font-weight:700;font-variant-numeric:tabular-nums">
+          <span style="position:absolute;left:0;color:{{ t0 }}">0%</span>
+          <span style="position:absolute;left:25%;transform:translateX(-50%);color:{{ t25 }}">25%</span>
+          <span style="position:absolute;left:50%;transform:translateX(-50%);color:{{ t50 }}">50%</span>
+          <span style="position:absolute;left:75%;transform:translateX(-50%);color:{{ t75 }}">75%</span>
+          <span style="position:absolute;right:0;display:inline-flex;align-items:center;gap:.35rem;color:{{ t100 }}">100%<i class="fa-solid fa-trophy" style="color:{{ trophy }}"></i></span>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:1rem">
+        <sc-for list="{{ stats }}" as="s" hint-placeholder-count="3">
+          <div style="display:flex;flex-direction:column;gap:.3rem;padding:1.1rem 1.25rem;border-radius:1rem;background:var(--surface-2);border:1px solid var(--line);opacity:{{ s.op }};transform:{{ s.tf }};transition:{{ s.trans }}">
+            <p style="margin:0;font-size:.75rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">{{ s.label }}</p>
+            <p style="margin:0;font-family:var(--font-head);font-size:1.625rem;font-weight:700;line-height:1.15">{{ s.value }}</p>
+            <p style="margin:0;font-size:.9375rem;color:var(--muted)">{{ s.sub }}</p>
+          </div>
+        </sc-for>
+      </div>
+      <hr style="margin:0;border:0;border-top:1px solid var(--line)">
+      <div style="display:flex;flex-direction:column;gap:1rem">
+        <h3 style="font-family:var(--font-body);font-size:1.0625rem;font-weight:700">Lessons and badges</h3>
+        <ol class="ae-3col" style="list-style:none;margin:0;padding:0;gap:.75rem">
+          <sc-for list="{{ lessonCards }}" as="c" hint-placeholder-count="6">
+            <li style="display:flex;opacity:{{ c.op }};transform:{{ c.tf }};transition:{{ c.trans }}">
+              <a href="{{ c.file }}" style="flex:1;display:flex;gap:.9rem;align-items:flex-start;padding:1rem 1.1rem;border-radius:1rem;border:1px solid {{ c.line }};background:{{ c.bg }};color:var(--ink);text-decoration:none;transition:border-color .2s,box-shadow .2s" style-hover="border-color:var(--accent);box-shadow:var(--shadow)">
+                <span aria-hidden="true" style="flex:none;width:3rem;height:3rem;border-radius:50%;display:grid;place-items:center;font-size:1.15rem;background:{{ c.badgeBg }};color:{{ c.badgeInk }};box-shadow:{{ c.ring }}"><i class="fa-solid {{ c.bIcon }}"></i></span>
+                <span style="display:flex;flex-direction:column;gap:.2rem;min-width:0">
+                  <span style="display:flex;align-items:center;gap:.4rem;font-size:.8125rem;font-weight:800;color:{{ c.labelInk }}"><i class="{{ c.icon }}" aria-hidden="true"></i><span>Lesson {{ c.n }} · {{ c.status }}</span></span>
+                  <span style="font-weight:700;line-height:1.3">{{ c.title }}</span>
+                  <span style="font-size:.8125rem;color:var(--muted)">{{ c.meta }}</span>
+                </span>
+              </a>
+            </li>
+          </sc-for>
+        </ol>
+      </div>
+      <hr style="margin:0;border:0;border-top:1px solid var(--line)">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1rem 1.5rem">
+        <sc-if value="{{ hasNext }}" hint-placeholder-val="{{ true }}">
+          <p style="margin:0">Next up: <strong>{{ nextName }}</strong></p>
+        </sc-if>
+        <sc-if value="{{ allDone }}" hint-placeholder-val="{{ false }}">
+          <p style="margin:0"><strong>All six lessons complete.</strong> Your digital badge is ready.</p>
+        </sc-if>
+        <a href="{{ nextHref }}" style="display:inline-flex;align-items:center;gap:.6rem;min-height:3.25rem;padding:.75rem 1.4rem;border-radius:.75rem;background:var(--accent);color:var(--accent-ink);font-weight:700;font-size:1.0625rem;text-decoration:none;box-shadow:var(--shadow);transition:transform .2s,filter .2s" style-hover="filter:brightness(.92);transform:translateY(-2px)">{{ nextCta }}<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      </div>
+    </section>
+
+    <section aria-labelledby="final-title" class="ae-split" style="gap:1.5rem;align-items:center;padding:1.5rem;border-radius:1.5rem;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow)">
+      <div style="display:flex;justify-content:center">
+        <div style="position:relative;width:min(100%,22rem);aspect-ratio:1">
+          <div role="img" aria-label="{{ badgeAlt }}" style="width:100%;height:100%;filter:{{ lockFilter }};opacity:{{ lockOp }};transition:filter .5s,opacity .5s">{{ svgEl }}</div>
+          <sc-if value="{{ locked }}" hint-placeholder-val="{{ true }}">
+            <span aria-hidden="true" style="position:absolute;inset:0;display:grid;place-items:center"><span style="width:4.5rem;height:4.5rem;border-radius:50%;background:var(--ink);color:var(--surface);display:grid;place-items:center;font-size:1.6rem;box-shadow:var(--shadow)"><i class="fa-solid fa-lock"></i></span></span>
+          </sc-if>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1rem">
+        <p style="margin:0;font-size:.8125rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-text)">{{ eyebrow }}</p>
+        <h2 id="final-title" style="font-size:2rem">Accessibility Essentials</h2>
+        <p style="margin:0">{{ finalText }}</p>
+        <label style="display:flex;flex-direction:column;gap:.35rem;font-weight:700;font-size:.9375rem">Name on your badge
+          <input type="text" value="{{ name }}" onInput="{{ setName }}" placeholder="e.g. Dr Alex Morgan" autocomplete="name" maxlength="40" style="min-height:3rem;padding:0 .9rem;border-radius:.65rem;border:1px solid var(--line);background:var(--surface);font-weight:400;font-size:1rem">
+        </label>
+        <div style="display:flex;flex-wrap:wrap;gap:.5rem">
+          <button type="button" onClick="{{ dlPng }}" disabled="{{ cantDl }}" style="display:inline-flex;align-items:center;gap:.5rem;min-height:2.75rem;padding:.55rem 1rem;border-radius:.65rem;border:0;background:var(--accent);color:var(--accent-ink);font-weight:700;cursor:pointer;opacity:{{ dlOp }}"><i class="fa-solid fa-download" aria-hidden="true"></i>Download PNG</button>
+          <button type="button" onClick="{{ dlSvg }}" disabled="{{ cantDl }}" style="display:inline-flex;align-items:center;gap:.5rem;min-height:2.75rem;padding:.55rem 1rem;border-radius:.65rem;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-weight:700;cursor:pointer;opacity:{{ dlOp }}"><i class="fa-solid fa-file-code" aria-hidden="true"></i>Download SVG</button>
+          <a href="{{ linkedIn }}" target="_blank" rel="noopener" aria-disabled="{{ liDisabled }}" style="display:inline-flex;align-items:center;gap:.5rem;min-height:2.75rem;padding:.55rem 1rem;border-radius:.65rem;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-weight:700;text-decoration:none;opacity:{{ dlOp }};pointer-events:{{ liPe }}"><i class="fa-brands fa-linkedin" aria-hidden="true" style="color:#0a66c2"></i>Add to LinkedIn<span class="sr-only"> (opens in a new tab)</span></a>
+        </div>
+        <sc-if value="{{ locked }}" hint-placeholder-val="{{ true }}">
+          <p style="margin:0;font-size:.875rem;color:var(--muted)"><button type="button" onClick="{{ togglePreview }}" aria-pressed="{{ previewSel }}" style="background:none;border:0;padding:0;color:var(--accent);font-weight:700;text-decoration:underline;cursor:pointer">{{ previewLabel }}</button> — see what you’re working towards.</p>
+        </sc-if>
+      </div>
+    </section>
+
+    <sc-if value="{{ allDone }}" hint-placeholder-val="{{ false }}">
+    <section aria-labelledby="cert-title" class="ae-split" style="gap:2rem;align-items:center;padding:clamp(1.25rem,.9rem + 1.6vw,2.5rem);border-radius:1.5rem;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow)">
+      <div aria-hidden="true" style="display:flex;justify-content:center">
+        <div style="width:min(100%,20rem);aspect-ratio:1/1.414;background:#fff;color:#1c1b1f;border:1px solid #dddddd;border-radius:.35rem;box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden">
+          <div style="height:.45rem;background:#D10373"></div>
+          <div style="flex:1;margin:.6rem;border:1px solid #dddddd;padding:1rem .9rem;display:flex;flex-direction:column;align-items:center;gap:.3rem;text-align:center">
+            <span style="font-size:.5rem;font-weight:800;letter-spacing:.14em;color:#D10373">CERTIFICATE OF COMPLETION</span>
+            <span style="font-family:var(--font-head);font-size:1.15rem;font-weight:700;line-height:1.1">Accessibility Essentials</span>
+            <span style="width:1.5rem;height:2px;background:#D10373;margin:.25rem 0"></span>
+            <span style="font-family:var(--font-head);font-style:italic;font-size:.55rem;color:#55535a">This certifies that</span>
+            <span style="font-family:var(--font-head);font-size:.95rem;font-weight:700;border-bottom:1px solid #dddddd;padding:0 .5rem .15rem;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ certName }}</span>
+            <span style="font-size:.45rem;color:#55535a;line-height:1.4;max-width:12rem">has completed all six lessons and knowledge checks</span>
+            <div style="width:100%;margin-top:.5rem;display:flex;flex-direction:column;gap:.28rem">
+              <sc-for list="{{ certRows }}" as="r" hint-placeholder-count="6">
+                <div style="display:flex;justify-content:space-between;gap:.5rem;padding-bottom:.22rem;border-bottom:1px solid #eeeeee;font-size:.42rem;text-align:left"><span style="font-weight:700">{{ r.n }}. {{ r.title }}</span><span style="color:#55535a;white-space:nowrap">{{ r.date }}</span></div>
+              </sc-for>
+            </div>
+            <span style="margin-top:auto;font-size:.42rem;color:#55535a">{{ certDate }}</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1rem">
+        <p style="margin:0;font-size:.8125rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-text)">For your CPD record</p>
+        <h2 id="cert-title" style="font-size:2rem">Course completion certificate</h2>
+        <p style="margin:0">A one-page A4 PDF summary of your progress: your name, completion date, and each lesson with its badge, completion date and knowledge-check result. It’s a tagged, screen-reader-friendly PDF — ready for appraisal, your HEA fellowship portfolio or a CPD log.</p>
+        <sc-if value="{{ noName }}" hint-placeholder-val="{{ false }}">
+          <p style="margin:0;padding:.75rem 1rem;border-radius:.75rem;background:var(--accent-soft);font-size:.9375rem;display:flex;gap:.6rem;align-items:baseline"><i class="fa-solid fa-circle-info" aria-hidden="true" style="color:var(--accent-text)"></i><span>Add your name in the badge section above so it appears on your certificate.</span></p>
+        </sc-if>
+        <div style="display:flex;flex-wrap:wrap;gap:.5rem">
+          <button type="button" onClick="{{ dlPdf }}" style="display:inline-flex;align-items:center;gap:.6rem;min-height:3.25rem;padding:.75rem 1.4rem;border-radius:.75rem;border:0;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:700;font-size:1.0625rem;cursor:pointer;box-shadow:var(--shadow)" style-hover="filter:brightness(.92)"><i class="fa-solid fa-file-pdf" aria-hidden="true"></i>Download PDF certificate</button>
+        </div>
+        <p style="margin:0;font-size:.875rem;color:var(--muted)">Generated from the progress saved in this browser. It records self-directed CPD and isn’t a verified credential.</p>
+      </div>
+    </section>
+    </sc-if>
+
+    <section aria-labelledby="reset-title" style="display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between;padding:1.1rem 1.25rem;border-radius:1rem;border:1px dashed var(--line)">
+      <div><h2 id="reset-title" style="font-family:var(--font-body);font-size:1rem;font-weight:700">Start over</h2><p style="margin:0;font-size:.9rem;color:var(--muted)">Clears your progress, answers and badges on this device. Display settings are kept.</p></div>
+      <button type="button" onClick="{{ reset }}" style="display:inline-flex;align-items:center;gap:.5rem;min-height:2.75rem;padding:.5rem 1rem;border-radius:.65rem;border:1px solid var(--bad);background:var(--surface);color:var(--bad);font-weight:700;cursor:pointer"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i>{{ resetLabel }}</button>
+    </section>
+  </div>
+</main>
+<dc-import name="Footer" hint-size="100%,12rem"></dc-import>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { preview:false, confirm:false, shown:0, inView:false, settled:false };
+  sumRef = React.createRef();
+  reduce(){ const m=document.documentElement.getAttribute('data-motion'); return m==='reduce'||(m!=='on'&&matchMedia('(prefers-reduced-motion: reduce)').matches); }
+  target(){ const AE=window.AE; return AE?Math.round(AE.progress.doneCount()/AE.lessons.length*100):0; }
+  animateTo(to){ cancelAnimationFrame(this._raf); const from=this.state.shown; if(this.reduce()||from===to){ if(from!==to) this.setState({shown:to}); return; }
+    const t0=performance.now(), dur=1100, step=now=>{ const p=Math.min(1,(now-t0)/dur), e=1-Math.pow(1-p,3); this.setState({shown:Math.round(from+(to-from)*e)}); if(p<1) this._raf=requestAnimationFrame(step); };
+    this._raf=requestAnimationFrame(step); }
+  reveal(){ if(this.state.inView) return; const r=this.reduce(); this.setState({inView:true,settled:r}); this.animateTo(this.target()); if(!r) this._st=setTimeout(()=>this.setState({settled:true}),1400); }
+  observe(){ const el=this.sumRef.current; if(el&&'IntersectionObserver' in window){ this._io=new IntersectionObserver(es=>{ if(es.some(x=>x.isIntersecting)){ this._io.disconnect(); this.reveal(); } },{threshold:.2}); this._io.observe(el); } else this.reveal(); }
+  componentDidMount(){ this._u=()=>{ this.forceUpdate(); if(this.state.inView) this.animateTo(this.target()); }; ['ae:ready','ae:progress','ae:prefs'].forEach(n=>window.addEventListener(n,this._u)); this.observe(); }
+  componentWillUnmount(){ ['ae:ready','ae:progress','ae:prefs'].forEach(n=>window.removeEventListener(n,this._u)); this._io&&this._io.disconnect(); cancelAnimationFrame(this._raf); clearTimeout(this._st); }
+  esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  svg(name,date,preview){
+    const nm=this.esc(name||'Your name'); const fs=nm.length>26?22:nm.length>18?27:32;
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600" role="img" aria-label="Accessibility Essentials digital badge">
+<title>Accessibility Essentials — awarded to ${nm}</title>
+<defs><path id="ring" d="M300,300 m-242,0 a242,242 0 1,1 484,0 a242,242 0 1,1 -484,0"/></defs>
+<circle cx="300" cy="300" r="296" fill="#D10373"/>
+<circle cx="300" cy="300" r="282" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="2"/>
+<text font-family="Helvetica, Arial, sans-serif" font-size="25" font-weight="700" letter-spacing="5" fill="#fff"><textPath href="#ring" startOffset="0">ACCESSIBILITY ESSENTIALS · UK HIGHER EDUCATION · CPD · INCLUSIVE BY DESIGN ·</textPath></text>
+<circle cx="300" cy="300" r="212" fill="#fff"/>
+<circle cx="300" cy="300" r="202" fill="none" stroke="#D10373" stroke-opacity=".25" stroke-width="2"/>
+<g stroke="#D10373" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" fill="none">
+<line x1="228" y1="212" x2="372" y2="212"/><line x1="300" y1="212" x2="300" y2="282"/><line x1="300" y1="282" x2="266" y2="348"/><line x1="300" y1="282" x2="334" y2="348"/></g>
+<circle cx="300" cy="160" r="24" fill="#D10373"/>
+<text x="300" y="398" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="3" fill="#6b6870">AWARDED TO</text>
+<text x="300" y="${432}" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="${fs}" font-weight="700" fill="#1c1b1f">${nm}</text>
+<text x="300" y="460" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#55535a">${this.esc(date)}</text>
+<path d="M112,478 L488,478 L470,500 L488,522 L112,522 L130,500 Z" fill="#1c1b1f"/>
+<text x="300" y="506" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="1.5" fill="#fff">PSBAR 2018 · EQUALITY ACT 2010 · WCAG 2.2</text>
+${preview?'<text x="300" y="300" text-anchor="middle" transform="rotate(-24 300 300)" font-family="Helvetica, Arial, sans-serif" font-size="84" font-weight="800" fill="#1c1b1f" fill-opacity=".14" letter-spacing="8">PREVIEW</text>':''}
+</svg>`;
+  }
+  certData(){ const AE=window.AE, pr=AE.progress.get(), fmt=s=>s?new Date(s).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'—';
+    const rows=AE.lessons.map(l=>{ const st=pr.lessons[l.n]||{}, qs=(AE.kc&&AE.kc[l.n])||[], ans=(st.kc&&st.kc.ans)||{};
+      const first=qs.filter((_,k)=>ans[k]&&ans[k].correct&&ans[k].tries===1).length;
+      return {n:l.n,title:l.title,badge:l.badge,date:fmt(st.date),first,total:qs.length,mins:l.mins}; });
+    const dates=AE.lessons.map(l=>pr.lessons[l.n]&&pr.lessons[l.n].date).filter(Boolean).sort();
+    const last=dates.length?new Date(dates[dates.length-1]):new Date();
+    return {name:(pr.name||'').trim(),rows,completed:last.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}),mins:rows.reduce((a,r)=>a+(Number(r.mins)||0),0)}; }
+  buildPdf(){
+    const D=this.certData(), W=595.28, H=841.89, M=56;
+    const cv=document.createElement('canvas').getContext('2d');
+    const F={R:['F1','Helvetica','12px Arial'],B:['F2','Helvetica-Bold','bold 12px Arial'],T:['F3','Times-Bold','bold 12px "Times New Roman"'],I:['F4','Times-Italic','italic 12px "Times New Roman"']};
+    const WIN={0x2018:145,0x2019:146,0x201C:147,0x201D:148,0x2013:150,0x2014:151,0x2022:149,0x2026:133,0x20AC:128};
+    const enc=s=>{ let o=''; for(const ch of String(s)){ const c=ch.codePointAt(0), b=WIN[c]!=null?WIN[c]:(c<256?c:63); if(b===40||b===41||b===92) o+='\\'+String.fromCharCode(b); else if(b<32||b>126) o+='\\'+b.toString(8).padStart(3,'0'); else o+=String.fromCharCode(b); } return o; };
+    const tw=(s,f,sz,tc=0)=>{ cv.font=F[f][2]; return cv.measureText(s).width*sz/12+tc*Math.max(0,[...s].length-1); };
+    const INK='0.11 0.106 0.122', MUTED='0.333 0.325 0.353', ACC='0.82 0.012 0.451', RULE='0.867 0.867 0.867';
+    let ops='', mcid=0; const top=[], owner=[];
+    const node=(S,parent,attrs)=>{ const n={S,K:[],attrs}; (parent?parent.K:top).push(n); return n; };
+    const art=s=>{ ops+='/Artifact BMC\n'+s+'EMC\n'; };
+    const rect=(x,y,w,h,c)=>art(`${c} rg ${x.toFixed(2)} ${y.toFixed(2)} ${w.toFixed(2)} ${h.toFixed(2)} re f\n`);
+    const frame=(x,y,w,h,c,lw)=>art(`${c} RG ${lw} w ${x} ${y} ${w.toFixed(2)} ${h.toFixed(2)} re S\n`);
+    const line=(x1,y1,x2,y2,c,lw=.75)=>art(`${c} RG ${lw} w ${x1.toFixed(2)} ${y1.toFixed(2)} m ${x2.toFixed(2)} ${y2.toFixed(2)} l S\n`);
+    const text=(n,s,x,y,f,sz,c=INK,align,tc=0)=>{ if(align==='c') x-=tw(s,f,sz,tc)/2; if(align==='r') x-=tw(s,f,sz,tc);
+      ops+=`/${n.S} <</MCID ${mcid}>> BDC\nBT /${F[f][0]} ${sz} Tf ${tc} Tc ${c} rg ${x.toFixed(2)} ${y.toFixed(2)} Td (${enc(s)}) Tj ET\nEMC\n`; n.K.push(mcid); owner[mcid]=n; mcid++; };
+    const wrap=(s,f,sz,maxW)=>{ const out=[]; let cur=''; s.split(' ').forEach(w=>{ const t=cur?cur+' '+w:w; if(tw(t,f,sz)>maxW&&cur){ out.push(cur); cur=w; } else cur=t; }); if(cur) out.push(cur); return out; };
+    rect(0,H-14,W,14,ACC); frame(28,28,W-56,H-70,RULE,1);
+    text(node('P'),'CERTIFICATE OF COMPLETION',W/2,H-88,'B',10,ACC,'c',2);
+    text(node('H1'),'Accessibility Essentials',W/2,H-130,'T',34,INK,'c');
+    text(node('P'),'CPD for teaching staff in UK higher education',W/2,H-152,'R',11,MUTED,'c');
+    line(W/2-28,H-174,W/2+28,H-174,ACC,2);
+    text(node('P'),'This certifies that',W/2,H-206,'I',14,MUTED,'c');
+    const nm=D.name||'Name not provided';
+    text(node('P'),nm,W/2,H-244,'T',nm.length>34?22:28,INK,'c');
+    line(W/2-150,H-256,W/2+150,H-256,RULE,.75);
+    const para=node('P');
+    wrap('has completed all six lessons and knowledge checks of Accessibility Essentials, covering the Public Sector Bodies Accessibility Regulations 2018, the Equality Act 2010 and WCAG 2.2.','R',11.5,400)
+      .forEach((l,i)=>text(para,l,W/2,H-284-i*16,'R',11.5,INK,'c'));
+    const sy=H-392; rect(M,sy,W-2*M,58,'0.973 0.969 0.976');
+    const firstAll=D.rows.reduce((a,r)=>a+r.first,0), qAll=D.rows.reduce((a,r)=>a+r.total,0);
+    [['COMPLETED',D.completed],['LESSONS','6 of 6'],['LEARNING TIME',D.mins+' minutes']].forEach((s,i)=>{ const cx=M+(W-2*M)*(i+.5)/3, p=node('P');
+      text(p,s[0],cx,sy+38,'B',7.5,MUTED,'c',1.2); text(p,s[1],cx,sy+17,'T',15,INK,'c'); });
+    text(node('H2'),'Progress summary',M,H-432,'B',12.5,INK);
+    const cols=[{x:M,w:22,h:'#'},{x:M+22,h:'Lesson'},{x:M+232,h:'Badge earned'},{x:M+352,h:'Completed'},{x:W-M,h:'Correct first time',r:1}];
+    const tbl=node('Table'), hr=node('TR',tbl); let y=H-458;
+    cols.forEach(c=>text(node('TH',hr,'/A << /O /Table /Scope /Column >>'),c.h.toUpperCase(),c.x,y,'B',7.5,MUTED,c.r?'r':null,.8));
+    line(M,y-8,W-M,y-8,INK,.9); y-=26;
+    D.rows.forEach(r=>{ const tr=node('TR',tbl); const v=[String(r.n),r.title,r.badge,r.date,r.first+' of '+r.total];
+      v.forEach((s,i)=>text(node('TD',tr),s,cols[i].x,y,i===1?'B':'R',10,i===0?MUTED:INK,cols[i].r?'r':null));
+      line(M,y-11,W-M,y-11,RULE,.6); y-=29; });
+    const tr=node('TR',tbl); text(node('TD',tr),'Overall',M+22,y,'B',10,INK); text(node('TD',tr),firstAll+' of '+qAll,W-M,y,'B',10,INK,'r');
+    const foot=node('P');
+    wrap('Generated on '+new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})+' from progress saved in the learner’s browser. This is a record of self-directed CPD, not a verified credential. Course content reflects UK law as at September 2026 and is guidance, not legal advice.','R',8,440)
+      .forEach((l,i)=>text(foot,l,W/2,96-i*11,'R',8,MUTED,'c'));
+    text(node('P'),'Accessibility Essentials  ·  Digital accessibility for UK higher education',W/2,52,'B',8,ACC,'c',.4);
+    // objects
+    const objs=[]; let next=13; const assign=n=>{ n.id=next++; n.K.forEach(k=>typeof k==='object'&&assign(k)); }; top.forEach(assign);
+    const ref=n=>n.id+' 0 R';
+    const emit=(n,parentRef)=>{ objs[n.id]=`<< /Type /StructElem /S /${n.S} /P ${parentRef} /Pg 3 0 R${n.attrs?' '+n.attrs:''} /K [${n.K.map(k=>typeof k==='object'?ref(k):k).join(' ')}] >>`; n.K.forEach(k=>typeof k==='object'&&emit(k,ref(n))); };
+    top.forEach(n=>emit(n,'12 0 R'));
+    const title='Accessibility Essentials – Course completion certificate'+(D.name?' – '+D.name:'');
+    objs[1]='<< /Type /Catalog /Pages 2 0 R /Lang (en-GB) /MarkInfo << /Marked true >> /StructTreeRoot 10 0 R /ViewerPreferences << /DisplayDocTitle true >> >>';
+    objs[2]='<< /Type /Pages /Kids [3 0 R] /Count 1 >>';
+    objs[3]=`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /StructParents 0 /Tabs /S /Resources << /Font << /F1 5 0 R /F2 6 0 R /F3 7 0 R /F4 8 0 R >> >> /Contents 4 0 R >>`;
+    objs[4]=`<< /Length ${ops.length} >>\nstream\n${ops}endstream`;
+    ['R','B','T','I'].forEach((k,i)=>objs[5+i]=`<< /Type /Font /Subtype /Type1 /BaseFont /${F[k][1]} /Encoding /WinAnsiEncoding >>`);
+    objs[9]=`<< /Title (${enc(title)}) /Author (${enc(D.name||'Learner')}) /Subject (Course completion summary) /Creator (Accessibility Essentials) /CreationDate (D:${new Date().toISOString().replace(/[-:T]/g,'').slice(0,14)}Z) >>`;
+    objs[10]='<< /Type /StructTreeRoot /K 12 0 R /ParentTree 11 0 R /ParentTreeNextKey 1 >>';
+    objs[11]=`<< /Nums [0 [${owner.map(ref).join(' ')}]] >>`;
+    objs[12]=`<< /Type /StructElem /S /Document /P 10 0 R /K [${top.map(ref).join(' ')}] >>`;
+    let out='%PDF-1.7\n%\xE2\xE3\xCF\xD3\n'; const off=[];
+    for(let i=1;i<objs.length;i++){ off[i]=out.length; out+=i+' 0 obj\n'+objs[i]+'\nendobj\n'; }
+    const xref=out.length;
+    out+='xref\n0 '+objs.length+'\n0000000000 65535 f \n'+off.slice(1).map(o=>String(o).padStart(10,'0')+' 00000 n \n').join('')+'trailer\n<< /Size '+objs.length+' /Root 1 0 R /Info 9 0 R >>\nstartxref\n'+xref+'\n%%EOF';
+    const bytes=new Uint8Array(out.length); for(let i=0;i<out.length;i++) bytes[i]=out.charCodeAt(i)&255;
+    return new Blob([bytes],{type:'application/pdf'}); }
+  save(blob,name){ const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },500); }
+  renderVals(){
+    const AE=window.AE; if(!AE) return { lessonCards:[], stats:[], certRows:[], locked:true, sumRef:this.sumRef };
+    const pr=AE.progress.get(), done=AE.progress.doneCount(), all=done===6;
+    const dates=AE.lessons.map(l=>pr.lessons[l.n]&&pr.lessons[l.n].date).filter(Boolean).sort();
+    const d=all&&dates.length?new Date(dates[dates.length-1]):new Date();
+    const dateStr='Awarded '+d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+    const showFull=all||this.state.preview;
+    const svg=this.svg(pr.name,dateStr,!all&&this.state.preview);
+    const svgEl=React.createElement('div',{style:{width:'100%',height:'100%'},'aria-hidden':'true',dangerouslySetInnerHTML:{__html:svg.replace('<svg ','<svg style="width:100%;height:100%" ')}});
+    const total=AE.lessons.length, pctNum=Math.round(done/total*100), sh=this.state.shown, inV=this.state.inView;
+    const isDone=l=>!!(pr.lessons[l.n]&&pr.lessons[l.n].done), visited=l=>!!(pr.lessons[l.n]&&pr.lessons[l.n].visited);
+    const wip=AE.lessons.filter(l=>!isDone(l)&&visited(l)).length;
+    const mins=l=>Number(l.mins)||0, totalMins=AE.lessons.reduce((x,l)=>x+mins(l),0), doneMins=AE.lessons.filter(isDone).reduce((x,l)=>x+mins(l),0), left=totalMins-doneMins;
+    const nextL=all?null:(AE.lessons.find(l=>!isDone(l)&&pr.last&&l.n>=pr.last)||AE.lessons.find(l=>!isDone(l)));
+    const enter=t=>({op:inV?1:0,tf:inV?'none':'translateY(.75rem)',trans:'opacity .5s ease '+t+'s, transform .6s cubic-bezier(.22,.9,.24,1) '+t+'s'});
+    const stats=[
+      {label:'Lessons completed',value:done+' / '+total,sub:all?'Every lesson complete':(total-done)+' lesson'+(total-done===1?'':'s')+' remaining'},
+      {label:'Estimated time',value:doneMins+' / '+totalMins+' min',sub:left?'~'+left+' min estimated left':'All done'},
+      {label:'Digital badge',value:all?'Unlocked':done+'/'+total+' towards badge',sub:all?'Ready to download below':'Complete all '+total+' lessons to claim'}
+    ].map((s,i)=>Object.assign(s,enter((.1+i*.08).toFixed(2))));
+    const fmt=s=>new Date(s).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+    const lessonCards=AE.lessons.map((l,i)=>{ const st=pr.lessons[l.n]||{}, ok=!!st.done, nx=!!nextL&&nextL.n===l.n, w=!ok&&!!st.visited;
+      return Object.assign({n:l.n,file:l.file,title:l.title,bIcon:l.icon,
+        status:ok?'Complete':nx?(w?'Resume here':'Up next'):w?'In progress':'Not started',
+        meta:ok?l.badge+' badge · earned '+(st.date?fmt(st.date):''):l.badge+' badge · '+l.mins+' min',
+        icon:ok?'fa-solid fa-circle-check':w?'fa-solid fa-circle-half-stroke':'fa-regular fa-circle',
+        labelInk:ok?'var(--ok)':nx?'var(--accent-text)':'var(--muted)',
+        badgeBg:ok?'var(--accent)':'var(--surface-2)', badgeInk:ok?'var(--accent-ink)':'var(--muted)', ring:ok?'0 0 0 3px var(--surface),0 0 0 5px var(--accent)':'none',
+        bg:nx?'var(--accent-soft)':'var(--surface)', line:nx?'var(--accent)':ok?'var(--accent-line)':'var(--line)'},enter((.3+i*.06).toFixed(2))); });
+    const pill=all?['Complete','var(--ok-soft)','var(--ok)','var(--ok)']:(done||wip)?['In progress','var(--accent-soft)','var(--accent-text)','var(--accent-line)']:['Not started','var(--accent-soft)','var(--accent-text)','var(--accent-line)'];
+    const tick=m=>sh>0&&sh>=m?'var(--accent-text)':'var(--muted)';
+    const sheen=(this.state.settled&&pctNum>0&&!this.reduce()&&AE.prefs.get().theme!=='hc')?React.createElement('span',{'aria-hidden':'true',style:{position:'absolute',inset:0,background:'linear-gradient(100deg,transparent 25%,rgba(255,255,255,.55) 50%,transparent 75%)',animation:'ae-sheen 1.3s cubic-bezier(.4,0,.2,1) .15s 2 both'}}):null;
+    const dash={ sumRef:this.sumRef, pillLabel:pill[0], pillBg:pill[1], pillInk:pill[2], pillLine:pill[3],
+      shownPct:sh+'%', fillW:sh+'%', sheen, pctNum, pctText:pctNum+'% — '+done+' of '+total+' lessons complete', doneCaption:done+' of '+total+' lessons completed',
+      t0:tick(1), t25:tick(25), t50:tick(50), t75:tick(75), t100:tick(100), trophy:sh>=100?'var(--accent)':'var(--muted)',
+      stats, lessonCards, hasNext:!!nextL, allDone:all, nextName:nextL?'Lesson '+nextL.n+' ('+nextL.title+')':'',
+      nextHref:nextL?nextL.file:'#final-title', nextCta:nextL?(visited(nextL)?'Resume':'Start')+' Lesson '+nextL.n:'Get your digital badge' };
+    const li='https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name='+encodeURIComponent('Accessibility Essentials (PSBAR 2018, Equality Act 2010, WCAG 2.2)')+'&issueYear='+d.getFullYear()+'&issueMonth='+(d.getMonth()+1);
+    const base='accessibility-essentials-badge';
+    const cd=all?this.certData():null;
+    const cert=cd?{ certName:cd.name||'Your name', noName:!cd.name, certDate:'Completed '+cd.completed, certRows:cd.rows.map(r=>({n:r.n,title:r.title,date:r.date})),
+      dlPdf:()=>{ this.save(this.buildPdf(),'accessibility-essentials-certificate'+(cd.name?'-'+AE.slug(cd.name):'')+'.pdf'); AE.toast&&AE.toast('Certificate downloaded','fa-file-pdf'); } }:{ certRows:[] };
+    return { ...dash, ...cert,
+      svgEl, locked:!all, lockFilter:showFull?'none':'grayscale(1)', lockOp:showFull?1:.55,
+      badgeAlt:all?'Accessibility Essentials digital badge awarded to '+(pr.name||'you')+'. '+dateStr+'.':'Accessibility Essentials badge, locked. '+done+' of 6 lessons complete.',
+      eyebrow:all?'Course complete':'Locked · '+done+' of 6 lessons complete',
+      finalText:all?'Congratulations — you’ve completed every lesson and knowledge check. Add your name, then download your badge or add it to your LinkedIn profile under Licences & certifications.':'Complete the knowledge check at the end of each lesson to unlock this badge.',
+      done, pct:Math.round(done/6*100)+'%', name:pr.name||'', setName:e=>AE.progress.setName(e.target.value),
+      cantDl:!all, dlOp:all?1:.45, liDisabled:all?undefined:'true', liPe:all?'auto':'none', linkedIn:li,
+      dlSvg:()=>this.save(new Blob([svg],{type:'image/svg+xml'}),base+'.svg'),
+      dlPng:()=>{ const img=new Image(); const url=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'})); img.onload=()=>{ const c=document.createElement('canvas'); c.width=1200; c.height=1200; const x=c.getContext('2d'); x.drawImage(img,0,0,1200,1200); URL.revokeObjectURL(url); c.toBlob(b=>this.save(b,base+'.png'),'image/png'); }; img.src=url; },
+      previewSel:this.state.preview?'true':'false', previewLabel:this.state.preview?'Hide preview':'Preview the badge', togglePreview:()=>this.setState({preview:!this.state.preview}),
+      resetLabel:this.state.confirm?'Yes, clear everything':'Reset progress',
+      reset:()=>{ if(!this.state.confirm){ this.setState({confirm:true}); return; } AE.progress.reset(); this.setState({confirm:false,preview:false}); }
+    };
+  }
+}
+</script>
+</body>
+</html>

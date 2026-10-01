@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<footer data-noprint="" style="border-top:1px solid var(--line);background:var(--surface);margin-top:3rem">
+  <div style="max-width:72rem;margin:0 auto;padding:2rem 1.25rem 2.5rem;display:flex;flex-direction:column;gap:1.5rem">
+    <section aria-labelledby="kbd-title" style="display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--line);font-size:.9375rem">
+      <h2 id="kbd-title" style="font-family:var(--font-body);font-size:.9375rem;font-weight:700;margin:0;display:flex;align-items:center;gap:.5rem"><i class="fa-solid fa-keyboard" aria-hidden="true" style="color:var(--accent)"></i>Keyboard shortcuts</h2>
+      <p style="margin:0;color:var(--muted)">Hold <kbd>Alt</kbd> + <kbd>Shift</kbd> (Mac: <kbd>Option</kbd> + <kbd>Shift</kbd>), then press:</p>
+      <ul style="list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:.5rem 1.25rem">
+        <sc-for list="{{ keys }}" as="k" hint-placeholder-count="6">
+          <li style="display:flex;align-items:center;gap:.4rem"><kbd>{{ k.c }}</kbd><span>{{ k.label }}</span></li>
+        </sc-for>
+        <li style="display:flex;align-items:center;gap:.4rem"><kbd>Esc</kbd><span>Close panels (on its own)</span></li>
+        <li style="display:flex;align-items:center;gap:.4rem"><kbd>Ctrl</kbd>+<kbd>K</kbd><span>(Mac: <kbd>⌘</kbd>+<kbd>K</kbd>) Search the course</span></li>
+      </ul>
+    </section>
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;justify-content:space-between;color:var(--muted);font-size:.875rem">
+      <p style="margin:0">Accessibility Essentials · CPD for teaching staff in UK higher education</p>
+      <p style="margin:0">Reflects PSBAR 2018 and the Equality Act 2010 as at September 2026. This course is guidance, not legal advice.</p>
+    </div>
+  </div>
+  <dc-import name="SearchModal" hint-size="0,0"></dc-import>
+</footer>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount(){ this._u=()=>this.forceUpdate(); window.addEventListener('ae:ready',this._u); }
+  componentWillUnmount(){ window.removeEventListener('ae:ready',this._u); }
+  renderVals(){
+    const s=(window.AE&&window.AE.shortcuts)||[];
+    return { keys: s.filter(k=>k[1]).map(k=>({a:k[0],b:k[1],c:k[2],label:k[3]})) };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div>
+<nav aria-label="Lesson navigation" data-noread="" style="padding:2rem 0;border-top:1px solid var(--line)">
+  <div class="ae-2col" style="gap:1rem">
+    <a href="{{ prevHref }}" style="display:flex;align-items:center;gap:1rem;padding:1.1rem 1.25rem;border-radius:1rem;background:var(--surface);border:1px solid var(--line);text-decoration:none;color:var(--ink);box-shadow:var(--shadow)" style-hover="border-color:var(--accent)">
+      <i class="fa-solid fa-arrow-left" aria-hidden="true" style="color:var(--accent);font-size:1.1rem"></i>
+      <span style="display:flex;flex-direction:column;min-width:0"><span style="font-size:.8125rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">{{ prevKicker }}</span><span style="font-weight:700;font-size:1.0625rem">{{ prevTitle }}</span></span>
+    </a>
+    <a href="{{ nextHref }}" style="display:flex;align-items:center;justify-content:flex-end;gap:1rem;padding:1.1rem 1.25rem;border-radius:1rem;background:var(--surface);border:1px solid var(--line);text-decoration:none;color:var(--ink);box-shadow:var(--shadow);text-align:right" style-hover="border-color:var(--accent)">
+      <span style="display:flex;flex-direction:column;min-width:0"><span style="font-size:.8125rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">{{ nextKicker }}</span><span style="font-weight:700;font-size:1.0625rem">{{ nextTitle }}</span></span>
+      <i class="fa-solid fa-arrow-right" aria-hidden="true" style="color:var(--accent);font-size:1.1rem"></i>
+    </a>
+  </div>
+</nav>
+<section id="resources" aria-labelledby="res-title" style="padding:2.5rem 0 1rem;border-top:1px solid var(--line)">
+  <h2 id="res-title" style="font-size:1.75rem;margin-bottom:1.25rem">Resources &amp; checklist</h2>
+  <div class="ae-2col" style="gap:1.25rem;align-items:start">
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:1rem;padding:1.25rem">
+      <h3 style="font-family:var(--font-body);font-size:1.0625rem;font-weight:700;margin-bottom:.75rem;display:flex;gap:.5rem;align-items:center"><i class="fa-solid fa-link" aria-hidden="true" style="color:var(--accent)"></i>Further reading</h3>
+      <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.85rem">
+        <sc-for list="{{ links }}" as="l" hint-placeholder-count="4">
+          <li style="display:flex;flex-direction:column;gap:.1rem"><a href="{{ l.u }}" target="_blank" rel="noopener" style="font-weight:600">{{ l.t }}<span class="sr-only"> (opens in a new tab)</span> <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true" style="font-size:.75em"></i></a><span style="font-size:.875rem;color:var(--muted)">{{ l.d }}</span></li>
+        </sc-for>
+      </ul>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:1rem;padding:1.25rem">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:.75rem">
+        <h3 style="font-family:var(--font-body);font-size:1.0625rem;font-weight:700;display:flex;gap:.5rem;align-items:center"><i class="fa-solid fa-list-check" aria-hidden="true" style="color:var(--accent)"></i>Put it into practice</h3>
+        <span aria-live="polite" style="font-size:.8125rem;font-weight:700;color:var(--muted)">{{ count }}</span>
+      </div>
+      <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.35rem">
+        <sc-for list="{{ checklist }}" as="c" hint-placeholder-count="4">
+          <li><label style="display:flex;gap:.75rem;align-items:flex-start;padding:.55rem .6rem;border-radius:.6rem;cursor:pointer;background:{{ c.bg }}"><input type="checkbox" checked="{{ c.on }}" onChange="{{ c.toggle }}" style="accent-color:var(--accent);width:1.15rem;height:1.15rem;margin:.2rem 0 0;flex:none"><span style="text-decoration:{{ c.deco }};color:{{ c.color }}">{{ c.t }}</span></label></li>
+        </sc-for>
+      </ul>
+      <p style="margin:.75rem 0 0;font-size:.8125rem;color:var(--muted)">Your ticks are saved on this device. Print this page for an offline copy.</p>
+    </div>
+  </div>
+</section>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;lesson&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:1,&quot;min&quot;:1,&quot;max&quot;:6,&quot;tsType&quot;:&quot;number&quot;}}">
+class Component extends DCLogic {
+  componentDidMount(){ this._u=()=>this.forceUpdate(); ['ae:ready','ae:progress'].forEach(e=>window.addEventListener(e,this._u)); }
+  componentWillUnmount(){ ['ae:ready','ae:progress'].forEach(e=>window.removeEventListener(e,this._u)); }
+  renderVals(){
+    const AE=window.AE; const n=Number(this.props.lesson||1); if(!AE) return {};
+    const P=AE.lessons[n-2], N=AE.lessons[n], R=AE.resources[n];
+    const ticks=AE.progress.lesson(n).checklist||{};
+    const checklist=R.checklist.map((t,i)=>{ const on=!!ticks[i]; return {t,on,bg:on?'var(--ok-soft)':'transparent',deco:'none',color:'var(--ink)',toggle:()=>{ const c=Object.assign({},ticks,{[i]:!on}); AE.progress.update(n,{checklist:c}); }}; });
+    const done=checklist.filter(c=>c.on).length;
+    return {
+      prevHref:P?P.file:'Home.dc.html', prevKicker:P?'Previous · Lesson '+P.n:'Back to', prevTitle:P?P.title:'Course outline',
+      nextHref:N?N.file:'Badge.dc.html', nextKicker:N?'Next · Lesson '+N.n:'Finish', nextTitle:N?N.title:'Your course badge',
+      links:R.links, checklist, count:done+' of '+checklist.length+' done'
+    };
+  }
+}
+</script>
+</body>
+</html>

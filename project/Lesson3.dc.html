@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 3: Accessible documents · Accessibility Essentials</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&amp;display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="course.css">
+<script src="course.js"></script>
+</helmet>
+<div data-lesson="3" style="min-height:100vh;display:flex;flex-direction:column">
+<dc-import name="Topbar" active="course" hint-size="100%,4rem"></dc-import>
+<div class="ae-lesson-layout" style="flex:1">
+<dc-import name="Sidebar" current="3" hint-size="0,0"></dc-import>
+<main id="main" data-read-root="" tabindex="-1" style="min-width:0;outline:none">
+<dc-import name="LessonIntro" lesson="3" hint-size="100%,26rem"></dc-import>
+<div style="max-width:var(--measure);margin:0 auto;padding:0 1.25rem 2rem">
+
+<section id="headings" aria-labelledby="h-headings" style="padding:2.5rem 0;margin-top:2rem;border-top:1px solid var(--line)">
+  <h2 id="h-headings" style="font-size:1.75rem;margin-bottom:.5rem">Why real headings matter</h2>
+  <p style="margin:0 0 1.25rem;font-size:1.0625rem">Screen reader users rarely read a document top to bottom. They pull up a list of headings and jump. These two handouts look identical — try opening each one’s headings list.</p>
+  <div class="ae-2col" style="gap:1rem">
+    <sc-for list="{{ docs }}" as="d" hint-placeholder-count="2">
+      <div style="display:flex;flex-direction:column;gap:.9rem;padding:1.1rem;border-radius:1.25rem;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow)">
+        <p style="margin:0;font-size:.8125rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)">{{ d.label }}</p>
+        <div aria-hidden="true" style="padding:1rem 1.1rem;border-radius:.75rem;border:1px solid var(--line);background:#fff;color:#1c1b1f;font-family:Calibri,Carlito,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;display:flex;flex-direction:column;gap:.45rem">
+          <span style="font-size:1.35rem;font-weight:700">Module handbook</span>
+          <span style="font-size:.8rem;color:#555">Welcome to BIO2004. This handbook explains how the module works…</span>
+          <span style="font-size:1.05rem;font-weight:700">Assessment</span>
+          <span style="font-size:.8rem;color:#555">There are two pieces of assessment…</span>
+          <span style="font-size:.9rem;font-weight:700">Essay deadline</span>
+          <span style="font-size:.8rem;color:#555">Submit via Turnitin by 12 noon…</span>
+          <span style="font-size:1.05rem;font-weight:700">Reading list</span>
+        </div>
+        <p style="margin:0;font-size:.875rem;color:var(--muted)">{{ d.how }}</p>
+        <button type="button" onClick="{{ d.toggle }}" aria-expanded="{{ d.expanded }}" style="display:flex;align-items:center;justify-content:center;gap:.5rem;min-height:2.75rem;padding:.5rem 1rem;border-radius:.65rem;border:0;background:var(--ink);color:var(--surface);font-weight:700;cursor:pointer"><i class="fa-solid fa-list-ul" aria-hidden="true"></i>{{ d.btn }}</button>
+        <div hidden="{{ d.closed }}" aria-live="polite" style="padding:.9rem 1rem;border-radius:.75rem;background:{{ d.resBg }};border:1px solid {{ d.resLine }}">
+          <p style="margin:0 0 .4rem;font-weight:700;color:{{ d.resInk }}"><i class="fa-solid {{ d.resIcon }}" aria-hidden="true"></i> {{ d.resTitle }}</p>
+          <ul style="list-style:none;margin:0;padding:0;font-family:ui-monospace,Menlo,monospace;font-size:.875rem;display:flex;flex-direction:column;gap:.2rem">
+            <sc-for list="{{ d.outline }}" as="o" hint-placeholder-count="0"><li style="padding-left:{{ o.pad }}">{{ o.t }}</li></sc-for>
+          </ul>
+          <p style="margin:.4rem 0 0;font-size:.875rem">{{ d.resText }}</p>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<section id="apps" aria-labelledby="h-apps" style="padding:2.5rem 0;border-top:1px solid var(--line)">
+  <h2 id="h-apps" style="font-size:1.75rem;margin-bottom:.5rem">Word, PowerPoint &amp; PDF</h2>
+  <p style="margin:0 0 1.25rem;font-size:1.0625rem">The essential steps for each format, with where to find them in Microsoft 365. Tick them off as you try them on one of your own files.</p>
+  <div style="background:var(--surface);border:1px solid var(--line);border-radius:1.25rem;overflow:hidden;box-shadow:var(--shadow)">
+    <div role="tablist" aria-label="Application" onKeyDown="{{ tabKey }}" style="display:flex;border-bottom:1px solid var(--line);background:var(--surface-2);overflow-x:auto">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+        <button type="button" role="tab" id="{{ t.tid }}" aria-controls="app-panel" aria-selected="{{ t.sel }}" tabindex="{{ t.ti }}" onClick="{{ t.pick }}" style="flex:1;min-height:3.25rem;padding:.75rem 1rem;border:0;border-bottom:3px solid {{ t.line }};background:transparent;font-weight:700;cursor:pointer;white-space:nowrap;color:{{ t.ink }}"><i class="fa-solid {{ t.icon }}" aria-hidden="true" style="color:{{ t.iconInk }}"></i> {{ t.label }}</button>
+      </sc-for>
+    </div>
+    <div role="tabpanel" id="app-panel" aria-labelledby="{{ activeTid }}" style="padding:1.25rem">
+      <div style="display:flex;justify-content:space-between;gap:1rem;align-items:center;margin-bottom:.9rem;flex-wrap:wrap">
+        <p style="margin:0;font-weight:700">{{ appIntro }}</p>
+        <span aria-live="polite" style="font-size:.875rem;font-weight:700;color:var(--muted)">{{ appCount }}</span>
+      </div>
+      <ol style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.5rem">
+        <sc-for list="{{ steps }}" as="s" hint-placeholder-count="6">
+          <li><label style="display:flex;gap:.8rem;align-items:flex-start;padding:.8rem .9rem;border-radius:.75rem;border:1px solid {{ s.line }};background:{{ s.bg }};cursor:pointer">
+            <input type="checkbox" checked="{{ s.on }}" onChange="{{ s.toggle }}" style="accent-color:var(--accent);width:1.15rem;height:1.15rem;margin:.2rem 0 0;flex:none">
+            <span style="display:flex;flex-direction:column;gap:.3rem;min-width:0"><span style="font-weight:700">{{ s.t }}</span><span style="font-size:.9375rem;color:var(--muted)">{{ s.d }}</span><span style="align-self:flex-start;font-size:.8125rem;font-family:ui-monospace,Menlo,monospace;padding:.15rem .5rem;border-radius:.4rem;background:var(--accent-soft);color:var(--accent-text)">{{ s.path }}</span></span>
+          </label></li>
+        </sc-for>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section id="spot" aria-labelledby="h-spot" style="padding:2.5rem 0;border-top:1px solid var(--line)">
+  <h2 id="h-spot" style="font-size:1.75rem;margin-bottom:.5rem">Spot the issues</h2>
+  <p style="margin:0 0 .4rem;font-size:1.0625rem">This lecture slide has five accessibility problems. Select anything on the slide you think is a problem.</p>
+  <p aria-live="polite" style="margin:0 0 1rem;font-weight:700;color:var(--accent-text)">{{ foundText }}</p>
+  <div style="aspect-ratio:16/9;min-height:18rem;border-radius:1rem;background:#fff;color:#1c1b1f;border:1px solid var(--line);box-shadow:var(--shadow);padding:clamp(.9rem,3vw,1.75rem);display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);grid-template-rows:auto 1fr auto;gap:.75rem 1.25rem;font-family:Calibri,Carlito,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif">
+    <sc-for list="{{ hot }}" as="h" hint-placeholder-count="5">
+      <button type="button" onClick="{{ h.pick }}" aria-pressed="{{ h.pressed }}" aria-label="{{ h.aria }}" style="grid-column:{{ h.col }};grid-row:{{ h.row }};position:relative;text-align:left;border:2px dashed {{ h.line }};background:{{ h.bg }};border-radius:.6rem;padding:.5rem .6rem;cursor:pointer;color:inherit;font-family:inherit;display:flex;flex-direction:column;justify-content:center;gap:.3rem;min-height:2.75rem" style-hover="border-color:var(--accent)">
+        <sc-if value="{{ h.isTitle }}" hint-placeholder-val="{{ false }}"><span style="font-size:1.6rem;font-weight:700">week 3: cell signalling</span></sc-if>
+        <sc-if value="{{ h.isText }}" hint-placeholder-val="{{ false }}"><span style="font-size:.95rem;color:#b5b5b5;line-height:1.45">Receptors bind ligands and trigger an intracellular cascade. Key pathways this week: GPCR, RTK, JAK-STAT.</span></sc-if>
+        <sc-if value="{{ h.isImg }}" hint-placeholder-val="{{ false }}"><span style="display:grid;place-items:center;min-height:5rem;background:#e9eef3;border-radius:.4rem;color:#5b6b7a;font-size:1.8rem"><i class="fa-solid fa-microscope" aria-hidden="true"></i></span></sc-if>
+        <sc-if value="{{ h.isLink }}" hint-placeholder-val="{{ false }}"><span style="color:#0b57d0;text-decoration:underline;font-size:.95rem">Click here for the paper</span></sc-if>
+        <sc-if value="{{ h.isLegend }}" hint-placeholder-val="{{ false }}"><span style="display:flex;gap:.9rem;align-items:center;font-size:.85rem"><span style="display:flex;gap:.3rem;align-items:center"><span style="width:.8rem;height:.8rem;border-radius:50%;background:#2e9e3f"></span>Normal</span><span style="display:flex;gap:.3rem;align-items:center"><span style="width:.8rem;height:.8rem;border-radius:50%;background:#d63a2f"></span>Mutated</span></span></sc-if>
+        <span aria-hidden="true" style="position:absolute;top:-.7rem;right:-.7rem;width:1.6rem;height:1.6rem;border-radius:50%;background:var(--accent);color:#fff;font-weight:800;font-size:.8rem;display:{{ h.badge }};place-items:center">{{ h.n }}</span>
+      </button>
+    </sc-for>
+  </div>
+  <ol style="list-style:none;margin:1rem 0 0;padding:0;display:flex;flex-direction:column;gap:.5rem">
+    <sc-for list="{{ foundList }}" as="f" hint-placeholder-count="0">
+      <li style="display:flex;gap:.8rem;align-items:flex-start;padding:.85rem 1rem;border-radius:.75rem;background:var(--surface);border:1px solid var(--line)">
+        <span aria-hidden="true" style="flex:none;width:1.6rem;height:1.6rem;border-radius:50%;background:var(--accent);color:#fff;font-weight:800;font-size:.8rem;display:grid;place-items:center">{{ f.n }}</span>
+        <span><strong>{{ f.issue }}</strong> <span style="color:var(--muted)">Fix: {{ f.fix }}</span></span>
+      </li>
+    </sc-for>
+  </ol>
+  <button type="button" onClick="{{ revealAll }}" style="margin-top:.75rem;background:none;border:0;color:var(--accent);font-weight:700;cursor:pointer;text-decoration:underline;padding:.5rem 0">Show me all five</button>
+</section>
+
+<section id="checkers" aria-labelledby="h-checkers" style="padding:2.5rem 0;border-top:1px solid var(--line)">
+  <h2 id="h-checkers" style="font-size:1.75rem;margin-bottom:.5rem">Using the checkers</h2>
+  <p style="margin:0 0 1rem;font-size:1.0625rem">Microsoft 365 and Adobe Acrobat Pro both have built-in accessibility checkers. Run them every time — then remember what they can’t judge.</p>
+  <ul class="ae-3col" style="list-style:none;margin:0 0 1.5rem;padding:0;gap:.75rem">
+    <li style="padding:1rem;border-radius:1rem;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;gap:.35rem"><i class="fa-solid fa-file-word" aria-hidden="true" style="color:var(--accent);font-size:1.3rem"></i><strong>Word &amp; PowerPoint</strong><span style="font-size:.9375rem;color:var(--muted)">Review › Check Accessibility. Leave it open while you work.</span></li>
+    <li style="padding:1rem;border-radius:1rem;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;gap:.35rem"><i class="fa-solid fa-file-pdf" aria-hidden="true" style="color:var(--accent);font-size:1.3rem"></i><strong>Acrobat Pro</strong><span style="font-size:.9375rem;color:var(--muted)">All tools › Prepare for accessibility › Check for accessibility.</span></li>
+    <li style="padding:1rem;border-radius:1rem;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;gap:.35rem"><i class="fa-solid fa-graduation-cap" aria-hidden="true" style="color:var(--accent);font-size:1.3rem"></i><strong>Moodle editor</strong><span style="font-size:.9375rem;color:var(--muted)">The accessibility checker button in the text editor toolbar.</span></li>
+  </ul>
+  <div style="background:var(--surface);border:1px solid var(--line);border-radius:1.25rem;padding:1.25rem;box-shadow:var(--shadow)">
+    <h3 style="font-family:var(--font-body);font-size:1.125rem;font-weight:700;margin-bottom:.9rem">Can the checker catch it?</h3>
+    <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.5rem">
+      <sc-for list="{{ catches }}" as="c" hint-placeholder-count="5">
+        <li style="display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;padding:.7rem .85rem;border-radius:.75rem;background:{{ c.bg }};border:1px solid {{ c.line }}">
+          <span style="flex:1 1 14rem">{{ c.t }}</span>
+          <span role="group" aria-label="{{ c.aria }}" style="display:flex;gap:.35rem">
+            <button type="button" onClick="{{ c.yes }}" aria-pressed="{{ c.pYes }}" style="min-width:4rem;min-height:2.5rem;border-radius:.55rem;border:1px solid var(--line);background:var(--surface);font-weight:700;cursor:pointer;color:var(--ink)">Yes</button>
+            <button type="button" onClick="{{ c.no }}" aria-pressed="{{ c.pNo }}" style="min-width:4rem;min-height:2.5rem;border-radius:.55rem;border:1px solid var(--line);background:var(--surface);font-weight:700;cursor:pointer;color:var(--ink)">No</button>
+          </span>
+          <span hidden="{{ c.noFb }}" style="flex-basis:100%;font-size:.9rem;color:{{ c.fbInk }}">{{ c.fb }}</span>
+        </li>
+      </sc-for>
+    </ul>
+  </div>
+</section>
+
+<dc-import name="DosDonts" lesson="3" hint-size="100%,20rem"></dc-import>
+<dc-import name="KnowledgeCheck" lesson="3" hint-size="100%,32rem"></dc-import>
+<dc-import name="LessonEnd" lesson="3" hint-size="100%,24rem"></dc-import>
+</div>
+</main>
+</div>
+<dc-import name="Footer" hint-size="100%,12rem"></dc-import>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { docOpen:{}, tab:0, ticks:{}, found:{}, cc:{} };
+  renderVals(){
+    const s=this.state, on=b=>b?'true':'false';
+    const docs=[0,1].map(i=>{ const o=!!s.docOpen[i]; const real=i===1;
+      return {label:real?'Handout B — Heading styles':'Handout A — bold, bigger text',how:real?'Titles use Heading 1, Heading 2 and Heading 3 from the Styles gallery.':'Titles were made bold and bigger with the font menu.',
+        expanded:on(o),closed:!o,btn:o?'Close headings list':'Open headings list',toggle:()=>this.setState(x=>({docOpen:Object.assign({},x.docOpen,{[i]:!o})})),
+        resBg:real?'var(--ok-soft)':'var(--bad-soft)',resLine:real?'var(--ok)':'var(--bad)',resInk:real?'var(--ok)':'var(--bad)',resIcon:real?'fa-circle-check':'fa-circle-xmark',
+        resTitle:real?'Headings list — 4 headings':'Headings list — no headings found',
+        outline:real?[{t:'H1  Module handbook',pad:'0'},{t:'H2  Assessment',pad:'1.25rem'},{t:'H3  Essay deadline',pad:'2.5rem'},{t:'H2  Reading list',pad:'1.25rem'}]:[],
+        resText:real?'A screen reader user can jump straight to “Essay deadline”. The navigation pane, tagged PDFs and Moodle all understand this structure too.':'To a screen reader this is one long run of text. The user has to listen from the top to find the deadline.'}; });
+    const APPS=[
+      {label:'Word',icon:'fa-file-word',intro:'Microsoft Word',steps:[
+        ['Use Heading styles','Apply Heading 1 for the title, Heading 2 for sections, Heading 3 for sub-sections.','Home › Styles › Heading 1'],
+        ['Use built-in lists','Real bullets and numbering are announced as lists, with the number of items.','Home › Bullets / Numbering'],
+        ['Add alt text, or mark as decorative','Describe the purpose of the image in its context.','Right-click image › View Alt Text'],
+        ['Write descriptive links','Replace pasted URLs and “click here” with words that say where the link goes.','Right-click link › Edit Hyperlink › Text to display'],
+        ['Mark table header rows','Screen readers use header rows to announce each cell’s column.','Table Design › Header Row · Layout › Repeat Header Rows'],
+        ['Set the title and language','The title is read out first; the language sets pronunciation.','File › Info › Properties · Review › Language'],
+        ['Save as a tagged PDF','Keep the structure when you export.','File › Save As › PDF › Options › Document structure tags']]},
+      {label:'PowerPoint',icon:'fa-file-powerpoint',intro:'Microsoft PowerPoint',steps:[
+        ['Build on slide layouts','Layouts give you real title and content placeholders.','Home › Layout'],
+        ['Give every slide a unique title','Titles are how people navigate a deck. “Continued” slides need their own titles too.','Check Accessibility › Missing slide titles'],
+        ['Check the reading order','Objects are read in the order they were added, not how they look.','Review › Check Accessibility › Reading Order pane'],
+        ['Add alt text, or mark as decorative','Include charts, SmartArt and icons.','Right-click object › View Alt Text'],
+        ['Keep text large and high-contrast','Aim for 24pt or larger for body text and use a high-contrast theme.','Design › Variants › Colours'],
+        ['Caption embedded video','Upload a WebVTT caption file for each video.','Playback › Insert Captions'],
+        ['Export a tagged PDF','Keep the structure when you export.','File › Export › Create PDF › Options › Document structure tags']]},
+      {label:'PDF',icon:'fa-file-pdf',intro:'PDF and Adobe Acrobat',steps:[
+        ['Start from an accessible source','Fix headings, alt text and tables in Word or PowerPoint first — it’s far quicker.','Your original .docx or .pptx'],
+        ['Export — don’t “print” to PDF','Printing to PDF throws away all the tags.','File › Save As / Export › PDF'],
+        ['Scanned page? Run OCR','A scan is just a picture. OCR turns it into real text.','Acrobat › All tools › Scan & OCR › Recognise text'],
+        ['Run the accessibility check','Fix reading order, tags and missing alt text it reports.','All tools › Prepare for accessibility › Check for accessibility'],
+        ['Set the title and language','Shown in the browser tab and read out first.','File › Properties › Description / Advanced'],
+        ['Ask: does it need to be a PDF?','A Moodle Page reflows on phones and works best with assistive technology.','Moodle › Add an activity or resource › Page']]}
+    ];
+    const A=APPS[s.tab]; const tk=s.ticks[s.tab]||{};
+    const tabs=APPS.map((a,i)=>{ const sel=i===s.tab; return {label:a.label,icon:a.icon,tid:'app-tab-'+i,sel:on(sel),ti:sel?0:-1,pick:()=>this.setState({tab:i}),line:sel?'var(--accent)':'transparent',ink:sel?'var(--accent-text)':'var(--muted)',iconInk:sel?'var(--accent)':'var(--muted)'}; });
+    const steps=A.steps.map((st,j)=>{ const o=!!tk[j]; return {t:st[0],d:st[1],path:st[2],on:o,line:o?'var(--ok)':'var(--line)',bg:o?'var(--ok-soft)':'var(--surface)',toggle:()=>this.setState(x=>{ const t=Object.assign({},x.ticks); t[x.tab]=Object.assign({},t[x.tab]||{},{[j]:!o}); return {ticks:t}; })}; });
+    const H=[
+      {k:'title',col:'1 / -1',row:'1',content:'week 3: cell signalling',css:'font-size:1.6rem;font-weight:700',issue:'The title is a text box, not the title placeholder.',fix:'Use a layout with a title placeholder, so the slide has a real title.'},
+      {k:'text',col:'1',row:'2',content:'Receptors bind ligands and trigger an intracellular cascade. Key pathways covered this week: GPCR, RTK, JAK-STAT.',css:'font-size:.95rem;color:#b5b5b5;line-height:1.45',issue:'Light grey text on white fails contrast (about 2:1).',fix:'Use dark text: at least 4.5:1 against the background.'},
+      {k:'img',col:'2',row:'2',content:'',css:'display:grid;place-items:center;min-height:5rem;background:#e9eef3;border-radius:.4rem;color:#5b6b7a;font-size:1.8rem',issue:'The micrograph has no alt text.',fix:'Add alt text describing what students need to notice.'},
+      {k:'link',col:'1',row:'3',content:'Click here for the paper',css:'color:#0b57d0;text-decoration:underline;font-size:.95rem',issue:'“Click here” doesn’t say where the link goes.',fix:'Use the paper’s title, e.g. “Smith et al. (2024), Nature Reviews”.'},
+      {k:'legend',col:'2',row:'3',content:'',css:'display:flex;gap:.6rem;align-items:center;font-size:.85rem',issue:'The key relies on red and green alone.',fix:'Add text labels and distinct shapes or patterns.'}
+    ];
+    const order=Object.keys(s.found).sort((a,b)=>s.found[a]-s.found[b]);
+    const hot=H.map((h,i)=>{ const f=s.found[i]!=null; const n=order.indexOf(String(i))+1;
+      return Object.assign({},h,{n,pressed:on(f),aria:'Slide element: '+(h.content||(h.k==='img'?'micrograph image':'chart key'))+(f?'. Issue found.':''),pick:()=>{ if(!f) this.setState(x=>({found:Object.assign({},x.found,{[i]:Object.keys(x.found).length})})); },line:f?'var(--accent)':'#e3e1e6',bg:f?'rgba(209,3,115,.06)':'transparent',badge:f?'grid':'none',
+        isTitle:h.k==='title',isText:h.k==='text',isImg:h.k==='img',isLink:h.k==='link',isLegend:h.k==='legend'}); });
+    const foundList=order.map((k,j)=>({n:j+1,issue:H[k].issue,fix:H[k].fix}));
+    const CC=[['An image with no alt text at all',true,'Yes — checkers reliably flag missing alt text.'],['Alt text that just says “image1.png”',false,'Usually not. The checker sees alt text exists; only a human can judge if it’s useful.'],['A slide with no title',true,'Yes — PowerPoint flags missing slide titles.'],['Headings that skip from Heading 1 to Heading 4',true,'Often yes — skipped levels are flagged in newer versions.'],['Instructions that are confusing or full of jargon',false,'No. Clear language needs human judgement.'],['A chart that only uses colour to show meaning',false,'No. Checkers can’t tell if colour carries meaning.']];
+    const catches=CC.map((c,i)=>{ const pk=s.cc[i]; const has=pk!=null; const ok=pk===c[1];
+      return {t:c[0],aria:'Can the checker catch: '+c[0],yes:()=>this.setState(x=>({cc:Object.assign({},x.cc,{[i]:true})})),no:()=>this.setState(x=>({cc:Object.assign({},x.cc,{[i]:false})})),pYes:on(pk===true),pNo:on(pk===false),
+        bg:has?(ok?'var(--ok-soft)':'var(--warn-soft)'):'var(--surface-2)',line:has?(ok?'var(--ok)':'var(--warn)'):'var(--line)',noFb:!has,fbInk:ok?'var(--ok)':'var(--warn)',fb:(ok?'Right. ':'Not quite. ')+c[2]}; });
+    const nFound=order.length;
+    return {
+      docs, tabs, activeTid:'app-tab-'+s.tab, appIntro:A.intro, steps, appCount:steps.filter(x=>x.on).length+' of '+steps.length+' tried',
+      tabKey:e=>{ if(e.key!=='ArrowRight'&&e.key!=='ArrowLeft') return; e.preventDefault(); const nx=(s.tab+(e.key==='ArrowRight'?1:2))%3; this.setState({tab:nx},()=>{ const b=document.getElementById('app-tab-'+nx); b&&b.focus(); }); },
+      hot, foundList, foundText:nFound===5?'All five found — nice work.':('Found '+nFound+' of 5'),
+      revealAll:()=>this.setState({found:{0:0,1:1,2:2,3:3,4:4}}), catches
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div aria-hidden="true" onClick="{{ close }}" style="position:fixed;inset:0;z-index:190;background:rgba(20,10,20,.38);opacity:{{ scrimOp }};visibility:{{ scrimVis }};transition:opacity .3s ease,visibility 0s linear {{ scrimDelay }}"></div>
+<aside id="ae-panel" data-chrome="panel" role="dialog" aria-modal="{{ ariaModal }}" aria-labelledby="ae-panel-title" hidden="{{ closed }}" onKeyDown="{{ onKey }}" onTransitionEnd="{{ onTEnd }}" style="transform:{{ panelTf }};opacity:{{ panelOp }};visibility:{{ panelVis }};transition:{{ pTrans }};will-change:transform;position:fixed;top:{{ pTop }};bottom:0;left:{{ leftPos }};right:{{ rightPos }};z-index:200;width:{{ pW }};max-height:{{ pMaxH }};border-radius:{{ pRad }};overflow:hidden;background:var(--surface);color:var(--ink);border:{{ pBorder }};border-left:1px solid var(--line);border-right:1px solid var(--line);box-shadow:0 0 60px rgba(20,10,20,.22);display:flex;flex-direction:column">
+  <div class="ae-mob" aria-hidden="true" onTouchStart="{{ dStart }}" onTouchMove="{{ dMove }}" onTouchEnd="{{ dEnd }}" style="flex:none;padding:.6rem 0 .1rem;touch-action:none"><div style="width:2.5rem;height:.3rem;border-radius:999px;background:var(--line);margin:0 auto"></div></div>
+  <div onTouchStart="{{ dStart }}" onTouchMove="{{ dMove }}" onTouchEnd="{{ dEnd }}" style="flex:none;padding:1.1rem 1.25rem 1rem;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:.75rem">
+    <div style="display:flex;align-items:center;gap:.75rem">
+      <span aria-hidden="true" style="flex:none;width:2.25rem;height:2.25rem;border-radius:.65rem;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center"><i class="fa-solid fa-sliders"></i></span>
+      <h2 id="ae-panel-title" style="font-size:1.25rem;flex:1">Display &amp; accessibility</h2>
+      <button type="button" class="ae-desk" onClick="{{ toggleDock }}" aria-label="{{ dockLabel }}" title="{{ dockLabel }}" style="width:2.75rem;height:2.75rem;border-radius:.6rem;border:1px solid var(--line);background:var(--surface);cursor:pointer;color:var(--ink)"><i class="fa-solid fa-right-left" aria-hidden="true"></i></button>
+      <button type="button" ref="{{ closeRef }}" onClick="{{ close }}" aria-label="Close accessibility settings" style="width:2.75rem;height:2.75rem;border-radius:.6rem;border:1px solid var(--line);background:var(--surface);cursor:pointer;color:var(--ink)"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+    </div>
+    <p style="margin:0;font-size:.875rem;color:var(--muted)">Tune the course to suit you. We start from your system and browser settings. This panel doesn’t replace your own assistive technology — the course is built to work with it.</p>
+  </div>
+  <div style="flex:1;overflow-y:auto;overscroll-behavior:contain;padding:1rem 1.25rem calc(2rem + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:1rem">
+    <section aria-labelledby="ps-title" style="display:flex;flex-direction:column;gap:.6rem">
+      <h3 id="ps-title" style="font-family:var(--font-body);font-size:.8125rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)">Quick settings</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:.4rem">
+        <sc-for list="{{ presets }}" as="p" hint-placeholder-count="5">
+          <button type="button" aria-pressed="{{ p.pressed }}" onClick="{{ p.apply }}" style="display:inline-flex;align-items:center;gap:.45rem;min-height:2.5rem;padding:.45rem .8rem;border-radius:.6rem;border:1px solid {{ p.border }};background:{{ p.bg }};color:var(--ink);font-weight:600;font-size:.875rem;cursor:pointer;text-align:left"><i class="fa-solid {{ p.icon }}" aria-hidden="true" style="color:var(--accent)"></i>{{ p.label }}</button>
+        </sc-for>
+      </div>
+    </section>
+
+    <sc-for list="{{ sections }}" as="s" hint-placeholder-count="6">
+      <details open="{{ s.open }}" style="border:1px solid var(--line);border-radius:.875rem;background:var(--surface-2)">
+        <summary style="cursor:pointer;list-style:none;display:flex;align-items:center;gap:.65rem;padding:.85rem 1rem;font-weight:700;font-size:1rem;min-height:2.75rem"><i class="fa-solid {{ s.icon }}" aria-hidden="true" style="color:var(--accent);width:1.1rem;text-align:center"></i><span style="flex:1">{{ s.title }}</span><i class="fa-solid fa-chevron-down" aria-hidden="true" style="font-size:.8rem;color:var(--muted)"></i></summary>
+        <div style="padding:.25rem 1rem 1rem;display:flex;flex-direction:column;gap:1rem">
+          <sc-if value="{{ s.hasStepper }}" hint-placeholder-val="{{ false }}">
+            <div role="group" aria-labelledby="size-lbl" style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
+              <span id="size-lbl" style="font-weight:600;font-size:.9375rem;flex:1">Text size</span>
+              <button type="button" onClick="{{ sizeDown }}" aria-label="Decrease text size" disabled="{{ sizeMin }}" style="width:2.75rem;height:2.75rem;border-radius:.6rem;border:1px solid var(--line);background:var(--surface);cursor:pointer;color:var(--ink)"><i class="fa-solid fa-minus" aria-hidden="true"></i></button>
+              <output aria-live="polite" style="min-width:3.5rem;text-align:center;font-weight:700;font-variant-numeric:tabular-nums">{{ sizePct }}</output>
+              <button type="button" onClick="{{ sizeUp }}" aria-label="Increase text size" disabled="{{ sizeMax }}" style="width:2.75rem;height:2.75rem;border-radius:.6rem;border:1px solid var(--line);background:var(--surface);cursor:pointer;color:var(--ink)"><i class="fa-solid fa-plus" aria-hidden="true"></i></button>
+            </div>
+          </sc-if>
+          <sc-if value="{{ s.hasListen }}" hint-placeholder-val="{{ false }}">
+            <button type="button" onClick="{{ listen }}" style="display:flex;align-items:center;justify-content:center;gap:.5rem;min-height:2.75rem;border-radius:.6rem;border:0;background:var(--accent);color:var(--accent-ink);font-weight:700;cursor:pointer"><i class="fa-solid fa-headphones" aria-hidden="true"></i>Read this page aloud</button>
+          </sc-if>
+          <sc-for list="{{ s.groups }}" as="g" hint-placeholder-count="2">
+            <fieldset style="border:0;margin:0;padding:0;min-width:0">
+              <legend style="font-weight:600;font-size:.9375rem;padding:0;margin-bottom:.45rem">{{ g.label }}</legend>
+              <div style="display:flex;flex-wrap:wrap;gap:.4rem">
+                <sc-for list="{{ g.opts }}" as="o" hint-placeholder-count="3">
+                  <label style="display:inline-flex;align-items:center;gap:.45rem;min-height:2.5rem;padding:.4rem .75rem;border-radius:999px;border:1px solid {{ o.border }};background:{{ o.bg }};font-size:.875rem;font-weight:600;cursor:pointer"><input type="radio" name="{{ g.id }}" value="{{ o.value }}" checked="{{ o.checked }}" onChange="{{ o.pick }}" style="accent-color:var(--accent);margin:0;width:1rem;height:1rem">{{ o.label }}</label>
+                </sc-for>
+              </div>
+            </fieldset>
+          </sc-for>
+          <sc-if value="{{ s.hasSlider }}" hint-placeholder-val="{{ false }}">
+            <label style="display:flex;flex-direction:column;gap:.35rem;font-weight:600;font-size:.9375rem">
+              <span>Caption background opacity: {{ capBgPct }}</span>
+              <input type="range" min="0" max="100" step="10" value="{{ capBg }}" onChange="{{ setCapBg }}" style="accent-color:var(--accent);width:100%">
+            </label>
+          </sc-if>
+          <sc-for list="{{ s.toggles }}" as="t" hint-placeholder-count="2">
+            <button type="button" role="switch" aria-checked="{{ t.aria }}" onClick="{{ t.toggle }}" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;width:100%;padding:.35rem 0;background:none;border:0;cursor:pointer;text-align:left;color:var(--ink)">
+              <span style="display:flex;flex-direction:column;gap:.1rem"><span style="font-weight:600;font-size:.9375rem">{{ t.label }}</span><span style="font-size:.8125rem;color:var(--muted);line-height:1.4">{{ t.hint }}</span></span>
+              <span aria-hidden="true" style="flex:none;position:relative;width:2.9rem;height:1.65rem;border-radius:999px;background:{{ t.track }};transition:background .2s"><span style="position:absolute;top:.225rem;left:{{ t.knob }};width:1.2rem;height:1.2rem;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.35);transition:left .2s"></span></span>
+            </button>
+          </sc-for>
+          <sc-if value="{{ s.hasDownloads }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:.45rem">
+              <span style="font-weight:600;font-size:.9375rem">Download this lesson</span>
+              <sc-if value="{{ onLesson }}" hint-placeholder-val="{{ true }}">
+                <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.4rem">
+                  <sc-for list="{{ downloads }}" as="d" hint-placeholder-count="4">
+                    <button type="button" onClick="{{ d.run }}" style="display:flex;align-items:center;gap:.5rem;min-height:2.75rem;padding:.45rem .7rem;border-radius:.6rem;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-weight:600;font-size:.875rem;cursor:pointer;text-align:left"><i class="fa-solid {{ d.icon }}" aria-hidden="true" style="color:var(--accent)"></i>{{ d.label }}</button>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ notLesson }}" hint-placeholder-val="{{ false }}">
+                <p style="margin:0;font-size:.875rem;color:var(--muted)">Open a lesson to download it as plain text, EPUB, tagged PDF or large print.</p>
+              </sc-if>
+            </div>
+          </sc-if>
+          <sc-if value="{{ s.note }}" hint-placeholder-val="{{ false }}">
+            <p style="margin:0;font-size:.8125rem;color:var(--muted);display:flex;gap:.5rem"><i class="fa-solid fa-circle-info" aria-hidden="true" style="margin-top:.2rem"></i><span>{{ s.note }}</span></p>
+          </sc-if>
+        </div>
+      </details>
+    </sc-for>
+  </div>
+  <div style="flex:none;padding:.9rem 1.25rem;border-top:1px solid var(--line);display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
+    <p style="margin:0;flex:1;min-width:10rem;font-size:.8125rem;color:var(--muted)">Display preferences are saved to your browser.</p>
+    <button type="button" onClick="{{ reset }}" style="display:flex;align-items:center;gap:.5rem;min-height:2.75rem;padding:.5rem .9rem;border-radius:.6rem;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-weight:700;cursor:pointer"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i>Reset to default</button>
+  </div>
+  <p class="sr-only" aria-live="polite">{{ announce }}</p>
+</aside>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { open: false, shown: false, anim: false, announce: '', mob: false, drag: 0, dragging: false };
+  closeRef = React.createRef();
+  componentDidMount(){
+    this._out=e=>{ if(!this.state.open) return; const t=e.target, pn=document.getElementById('ae-panel'); if(!t||!t.closest||(pn&&pn.contains(t))||t.closest('[aria-controls="ae-panel"]')) return; this._ret=null; this.setOpen(false); };
+    document.addEventListener('pointerdown',this._out,true);
+    this._mq=window.matchMedia('(max-width:64em)'); this._mqf=()=>this.setState({mob:this._mq.matches}); this._mqf(); this._mq.addEventListener('change',this._mqf);
+    this._u=()=>this.forceUpdate();
+    this._p=e=>{ const d=e.detail||{}; const open=d.toggle?!this.state.open:!!d.open; this.setOpen(open); };
+    ['ae:ready','ae:prefs'].forEach(n=>window.addEventListener(n,this._u));
+    window.addEventListener('ae:panel',this._p);
+  }
+  componentWillUnmount(){ ['ae:ready','ae:prefs'].forEach(n=>window.removeEventListener(n,this._u)); window.removeEventListener('ae:panel',this._p); document.removeEventListener('pointerdown',this._out,true); if(this._mq) this._mq.removeEventListener('change',this._mqf); }
+  setOpen(open){
+    if(open){ this._ret=document.activeElement; }
+    clearTimeout(this._hideT); cancelAnimationFrame(this._raf);
+    const rm=window.AE&&AE.prefs.reducedMotion&&AE.prefs.reducedMotion();
+    const done=()=>{
+      window.dispatchEvent(new CustomEvent('ae:panel-state',{detail:{open}}));
+      if(open&&this.closeRef.current) this.closeRef.current.focus({preventScroll:true});
+      if(!open&&this._ret&&this._ret.focus) this._ret.focus();
+    };
+    if(open){
+      this.setState({open:true,shown:true},()=>{ done(); this._raf=requestAnimationFrame(()=>{ this._raf=requestAnimationFrame(()=>this.setState({anim:true})); }); });
+    } else {
+      this.setState({open:false,anim:false},done);
+      this._hideT=setTimeout(()=>{ if(!this.state.open) this.setState({shown:false}); }, rm?0:480);
+    }
+  }
+  renderVals(){
+    const AE=window.AE; if(!AE) return { closed:true, sections:[], presets:[] };
+    const P=AE.prefs, p=P.get();
+    const set=(k,v)=>{ P.set({[k]:v}); this.setState({announce:'Setting updated'}); };
+    const grp=(id,label,opts)=>({id:'ae-'+id,label,opts:opts.map(([value,l])=>{ const checked=p[id]===value; return {value:String(value),label:l,checked,pick:()=>set(id,value),border:checked?'var(--accent)':'var(--line)',bg:checked?'var(--accent-soft)':'var(--surface)'}; })});
+    const tog=(id,label,hint)=>{ const on=!!p[id]; return {label,hint,aria:on?'true':'false',toggle:()=>set(id,!on),track:on?'var(--accent)':'var(--line)',knob:on?'1.475rem':'.225rem'}; };
+    const sections=[
+      {title:'Text & typography',icon:'fa-font',open:true,hasStepper:true,groups:[
+        grp('lh','Line height',[['normal','Standard'],['loose','Relaxed'],['xloose','Extra']]),
+        grp('ls','Letter spacing',[['normal','Standard'],['wide','Wider'],['xwide','Widest']]),
+        grp('ws','Word spacing',[['normal','Standard'],['wide','Wider'],['xwide','Widest']]),
+        grp('font','Font',[['default','System font'],['public','Public Sans'],['atkinson','Atkinson Hyperlegible'],['serif','Serif']]),
+        grp('measure','Content width',[['narrow','Narrow'],['standard','Standard'],['wide','Wide']])],
+        toggles:[tog('alignLeft','Left-align all text','Turns off justified and centred body text')]},
+      {title:'Colour & contrast',icon:'fa-circle-half-stroke',groups:[
+        grp('theme','Theme',[['auto','Match my system'],['light','Light'],['dark','Dark'],['hc','High contrast'],['sepia','Sepia, less blue']])],
+        toggles:[tog('focusStrong','Stronger focus outlines','A thicker, two-tone outline on the focused element'),tog('underline','Underline all links','Links don’t rely on colour alone'),tog('bigCursor','Large cursor','A bigger, high-contrast pointer')]},
+      {title:'Motion & distraction',icon:'fa-wind',groups:[
+        grp('motion','Animations and transitions',[['auto','Match my system'],['reduce','Stop them'],['allow','Allow']]),
+        grp('ruler','Reading guide',[['off','Off'],['ruler','Reading ruler'],['mask','Line focus mask']])],
+        toggles:[tog('focusMode','Focus mode','Hides the sidebar, badges, progress and notifications')],
+        note:'Nothing in this course autoplays. Videos and audio only start when you press play.'},
+      {title:'Reading support',icon:'fa-book-open-reader',hasListen:true,hasDownloads:true,groups:[
+        grp('ttsRate','Reading speed',[[0.75,'0.75×'],[1,'1×'],[1.25,'1.25×'],[1.5,'1.5×'],[2,'2×']])],
+        toggles:[tog('ttsHighlight','Highlight words as they’re read','Follows the voice word by word'),tog('reader','Plain reader view','Strips the page to a single column of content'),tog('lookup','Glossary look-up','Select a term to see its definition')]},
+      {title:'Captions & media',icon:'fa-closed-captioning',hasSlider:true,groups:[
+        grp('capSize','Caption size',[['s','Small'],['m','Medium'],['l','Large'],['xl','Extra large']]),
+        grp('capFont','Caption font',[['default','System font'],['public','Public Sans'],['atkinson','Atkinson'],['serif','Serif'],['mono','Monospace']]),
+        grp('capPos','Caption position',[['bottom','Bottom'],['top','Top']]),
+        grp('speed','Playback speed',[[0.75,'0.75×'],[1,'1×'],[1.25,'1.25×'],[1.5,'1.5×'],[2,'2×']])],
+        toggles:[tog('ad','Audio description on by default','Plays extra narration of key visuals'),tog('transcriptScroll','Transcript follows the video','Scrolls and highlights the current line')],
+        note:'Caption settings are separate from page text settings. Changing speed keeps captions in sync.'},
+      {title:'This panel',icon:'fa-window-maximize',groups:[grp('dock','Dock panel on the',[['left','Left'],['right','Right']])]}
+    ].map(s=>Object.assign({groups:[],toggles:[],hasStepper:false,hasListen:false,hasSlider:false,hasDownloads:false,note:'',open:false},s));
+    const presets=P.presets.map(x=>{ const on=P.isPreset(x.id); return {label:x.label,icon:x.icon,pressed:on?'true':'false',border:on?'var(--accent)':'var(--line)',bg:on?'var(--accent-soft)':'var(--surface)',apply:()=>{ P.applyPreset(x.id); this.setState({announce:x.label+' applied'}); }}; });
+    const onLesson=!!AE.currentLesson();
+    const dl=(k)=>()=>AE.download(k);
+    const right=p.dock!=='left'; const mob=this.state.mob;
+    return {
+      closed:!this.state.shown,
+      panelTf:mob?(this.state.anim?'translateY('+this.state.drag+'px)':'translateY(104%)'):(this.state.anim?'translateX(0)':(right?'translateX(104%)':'translateX(-104%)')),
+      panelOp:(mob||this.state.anim)?'1':'0', panelVis:this.state.shown?'visible':'hidden',
+      pTrans:this.state.dragging?'none':(mob?'transform .44s cubic-bezier(.32,.72,0,1),visibility 0s linear '+(this.state.anim?'0s':'.44s'):'transform .34s cubic-bezier(.22,.9,.24,1),opacity .24s ease,visibility 0s linear '+(this.state.anim?'0s':'.34s')),
+      pTop:mob?'auto':'0', pW:mob?'100%':'min(27rem,100vw)', pMaxH:mob?'88vh':'none', pRad:mob?'1.25rem 1.25rem 0 0':'0', pBorder:mob?'1px solid var(--line)':'0',
+      ariaModal:mob?'true':'false',
+      scrimOp:(mob&&this.state.anim)?Math.max(0,1-this.state.drag/400):0, scrimVis:(mob&&this.state.shown)?'visible':'hidden', scrimDelay:this.state.anim?'0s':'.3s',
+      dStart:e=>{ if(!mob) return; this._y0=e.touches[0].clientY; this.setState({dragging:true}); },
+      dMove:e=>{ if(!mob||this._y0==null) return; this.setState({drag:Math.max(0,e.touches[0].clientY-this._y0)}); },
+      dEnd:()=>{ if(!mob) return; const far=this.state.drag>110; this._y0=null; this.setState({dragging:false,drag:0}); if(far) this.setOpen(false); }, onTEnd:e=>{ if(e.target===e.currentTarget&&e.propertyName==='transform'&&!this.state.open) this.setState({shown:false}); }, leftPos:(mob||!right)?'0':'auto', rightPos:(mob||right)?'0':'auto',
+      dockLabel:right?'Move panel to the left':'Move panel to the right',
+      toggleDock:()=>set('dock',right?'left':'right'),
+      close:()=>this.setOpen(false),
+      onKey:e=>{ if(e.key==='Escape'){ e.stopPropagation(); this.setOpen(false); } },
+      closeRef:this.closeRef, presets, sections, announce:this.state.announce,
+      sizePct:Math.round(p.scale*100)+'%', sizeMin:p.scale<=1, sizeMax:p.scale>=2,
+      sizeDown:()=>set('scale',Math.max(1,Math.round((p.scale-0.1)*10)/10)),
+      sizeUp:()=>set('scale',Math.min(2,Math.round((p.scale+0.1)*10)/10)),
+      capBg:p.capBg, capBgPct:p.capBg+'%', setCapBg:e=>set('capBg',Number(e.target.value)),
+      listen:()=>{ this.setOpen(false); AE.tts.play(); },
+      onLesson, notLesson:!onLesson,
+      downloads:[{label:'Plain text',icon:'fa-file-lines',run:dl('text')},{label:'EPUB',icon:'fa-book',run:dl('epub')},{label:'Tagged PDF',icon:'fa-file-pdf',run:dl('pdf')},{label:'Large print',icon:'fa-magnifying-glass-plus',run:dl('large')}],
+      reset:()=>{ P.reset(); this.setState({announce:'All settings reset to default'}); }
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<sc-if value="{{ open }}" hint-placeholder-val="{{ false }}">
+<div data-chrome="search" style="position:fixed;inset:0;z-index:2000;display:flex;justify-content:center;align-items:flex-start;padding:min(12vh,6rem) 1rem 1rem">
+  <div onClick="{{ close }}" aria-hidden="true" style="position:absolute;inset:0;background:rgba(0,0,0,.55)"></div>
+  <div role="dialog" aria-modal="true" aria-labelledby="sm-title" ref="{{ dlgRef }}" onKeyDown="{{ trap }}" style="position:relative;width:min(100%,42rem);max-height:calc(100vh - min(12vh,6rem) - 1rem);display:flex;flex-direction:column;border-radius:1.25rem;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden;color:var(--ink)">
+    <h2 id="sm-title" class="sr-only">Search the course</h2>
+    <div role="search" style="flex:none;position:relative;display:flex;align-items:center;gap:.5rem;padding:.6rem .6rem .6rem 1.1rem;border-bottom:1px solid var(--line)">
+      <i class="fa-solid fa-magnifying-glass" aria-hidden="true" style="color:var(--accent)"></i>
+      <label for="sm-input" class="sr-only">Search lessons, topics, glossary terms and tips</label>
+      <input id="sm-input" ref="{{ inputRef }}" type="search" autocomplete="off" spellcheck="false" placeholder="Search lessons, topics, glossary…" value="{{ q }}" onChange="{{ onQ }}" onKeyDown="{{ onKey }}" aria-describedby="sm-status" aria-controls="sm-results" style="flex:1;min-width:0;min-height:3rem;padding:.5rem .25rem;border:0;background:transparent;color:var(--ink);font:inherit;font-size:1.125rem;outline:none">
+      <button type="button" onClick="{{ close }}" aria-label="Close search" style="display:inline-flex;align-items:center;gap:.4rem;min-height:2.75rem;padding:.3rem .7rem;border-radius:.6rem;border:1px solid var(--line);background:transparent;color:var(--muted);font:inherit;font-size:.8125rem;font-weight:700;cursor:pointer" style-hover="color:var(--ink);background:var(--surface-2)">Esc</button>
+    </div>
+    <div style="flex:1;min-height:0;overflow-y:auto;padding:1rem 1.1rem 1.1rem;display:flex;flex-direction:column;gap:.85rem">
+      <sc-if value="{{ showChips }}" hint-placeholder-val="{{ true }}">
+        <div style="flex:none;display:flex;flex-direction:column;gap:.6rem">
+          <p style="margin:0;font-size:.75rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">Popular searches</p>
+          <div style="display:flex;flex-wrap:wrap;gap:.5rem">
+            <sc-for list="{{ chips }}" as="c" hint-placeholder-count="6">
+              <button type="button" onClick="{{ c.go }}" style="min-height:2.75rem;padding:.4rem .9rem;border-radius:999px;border:1px solid #dddddd;background:transparent;color:var(--ink);font:inherit;font-size:.9rem;font-weight:600;cursor:pointer" style-hover="border-color:var(--accent);color:var(--accent-text)">{{ c.t }}</button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+      <p id="sm-status" role="status" aria-live="polite" style="flex:none;margin:0;font-size:.875rem;font-weight:700;color:var(--muted)">{{ status }}</p>
+      <sc-if value="{{ hasResults }}" hint-placeholder-val="{{ false }}">
+        <ul id="sm-results" aria-label="Search results" style="flex:none;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:1rem;overflow:hidden">
+          <sc-for list="{{ results }}" as="r" hint-placeholder-count="3">
+            <li style="display:flex">
+              <a href="{{ r.href }}" onClick="{{ pick }}" onKeyDown="{{ onResKey }}" style="flex:1;display:grid;grid-template-columns:2.25rem minmax(0,1fr);gap:.9rem;align-items:start;padding:.9rem 1.1rem;background:var(--surface);color:var(--ink);text-decoration:none;outline-offset:-3px" style-hover="background:var(--surface-2)" style-focus="background:var(--surface-2)">
+                <span aria-hidden="true" style="width:2.25rem;height:2.25rem;border-radius:.6rem;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent-text)"><i class="fa-solid {{ r.icon }}"></i></span>
+                <span style="display:flex;flex-direction:column;gap:.2rem;min-width:0">
+                  <span style="font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)">{{ r.kind }}</span>
+                  <span style="font-weight:700;line-height:1.35"><sc-for list="{{ r.titleParts }}" as="p" hint-placeholder-count="1"><span style="background:{{ p.bg }};color:{{ p.ink }};border-radius:.2rem">{{ p.t }}</span></sc-for></span>
+                  <sc-if value="{{ r.hasSnip }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-size:.9375rem;color:var(--muted);line-height:1.45"><sc-for list="{{ r.snipParts }}" as="p" hint-placeholder-count="1"><span style="background:{{ p.bg }};color:{{ p.ink }};border-radius:.2rem">{{ p.t }}</span></sc-for></span>
+                  </sc-if>
+                </span>
+              </a>
+            </li>
+          </sc-for>
+        </ul>
+      </sc-if>
+      <sc-if value="{{ hasMore }}" hint-placeholder-val="{{ false }}">
+        <button type="button" onClick="{{ showAll }}" style="flex:none;align-self:flex-start;min-height:2.75rem;padding:.45rem .9rem;border-radius:.65rem;border:1px solid #dddddd;background:transparent;color:var(--ink);font:inherit;font-weight:700;cursor:pointer">{{ moreLabel }}</button>
+      </sc-if>
+    </div>
+    <div aria-hidden="true" style="flex:none;display:flex;flex-wrap:wrap;gap:.4rem 1.25rem;padding:.7rem 1.1rem;border-top:1px solid var(--line);background:var(--surface-2);font-size:.8125rem;color:var(--muted)">
+      <span style="display:flex;align-items:center;gap:.35rem"><kbd>↑</kbd><kbd>↓</kbd>Move</span>
+      <span style="display:flex;align-items:center;gap:.35rem"><kbd>Enter</kbd>Open</span>
+      <span style="display:flex;align-items:center;gap:.35rem"><kbd>Esc</kbd>Close</span>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { open:false, q:'', all:false };
+  dlgRef = React.createRef();
+  inputRef = React.createRef();
+  componentDidMount(){
+    this._k=e=>{ if((e.ctrlKey||e.metaKey)&&!e.altKey&&!e.shiftKey&&(e.key==='k'||e.key==='K')){ e.preventDefault(); this.state.open?this.close():this.openIt(); } };
+    this._o=()=>this.openIt();
+    document.addEventListener('keydown',this._k,true); window.addEventListener('ae:search',this._o);
+  }
+  componentWillUnmount(){ document.removeEventListener('keydown',this._k,true); window.removeEventListener('ae:search',this._o); document.documentElement.style.overflow=''; }
+  focusInput(tries=0){ const i=this.inputRef.current||document.getElementById('sm-input'); if(i){ i.focus(); i.select(); if(document.activeElement===i) return; } if(tries<20) requestAnimationFrame(()=>this.focusInput(tries+1)); }
+  openIt(){ if(this.state.open){ this.focusInput(); return; } this._ret=document.activeElement; document.documentElement.style.overflow='hidden'; this.setState({open:true,all:false},()=>requestAnimationFrame(()=>this.focusInput())); }
+  close(restore=true){ document.documentElement.style.overflow=''; this.setState({open:false}); if(restore&&this._ret&&this._ret.focus) setTimeout(()=>this._ret.focus(),0); }
+  index(){ if(this._idx) return this._idx; const AE=window.AE, out=[]; if(!AE) return out;
+    const add=(kind,icon,title,text,href,w)=>out.push({kind,icon,title,text:text||'',href,w,hay:(title+' '+(text||'')).toLowerCase()});
+    AE.lessons.forEach(l=>{ const L='Lesson '+l.n;
+      add(L,l.icon||'fa-book-open',l.title,l.summary,l.file,4);
+      l.sections.forEach(s=>add(L+' · Section','fa-bookmark',s.title,l.title,l.file+'#'+s.id,3));
+      (l.outcomes||[]).forEach(o=>add(L+' · Learning outcome','fa-star',o,'',l.file,1));
+      const d=AE.dosdonts&&AE.dosdonts[l.n]; if(d){ (d.dos||[]).forEach(t=>add(L+' · Do','fa-circle-check',t,'',l.file+'#dos-donts',1)); (d.donts||[]).forEach(t=>add(L+' · Don’t','fa-circle-xmark',t,'',l.file+'#dos-donts',1)); }
+      const r=AE.resources&&AE.resources[l.n]; if(r) (r.checklist||[]).forEach(t=>add(L+' · Checklist','fa-list-check',t,'',l.file+'#resources',1));
+    });
+    (AE.glossary||[]).forEach(g=>add('Glossary','fa-book',g.term,g.def+(g.alias.length?' ('+g.alias.join(', ')+')':''),'Glossary.dc.html#'+g.id,3));
+    return this._idx=out; }
+  search(q){ const toks=q.toLowerCase().split(/\s+/).filter(Boolean); if(!toks.length) return [];
+    return this.index().filter(e=>toks.every(t=>e.hay.includes(t))).map(e=>{ const tl=e.title.toLowerCase(); let s=e.w;
+      toks.forEach(t=>{ if(tl.includes(t)) s+=5; if(tl.startsWith(t)) s+=3; }); if(tl===q.toLowerCase().trim()) s+=10; return {e,s}; })
+      .sort((a,b)=>b.s-a.s).map(x=>x.e); }
+  parts(text,toks){ if(!toks.length) return [{t:text,bg:'transparent',ink:'inherit'}];
+    const re=new RegExp('('+toks.map(t=>t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')+')','ig');
+    return text.split(re).filter(Boolean).map(t=>{ const m=toks.some(k=>k===t.toLowerCase()); return {t,bg:m?'var(--accent-soft)':'transparent',ink:m?'var(--ink)':'inherit'}; }); }
+  snip(text,toks){ if(!text) return ''; const cut=s=>s.length>140?s.slice(0,140).replace(/\s\S*$/,'')+'…':s; const lo=text.toLowerCase(); let i=-1; toks.some(t=>(i=lo.indexOf(t))>=0);
+    if(text.length<=140||i<60) return cut(text); const st=text.lastIndexOf(' ',i-40); return '…'+cut(text.slice(st>0?st+1:0)); }
+  focusables(){ const d=this.dlgRef.current; return d?[...d.querySelectorAll('input,button,a[href]')].filter(el=>!el.disabled&&el.offsetParent!==null):[]; }
+  renderVals(){
+    const q=this.state.q, toks=q.toLowerCase().split(/\s+/).filter(Boolean), hits=q.trim()?this.search(q):[], LIM=8;
+    const shown=this.state.all?hits:hits.slice(0,LIM);
+    const results=shown.map(e=>{ const sn=this.snip(e.text,toks); return { href:e.href, icon:e.icon, kind:e.kind, titleParts:this.parts(e.title,toks), hasSnip:!!sn, snipParts:this.parts(sn,toks) }; });
+    const setQ=v=>this.setState({q:v,all:false});
+    const input=()=>this.inputRef.current;
+    const links=()=>[...document.querySelectorAll('#sm-results a')];
+    const status=!q.trim()?'':hits.length?(hits.length+' result'+(hits.length===1?'':'s')+' for “'+q.trim()+'”'+(hits.length>shown.length?' · showing top '+shown.length:'')):'No results for “'+q.trim()+'”. Try a shorter or different word.';
+    return {
+      open:this.state.open, dlgRef:this.dlgRef, inputRef:this.inputRef, q,
+      close:()=>this.close(), pick:()=>this.close(false),
+      onQ:e=>setQ(e.target.value),
+      onKey:e=>{ if(e.key==='ArrowDown'&&hits.length){ e.preventDefault(); const l=links()[0]; l&&l.focus(); } else if(e.key==='Enter'&&hits.length){ e.preventDefault(); this.close(false); location.href=hits[0].href; } },
+      onResKey:e=>{ const list=links(), i=list.indexOf(e.currentTarget);
+        if(e.key==='ArrowDown'){ e.preventDefault(); (list[i+1]||list[i]).focus(); } else if(e.key==='ArrowUp'){ e.preventDefault(); i>0?list[i-1].focus():input()&&input().focus(); } },
+      trap:e=>{ if(e.key==='Escape'){ e.preventDefault(); e.stopPropagation(); this.close(); return; }
+        if(e.key!=='Tab') return; const f=this.focusables(); if(!f.length) return; const a=f[0], z=f[f.length-1];
+        if(e.shiftKey&&document.activeElement===a){ e.preventDefault(); z.focus(); } else if(!e.shiftKey&&document.activeElement===z){ e.preventDefault(); a.focus(); } },
+      showChips:!q.trim(), chips:['Alt text','Captions','Contrast','PSBAR','Reasonable adjustments','Moodle'].map(t=>({t,go:()=>{ setQ(t); const i=input(); i&&i.focus(); }})),
+      status, hasResults:results.length>0, results, hasMore:hits.length>shown.length, moreLabel:'Show all '+hits.length+' results', showAll:()=>this.setState({all:true})
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glossary · Accessibility Essentials</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&amp;display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="course.css">
+<script src="course.js"></script>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+<dc-import name="Topbar" active="glossary" hint-size="100%,4rem"></dc-import>
+<main id="main" data-read-root="" tabindex="-1" style="flex:1;outline:none">
+  <header style="background:var(--surface);border-bottom:1px solid var(--line)">
+    <div style="max-width:56rem;margin:0 auto;padding:3rem 1.25rem 2rem;display:flex;flex-direction:column;gap:1rem">
+      <nav aria-label="Breadcrumb" style="font-size:.875rem"><a href="Home.dc.html">Accessibility Essentials</a> <i class="fa-solid fa-chevron-right" aria-hidden="true" style="font-size:.7rem;color:var(--muted)"></i> <span style="color:var(--muted)">Glossary</span></nav>
+      <h1 style="font-size:clamp(2.25rem,1.6rem + 2.5vw,3.5rem)">Glossary</h1>
+      <p style="margin:0;font-size:1.1875rem;color:var(--muted);max-width:40rem">Plain-English definitions of the laws, standards and accessibility terms used in this course. Tip: in any lesson, select a term to see its definition.</p>
+      <div role="search" style="position:relative;margin-top:.5rem">
+        <label for="g-search" class="sr-only">Search the glossary</label>
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true" style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--muted)"></i>
+        <input id="g-search" type="search" value="{{ q }}" onInput="{{ setQ }}" placeholder="Search terms and definitions, e.g. captions" autocomplete="off" aria-describedby="g-count" style="width:100%;min-height:3.5rem;padding:0 1rem 0 2.75rem;border-radius:.875rem;border:2px solid var(--line);background:var(--surface);font-size:1.0625rem" style-focus="border-color:var(--accent)">
+      </div>
+      <p id="g-count" role="status" aria-live="polite" style="margin:0;font-size:.9375rem;font-weight:600;color:var(--muted)">{{ countText }}</p>
+      <nav aria-label="Jump to letter">
+        <ul style="list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:.3rem">
+          <sc-for list="{{ letters }}" as="L" hint-placeholder-count="26">
+            <li><a href="{{ L.href }}" aria-disabled="{{ L.disabled }}" onClick="{{ L.go }}" style="display:grid;place-items:center;width:2.25rem;height:2.25rem;border-radius:.5rem;font-weight:700;text-decoration:none;font-size:.9375rem;background:{{ L.bg }};color:{{ L.ink }};pointer-events:{{ L.pe }}">{{ L.l }}</a></li>
+          </sc-for>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <div style="max-width:56rem;margin:0 auto;padding:2rem 1.25rem 3rem;display:flex;flex-direction:column;gap:2rem">
+    <sc-for list="{{ groups }}" as="g" hint-placeholder-count="6">
+      <section id="{{ g.id }}" aria-labelledby="{{ g.hid }}">
+        <h2 id="{{ g.hid }}" style="font-size:1.75rem;color:var(--accent);margin-bottom:.75rem;padding-bottom:.4rem;border-bottom:2px solid var(--accent-line)">{{ g.l }}</h2>
+        <dl style="margin:0;display:flex;flex-direction:column;gap:.6rem">
+          <sc-for list="{{ g.items }}" as="t" hint-placeholder-count="3">
+            <div id="{{ t.id }}" style="padding:1rem 1.15rem;border-radius:1rem;background:var(--surface);border:1px solid {{ t.line }};box-shadow:{{ t.shadow }};transition:border-color .4s,box-shadow .4s">
+              <dt style="font-family:var(--font-head);font-weight:700;font-size:1.1875rem;margin-bottom:.25rem"><sc-for list="{{ t.tp }}" as="p" hint-placeholder-count="1"><span style="background:{{ p.bg }};color:{{ p.ink }};border-radius:.2rem">{{ p.s }}</span></sc-for></dt>
+              <dd style="margin:0"><sc-for list="{{ t.dp }}" as="p" hint-placeholder-count="1"><span style="background:{{ p.bg }};color:{{ p.ink }};border-radius:.2rem">{{ p.s }}</span></sc-for></dd>
+              <sc-if value="{{ t.hasAlias }}" hint-placeholder-val="{{ false }}"><p style="margin:.4rem 0 0;font-size:.8125rem;color:var(--muted)">Also: {{ t.alias }}</p></sc-if>
+            </div>
+          </sc-for>
+        </dl>
+      </section>
+    </sc-for>
+    <sc-if value="{{ none }}" hint-placeholder-val="{{ false }}">
+      <div style="text-align:center;padding:3rem 1rem;border-radius:1rem;background:var(--surface);border:1px dashed var(--line)">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true" style="font-size:1.75rem;color:var(--muted)"></i>
+        <p style="margin:.75rem 0 .25rem;font-weight:700;font-size:1.125rem">No terms match “{{ q }}”</p>
+        <p style="margin:0;color:var(--muted)">Try a shorter word, or <button type="button" onClick="{{ clear }}" style="background:none;border:0;padding:0;color:var(--accent);font-weight:700;text-decoration:underline;cursor:pointer">clear the search</button>.</p>
+      </div>
+    </sc-if>
+  </div>
+</main>
+<dc-import name="Footer" hint-size="100%,12rem"></dc-import>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { q:'', flash:null };
+  componentDidMount(){
+    this._u=()=>{ this.forceUpdate(); this.jump(); }; window.addEventListener('ae:ready',this._u);
+    this._h=()=>this.jump(); window.addEventListener('hashchange',this._h);
+    setTimeout(()=>this.jump(),300);
+  }
+  componentWillUnmount(){ window.removeEventListener('ae:ready',this._u); window.removeEventListener('hashchange',this._h); clearTimeout(this._ft); }
+  jump(){ const id=decodeURIComponent(location.hash.slice(1)); if(!id) return; const el=document.getElementById(id); if(!el) return;
+    window.scrollTo({top:el.getBoundingClientRect().top+scrollY-90,behavior:'auto'}); this.setState({flash:id}); clearTimeout(this._ft); this._ft=setTimeout(()=>this.setState({flash:null}),2500); }
+  parts(text,q){ if(!q) return [{s:text,bg:'transparent',ink:'inherit'}]; const out=[]; const low=text.toLowerCase(); let i=0; while(true){ const j=low.indexOf(q,i); if(j<0){ out.push({s:text.slice(i),bg:'transparent',ink:'inherit'}); break; } if(j>i) out.push({s:text.slice(i,j),bg:'transparent',ink:'inherit'}); out.push({s:text.slice(j,j+q.length),bg:'var(--accent)',ink:'#fff'}); i=j+q.length; } return out.filter(p=>p.s); }
+  renderVals(){
+    const AE=window.AE; if(!AE) return { groups:[], letters:[] };
+    const q=this.state.q.trim().toLowerCase();
+    const list=AE.glossary.filter(g=>!q||g.term.toLowerCase().includes(q)||g.def.toLowerCase().includes(q)||g.alias.some(a=>a.toLowerCase().includes(q))).sort((a,b)=>{ if(q){ const as=a.term.toLowerCase().includes(q)?0:1, bs=b.term.toLowerCase().includes(q)?0:1; if(as!==bs) return as-bs; } return a.term.localeCompare(b.term); });
+    const by={}; list.forEach(g=>{ const L=g.term[0].toUpperCase(); (by[L]=by[L]||[]).push(g); });
+    const keys=q?Object.keys(by):Object.keys(by).sort();
+    const groups=keys.map(L=>({l:L,id:'letter-'+L,hid:'h-letter-'+L,items:by[L].map(g=>{ const f=this.state.flash===g.id; return {id:g.id,tp:this.parts(g.term,q),dp:this.parts(g.def,q),hasAlias:g.alias.length>0,alias:g.alias.join(', '),line:f?'var(--accent)':'var(--line)',shadow:f?'0 0 0 4px var(--accent-soft)':'none'}; })}));
+    const letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(l=>{ const has=!!by[l]; return {l,href:'#letter-'+l,disabled:has?undefined:'true',bg:has?'var(--accent-soft)':'transparent',ink:has?'var(--accent-text)':'var(--muted)',pe:has?'auto':'none',go:e=>{ e.preventDefault(); const el=document.getElementById('letter-'+l); if(el){ window.scrollTo({top:el.getBoundingClientRect().top+scrollY-80,behavior:AE.prefs.reducedMotion()?'auto':'smooth'}); const h=el.querySelector('h2'); if(h){ h.setAttribute('tabindex','-1'); h.focus({preventScroll:true}); } } }}; });
+    const n=list.length;
+    return { q:this.state.q, setQ:e=>this.setState({q:e.target.value}), clear:()=>this.setState({q:''}), groups, letters, none:n===0,
+      countText:q?(n+' term'+(n===1?'':'s')+' found for “'+this.state.q.trim()+'”'):(AE.glossary.length+' terms') };
+  }
+}
+</script>
+</body>
+</html>

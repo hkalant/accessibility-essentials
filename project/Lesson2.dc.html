@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 2: WCAG 2.2 &amp; the POUR principles · Accessibility Essentials</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&amp;display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="course.css">
+<script src="course.js"></script>
+</helmet>
+<div data-lesson="2" style="min-height:100vh;display:flex;flex-direction:column">
+<dc-import name="Topbar" active="course" hint-size="100%,4rem"></dc-import>
+<div class="ae-lesson-layout" style="flex:1">
+<dc-import name="Sidebar" current="2" hint-size="0,0"></dc-import>
+<main id="main" data-read-root="" tabindex="-1" style="min-width:0;outline:none">
+<dc-import name="LessonIntro" lesson="2" hint-size="100%,26rem"></dc-import>
+<div style="max-width:var(--measure);margin:0 auto;padding:0 1.25rem 2rem">
+
+<section id="what-is-wcag" aria-labelledby="h-wcag" style="padding:2.5rem 0;margin-top:2rem;border-top:1px solid var(--line)">
+  <h2 id="h-wcag" style="font-size:1.75rem;margin-bottom:.5rem">What is WCAG 2.2?</h2>
+  <p style="margin:0 0 1rem;font-size:1.0625rem">The <strong>Web Content Accessibility Guidelines</strong> are published by the W3C, the international body for web standards. Version 2.2 was published in October 2023. PSBAR 2018 points to WCAG level AA, so it’s the yardstick for your Moodle pages, documents and media.</p>
+  <p style="margin:0 0 1.25rem">WCAG is built in layers. Select each part of this real success criterion to see how it fits together.</p>
+  <div style="background:var(--surface);border:1px solid var(--line);border-radius:1.25rem;padding:1.25rem;box-shadow:var(--shadow)">
+    <div role="group" aria-label="Anatomy of a success criterion" style="display:flex;flex-wrap:wrap;gap:.5rem;align-items:stretch">
+      <sc-for list="{{ anatomy }}" as="a" hint-placeholder-count="4">
+        <button type="button" onClick="{{ a.pick }}" aria-pressed="{{ a.pressed }}" style="flex:1 1 9rem;display:flex;flex-direction:column;align-items:flex-start;gap:.15rem;padding:.75rem .9rem;border-radius:.75rem;border:2px solid {{ a.line }};background:{{ a.bg }};color:{{ a.ink }};cursor:pointer;text-align:left"><span style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;opacity:.9">{{ a.kind }}</span><span style="font-weight:800;font-size:1.0625rem">{{ a.label }}</span></button>
+      </sc-for>
+    </div>
+    <p aria-live="polite" style="margin:1rem 0 0;padding:1rem;border-radius:.75rem;background:var(--surface-2)">{{ anatomyText }}</p>
+  </div>
+</section>
+
+<section id="pour" aria-labelledby="h-pour" style="padding:2.5rem 0;border-top:1px solid var(--line)">
+  <h2 id="h-pour" style="font-size:1.75rem;margin-bottom:.5rem">The POUR principles</h2>
+  <p style="margin:0 0 1.25rem;font-size:1.0625rem">Every WCAG criterion sits under one of four principles. If you remember nothing else, remember POUR — it works as a quick check on any piece of teaching content.</p>
+  <div class="ae-4col" style="gap:.9rem;align-items:start">
+    <sc-for list="{{ pour }}" as="p" hint-placeholder-count="4">
+      <article style="display:flex;flex-direction:column;gap:.75rem;padding:1.25rem 1.1rem;border-radius:1.25rem;background:var(--surface);border:1px solid {{ p.line }};box-shadow:var(--shadow);transition:border-color .2s">
+        <span aria-hidden="true" style="width:3.5rem;height:3.5rem;border-radius:1rem;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-family:var(--font-head);font-size:2rem;font-weight:700">{{ p.letter }}</span>
+        <h3 style="font-size:1.375rem">{{ p.name }}</h3>
+        <p style="margin:0;font-weight:600">{{ p.means }}</p>
+        <p style="margin:0;font-size:.9375rem;color:var(--muted)">{{ p.detail }}</p>
+        <button type="button" onClick="{{ p.toggle }}" aria-expanded="{{ p.expanded }}" aria-controls="{{ p.pid }}" style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;min-height:2.5rem;padding:.4rem .7rem;border-radius:.6rem;border:1px solid var(--accent-line);background:var(--accent-soft);color:var(--accent-text);font-weight:700;font-size:.875rem;cursor:pointer">In your teaching<i class="fa-solid {{ p.chev }}" aria-hidden="true"></i></button>
+        <ul id="{{ p.pid }}" hidden="{{ p.closed }}" style="margin:0;padding-left:1.1rem;font-size:.9375rem;display:flex;flex-direction:column;gap:.35rem">
+          <sc-for list="{{ p.ex }}" as="e" hint-placeholder-count="3"><li>{{ e }}</li></sc-for>
+        </ul>
+      </article>
+    </sc-for>
+  </div>
+</section>
+
+<section id="levels" aria-labelledby="h-levels" style="padding:2.5rem 0;border-top:1px solid var(--line)">
+  <h2 id="h-levels" style="font-size:1.75rem;margin-bottom:.5rem">Conformance levels</h2>
+  <p style="margin:0 0 1.25rem;font-size:1.0625rem">Success criteria are graded A, AA or AAA. Levels are cumulative: to meet AA you must meet every A criterion too.</p>
+  <div class="ae-3col" style="gap:.9rem">
+    <article style="display:flex;flex-direction:column;gap:.6rem;padding:1.25rem;border-radius:1.25rem;background:var(--surface);border:1px solid var(--line)">
+      <span style="font-family:var(--font-head);font-size:2.25rem;font-weight:700;color:var(--accent)">A</span>
+      <h3 style="font-family:var(--font-body);font-size:1.125rem;font-weight:700">Essential</h3>
+      <p style="margin:0">Without these, some people can’t use the content at all.</p>
+      <ul style="margin:0;padding-left:1.1rem;font-size:.9375rem;color:var(--muted);display:flex;flex-direction:column;gap:.25rem"><li>Alt text for images</li><li>Captions on recorded video</li><li>Everything works by keyboard</li></ul>
+    </article>
+    <article style="display:flex;flex-direction:column;gap:.6rem;padding:1.25rem;border-radius:1.25rem;background:var(--surface);border:2px solid var(--accent);box-shadow:var(--shadow);position:relative">
+      <span style="position:absolute;top:1rem;right:1rem;font-size:.75rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;background:var(--accent);color:var(--accent-ink);padding:.25rem .6rem;border-radius:999px">Legal target</span>
+      <span style="font-family:var(--font-head);font-size:2.25rem;font-weight:700;color:var(--accent)">AA</span>
+      <h3 style="font-family:var(--font-body);font-size:1.125rem;font-weight:700">Standard</h3>
+      <p style="margin:0">Removes the most common, significant barriers. Required by PSBAR 2018.</p>
+      <ul style="margin:0;padding-left:1.1rem;font-size:.9375rem;color:var(--muted);display:flex;flex-direction:column;gap:.25rem"><li>4.5:1 text contrast</li><li>Audio description for recorded video</li><li>Text resizes to 200%</li></ul>
+    </article>
+    <article style="display:flex;flex-direction:column;gap:.6rem;padding:1.25rem;border-radius:1.25rem;background:var(--surface);border:1px solid var(--line)">
+      <span style="font-family:var(--font-head);font-size:2.25rem;font-weight:700;color:var(--accent)">AAA</span>
+      <h3 style="font-family:var(--font-body);font-size:1.125rem;font-weight:700">Enhanced</h3>
+      <p style="margin:0">Goes further. Worth meeting where you can, but not required for whole sites.</p>
+      <ul style="margin:0;padding-left:1.1rem;font-size:.9375rem;color:var(--muted);display:flex;flex-direction:column;gap:.25rem"><li>7:1 text contrast</li><li>Sign language for video</li><li>Plain reading level</li></ul>
+    </article>
+  </div>
+  <div style="margin-top:1.5rem;background:var(--surface);border:1px solid var(--line);border-radius:1.25rem;padding:1.25rem;box-shadow:var(--shadow)">
+    <div style="display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;align-items:baseline;margin-bottom:.9rem">
+      <h3 style="font-family:var(--font-body);font-size:1.125rem;font-weight:700">Guess the level</h3>
+      <span aria-live="polite" style="font-weight:700;color:var(--accent-text)">{{ guessScore }}</span>
+    </div>
+    <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.5rem">
+      <sc-for list="{{ guesses }}" as="g" hint-placeholder-count="6">
+        <li style="display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;padding:.7rem .85rem;border-radius:.75rem;background:{{ g.bg }};border:1px solid {{ g.line }}">
+          <span style="flex:1 1 14rem"><strong>{{ g.sc }}</strong> {{ g.name }}</span>
+          <span role="group" aria-label="{{ g.aria }}" style="display:flex;gap:.35rem">
+            <sc-for list="{{ g.opts }}" as="o" hint-placeholder-count="3">
+              <button type="button" onClick="{{ o.pick }}" aria-pressed="{{ o.pressed }}" style="min-width:3.25rem;min-height:2.5rem;border-radius:.55rem;border:1px solid {{ o.line }};background:{{ o.bg }};color:{{ o.ink }};font-weight:800;cursor:pointer">{{ o.l }}</button>
+            </sc-for>
+          </span>
+          <span style="flex-basis:100%;font-size:.875rem;color:{{ g.fbInk }}" hidden="{{ g.noFb }}">{{ g.fb }}</span>
+        </li>
+      </sc-for>
+    </ul>
+  </div>
+</section>
+
+<section id="new-in-22" aria-labelledby="h-new" style="padding:2.5rem 0;border-top:1px solid var(--line)">
+  <h2 id="h-new" style="font-size:1.75rem;margin-bottom:.5rem">New in WCAG 2.2</h2>
+  <p style="margin:0 0 1rem;font-size:1.0625rem">WCAG 2.2 added nine success criteria and removed one (4.1.1 Parsing). These are the ones you’re most likely to meet when building teaching activities.</p>
+  <div role="group" aria-label="Filter" style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem">
+    <button type="button" onClick="{{ showTeach }}" aria-pressed="{{ teachSel }}" style="min-height:2.5rem;padding:.4rem .9rem;border-radius:999px;border:1px solid {{ teachLine }};background:{{ teachBg }};font-weight:700;cursor:pointer;color:var(--ink)">Most relevant to teaching</button>
+    <button type="button" onClick="{{ showAll }}" aria-pressed="{{ allSel }}" style="min-height:2.5rem;padding:.4rem .9rem;border-radius:999px;border:1px solid {{ allLine }};background:{{ allBg }};font-weight:700;cursor:pointer;color:var(--ink)">All nine</button>
+  </div>
+  <ul class="ae-2col" style="list-style:none;margin:0;padding:0;gap:.75rem">
+    <sc-for list="{{ newSc }}" as="n" hint-placeholder-count="5">
+      <li style="display:flex;flex-direction:column;gap:.35rem;padding:1rem 1.1rem;border-radius:1rem;background:var(--surface);border:1px solid var(--line)">
+        <span style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap"><strong style="font-variant-numeric:tabular-nums">{{ n.sc }}</strong><span style="font-weight:700">{{ n.name }}</span><span style="margin-left:auto;font-size:.75rem;font-weight:800;padding:.15rem .5rem;border-radius:999px;background:var(--accent-soft);color:var(--accent-text)">{{ n.level }}</span></span>
+        <span style="font-size:.9375rem;color:var(--muted)">{{ n.what }}</span>
+      </li>
+    </sc-for>
+  </ul>
+  <div style="margin-top:1.5rem;background:var(--surface);border:1px solid var(--line);border-radius:1.25rem;padding:1.25rem;box-shadow:var(--shadow)">
+    <h3 style="font-family:var(--font-body);font-size:1.125rem;font-weight:700;margin-bottom:.35rem">See it: target size</h3>
+    <p style="margin:0 0 1rem;font-size:.9375rem;color:var(--muted)">Show the hit area of each icon. Tiny targets are hard to hit with a tremor, on a touchscreen, or with a head pointer.</p>
+    <div class="ae-2col" style="gap:1rem">
+      <div style="padding:1rem;border-radius:.875rem;background:var(--bad-soft)">
+        <p style="margin:0 0 .6rem;font-weight:700;color:var(--bad)"><i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> 14 × 14 px, no spacing</p>
+        <div aria-hidden="true" style="display:flex;gap:0">
+          <sc-for list="{{ tiny }}" as="t" hint-placeholder-count="5"><span style="width:14px;height:14px;display:grid;place-items:center;font-size:10px;color:var(--ink);outline:{{ outlineBad }};outline-offset:-1px"><i class="fa-solid {{ t }}"></i></span></sc-for>
+        </div>
+      </div>
+      <div style="padding:1rem;border-radius:.875rem;background:var(--ok-soft)">
+        <p style="margin:0 0 .6rem;font-weight:700;color:var(--ok)"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> At least 24 × 24 px</p>
+        <div aria-hidden="true" style="display:flex;gap:6px">
+          <sc-for list="{{ tiny }}" as="t" hint-placeholder-count="5"><span style="width:32px;height:32px;display:grid;place-items:center;font-size:15px;color:var(--ink);border-radius:6px;outline:{{ outlineOk }};outline-offset:-1px"><i class="fa-solid {{ t }}"></i></span></sc-for>
+        </div>
+      </div>
+    </div>
+    <button type="button" onClick="{{ toggleTargets }}" aria-pressed="{{ targetsSel }}" style="margin-top:1rem;display:inline-flex;align-items:center;gap:.5rem;min-height:2.75rem;padding:.5rem 1rem;border-radius:.65rem;border:0;background:var(--accent);color:var(--accent-ink);font-weight:700;cursor:pointer"><i class="fa-solid fa-crosshairs" aria-hidden="true"></i>{{ targetsLabel }}</button>
+  </div>
+</section>
+
+<dc-import name="DosDonts" lesson="2" hint-size="100%,20rem"></dc-import>
+<dc-import name="KnowledgeCheck" lesson="2" hint-size="100%,32rem"></dc-import>
+<dc-import name="LessonEnd" lesson="2" hint-size="100%,24rem"></dc-import>
+</div>
+</main>
+</div>
+<dc-import name="Footer" hint-size="100%,12rem"></dc-import>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { part:2, open:{}, guess:{}, teach:true, targets:false };
+  renderVals(){
+    const s=this.state, on=b=>b?'true':'false';
+    const A=[['Principle','1 Perceivable','The top layer. Every criterion belongs to one of four principles — here, Perceivable: can people take in the information?'],
+      ['Guideline','1.4 Distinguishable','Guidelines group related criteria under a goal. 1.4 is about making it easy to see and hear content, including separating foreground from background.'],
+      ['Success criterion','1.4.3 Contrast (Minimum)','The testable requirement: text must have a contrast ratio of at least 4.5:1 (3:1 for large text). This is what an auditor actually checks.'],
+      ['Level','AA','Each criterion has a level. 1.4.3 is AA, so it is required for UK public sector content. Lesson 4 lets you test contrast yourself.']];
+    const anatomy=A.map((a,i)=>{ const sel=i===s.part; return {kind:a[0],label:a[1],pressed:on(sel),pick:()=>this.setState({part:i}),line:sel?'var(--accent)':'var(--line)',bg:sel?'var(--accent)':'var(--surface-2)',ink:sel?'var(--accent-ink)':'var(--ink)'}; });
+    const P=[['P','Perceivable','Can everyone take in the content?','Information can’t be invisible to all of someone’s senses.',['Alt text on diagrams and photos','Edited captions on lecture recordings','Text colours with enough contrast']],
+      ['O','Operable','Can everyone use it?','Interfaces must work by keyboard, give enough time and avoid harm.',['Quizzes that work with a keyboard','Extra time available on timed activities','No content that flashes more than three times a second']],
+      ['U','Understandable','Can everyone make sense of it?','Content and navigation are clear, consistent and predictable.',['Plain-language assessment briefs','The same Moodle structure each week','Clear instructions and helpful error messages']],
+      ['R','Robust','Does it work with everyone’s tools?','Content works with current and future browsers and assistive technology.',['Using Moodle’s built-in tools, not hacked HTML','Tagged PDFs rather than scans','Standard file formats students can open']]];
+    const pour=P.map((p,i)=>{ const o=!!s.open[i]; return {letter:p[0],name:p[1],means:p[2],detail:p[3],ex:p[4],pid:'pour-ex-'+i,expanded:on(o),closed:!o,chev:o?'fa-chevron-up':'fa-chevron-down',line:o?'var(--accent)':'var(--line)',toggle:()=>this.setState(x=>({open:Object.assign({},x.open,{[i]:!o})}))}; });
+    const G=[['1.1.1','Non-text content','A'],['1.2.2','Captions (Prerecorded)','A'],['1.4.3','Contrast (Minimum)','AA'],['1.2.5','Audio Description (Prerecorded)','AA'],['1.4.4','Resize Text','AA'],['1.2.6','Sign Language (Prerecorded)','AAA'],['1.4.6','Contrast (Enhanced)','AAA']];
+    let right=0,done=0;
+    const guesses=G.map((g,i)=>{ const pk=s.guess[i]; const has=pk!=null; const ok=pk===g[2]; if(has){done++; if(ok) right++;}
+      return {sc:g[0],name:g[1],aria:'Level for '+g[0]+' '+g[1],bg:has?(ok?'var(--ok-soft)':'var(--bad-soft)'):'var(--surface-2)',line:has?(ok?'var(--ok)':'var(--bad)'):'var(--line)',noFb:!has,fbInk:ok?'var(--ok)':'var(--bad)',fb:has?(ok?'Correct — level '+g[2]+'.':'Not quite — it’s level '+g[2]+'.'):'',
+        opts:['A','AA','AAA'].map(l=>({l,pressed:on(pk===l),pick:()=>this.setState(x=>({guess:Object.assign({},x.guess,{[i]:l})})),line:pk===l?'var(--accent)':'var(--line)',bg:pk===l?'var(--accent)':'var(--surface)',ink:pk===l?'var(--accent-ink)':'var(--ink)'}))}; });
+    const N=[['2.4.11','Focus Not Obscured (Minimum)','AA','The keyboard focus mustn’t be completely hidden behind sticky headers, banners or chat widgets.',1],
+      ['2.4.12','Focus Not Obscured (Enhanced)','AAA','No part of the focused element is hidden.',0],
+      ['2.4.13','Focus Appearance','AAA','Focus indicators must be large and contrasting enough to see.',0],
+      ['2.5.7','Dragging Movements','AA','Anything done by dragging — like drag-and-drop quizzes — needs a single-click alternative.',1],
+      ['2.5.8','Target Size (Minimum)','AA','Clickable targets should be at least 24 × 24 CSS pixels, or well spaced.',1],
+      ['3.2.6','Consistent Help','A','Help links and contact details appear in the same place on every page.',1],
+      ['3.3.7','Redundant Entry','A','Don’t make people re-type information they’ve already given in the same process.',1],
+      ['3.3.8','Accessible Authentication (Minimum)','AA','Logging in mustn’t depend on memory puzzles; allow paste and password managers.',1],
+      ['3.3.9','Accessible Authentication (Enhanced)','AAA','Stricter: no object or image recognition tests either.',0]];
+    const newSc=N.filter(n=>!s.teach||n[4]).map(n=>({sc:n[0],name:n[1],level:n[2],what:n[3]}));
+    const pill=sel=>({line:sel?'var(--accent)':'var(--line)',bg:sel?'var(--accent-soft)':'var(--surface)'});
+    const T=pill(s.teach), AL=pill(!s.teach);
+    return {
+      anatomy, anatomyText:A[s.part][2], pour, guesses, guessScore:done?right+' of '+done+' correct':'',
+      newSc, teachSel:on(s.teach), allSel:on(!s.teach), teachLine:T.line, teachBg:T.bg, allLine:AL.line, allBg:AL.bg,
+      showTeach:()=>this.setState({teach:true}), showAll:()=>this.setState({teach:false}),
+      tiny:['fa-pen','fa-trash','fa-share','fa-copy','fa-flag'],
+      outlineBad:s.targets?'2px solid var(--bad)':'0 solid transparent', outlineOk:s.targets?'2px solid var(--ok)':'0 solid transparent',
+      targetsSel:on(s.targets), targetsLabel:s.targets?'Hide hit areas':'Show hit areas', toggleTargets:()=>this.setState({targets:!s.targets})
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<aside data-chrome="sidebar" aria-label="Course outline" class="ae-desk" style="position:sticky;top:4rem;height:calc(100vh - 4rem);overflow-y:auto;background:var(--surface);border-right:1px solid var(--line);padding:1.5rem 1rem 2rem;display:flex;flex-direction:column;gap:1.25rem">
+  <div style="display:flex;flex-direction:column;gap:.6rem;padding:0 .5rem">
+    <a href="Home.dc.html" style="font-size:.8125rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:.4rem" style-hover="color:var(--accent-text)"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Course outline</a>
+    <div data-gamify="" style="display:flex;flex-direction:column;gap:.35rem">
+      <div style="display:flex;justify-content:space-between;font-size:.8125rem;color:var(--muted)"><span>{{ doneText }}</span><span>{{ pct }}</span></div>
+      <div role="progressbar" aria-label="Course progress" aria-valuemin="0" aria-valuemax="6" aria-valuenow="{{ done }}" style="height:.4rem;border-radius:999px;background:var(--line);overflow:hidden"><div style="height:100%;width:{{ pct }};background:var(--accent);border-radius:999px;transition:width .4s"></div></div>
+    </div>
+  </div>
+  <nav aria-label="Lessons">
+    <ol style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.15rem">
+      <sc-for list="{{ items }}" as="l" hint-placeholder-count="6">
+        <li>
+          <a href="{{ l.file }}" aria-current="{{ l.current }}" style="display:flex;gap:.75rem;align-items:flex-start;padding:.65rem .5rem;border-radius:.65rem;text-decoration:none;color:var(--ink);background:{{ l.bg }}" style-hover="background:var(--accent-soft)">
+            <span aria-hidden="true" style="flex:none;width:1.9rem;height:1.9rem;border-radius:50%;display:grid;place-items:center;font-size:.8125rem;font-weight:700;background:{{ l.dotBg }};color:{{ l.dotInk }};border:1.5px solid {{ l.dotLine }}"><i class="fa-solid {{ l.dotIcon }}" style="display:{{ l.iconDisp }}"></i><span style="display:{{ l.numDisp }}">{{ l.n }}</span></span>
+            <span style="display:flex;flex-direction:column;min-width:0;gap:.1rem"><span style="font-weight:{{ l.weight }};font-size:.9375rem;line-height:1.3">{{ l.title }}</span><span style="font-size:.8125rem;color:var(--muted)">{{ l.meta }}</span></span>
+          </a>
+          <sc-if value="{{ l.isCurrent }}" hint-placeholder-val="{{ false }}">
+            <ol aria-label="On this page" style="list-style:none;margin:.25rem 0 .5rem 1.45rem;padding:0 0 0 1.05rem;border-left:2px solid var(--line);display:flex;flex-direction:column">
+              <sc-for list="{{ l.secs }}" as="s" hint-placeholder-count="5">
+                <li><a href="{{ s.href }}" aria-current="{{ s.cur }}" style="display:block;padding:.35rem .5rem;margin-left:-1.15rem;border-left:2px solid {{ s.line }};font-size:.875rem;text-decoration:none;color:{{ s.color }};font-weight:{{ s.weight }}" style-hover="color:var(--accent-text)">{{ s.title }}</a></li>
+              </sc-for>
+            </ol>
+          </sc-if>
+        </li>
+      </sc-for>
+    </ol>
+  </nav>
+</aside>
+
+<div data-chrome="sidebar" class="ae-mob" onKeyDown="{{ onKey }}" style="position:sticky;top:0;z-index:55">
+  <div ref="{{ barRef }}" style="display:flex;align-items:center;gap:.75rem;padding:.55rem 1rem;min-height:3.5rem;background:var(--glass);backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5);border-bottom:1px solid var(--line)">
+    <button type="button" ref="{{ btnRef }}" onClick="{{ toggle }}" aria-expanded="{{ expanded }}" aria-controls="m-outline" aria-label="{{ btnLabel }}" style="flex:none;width:2.75rem;height:2.75rem;border-radius:.65rem;border:0;background:transparent;cursor:pointer;position:relative;color:var(--ink)">
+      <span aria-hidden="true" style="position:absolute;left:.8rem;right:.8rem;top:calc(50% - 4px);height:2px;border-radius:2px;background:currentColor;transform:{{ barTop }};transition:transform .35s cubic-bezier(.4,0,.2,1)"></span>
+      <span aria-hidden="true" style="position:absolute;left:.8rem;right:.8rem;top:calc(50% + 3px);height:2px;border-radius:2px;background:currentColor;transform:{{ barBot }};transition:transform .35s cubic-bezier(.4,0,.2,1)"></span>
+    </button>
+    <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+      <span style="font-size:.75rem;font-weight:700;color:var(--accent-text);letter-spacing:.04em;text-transform:uppercase">{{ curLabel }}</span>
+      <span style="font-weight:700;font-size:.9375rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ curTitle }}</span>
+    </div>
+    <span data-gamify="" style="flex:none;font-size:.8125rem;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:.35rem"><i class="fa-solid fa-circle-check" aria-hidden="true" style="color:var(--ok)"></i>{{ done }}/6</span>
+  </div>
+  <div id="m-outline" hidden="{{ closed }}" style="position:fixed;left:0;right:0;bottom:0;top:{{ menuTop }};z-index:56;background:var(--surface);overflow-y:auto;padding:1.25rem 1.5rem 8rem;opacity:{{ panelOp }};transition:opacity .3s ease">
+    <nav aria-label="Course outline">
+      <a href="Home.dc.html" style="display:block;font-size:.8125rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:.5rem 0;opacity:{{ panelOp }};transition:opacity .4s ease .05s">Course outline</a>
+      <ol style="list-style:none;margin:0;padding:0">
+        <sc-for list="{{ items }}" as="l" hint-placeholder-count="6">
+          <li style="opacity:{{ l.mOp }};transform:{{ l.mTf }};transition:opacity .45s ease {{ l.delay }},transform .45s cubic-bezier(.2,.8,.2,1) {{ l.delay }}">
+            <a href="{{ l.file }}" aria-current="{{ l.current }}" onClick="{{ closeMenu }}" style="display:flex;align-items:baseline;gap:.75rem;padding:.55rem 0;text-decoration:none;color:{{ l.mColor }}">
+              <span style="font-size:.875rem;font-weight:700;color:var(--muted);min-width:1.2rem">{{ l.n }}</span>
+              <span style="font-family:var(--font-head);font-size:1.5rem;font-weight:700;line-height:1.2;flex:1">{{ l.title }}</span>
+              <i class="fa-solid fa-circle-check" aria-hidden="true" style="color:var(--ok);display:{{ l.iconDisp }}"></i>
+            </a>
+            <sc-if value="{{ l.isCurrent }}" hint-placeholder-val="{{ false }}">
+              <ol aria-label="On this page" style="list-style:none;margin:0 0 .75rem 2rem;padding:0;display:flex;flex-direction:column">
+                <sc-for list="{{ l.secs }}" as="s" hint-placeholder-count="5">
+                  <li><a href="{{ s.href }}" onClick="{{ closeMenu }}" style="display:block;padding:.45rem 0;font-size:1rem;text-decoration:none;color:{{ s.color }};font-weight:{{ s.weight }}">{{ s.title }}</a></li>
+                </sc-for>
+              </ol>
+            </sc-if>
+          </li>
+        </sc-for>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;current&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:1,&quot;min&quot;:1,&quot;max&quot;:6,&quot;tsType&quot;:&quot;number&quot;}}">
+class Component extends DCLogic {
+  state = { open:false, shown:false, menuTop:'3.5rem', active:null };
+  barRef = React.createRef(); btnRef = React.createRef();
+  componentDidMount(){
+    this._u=()=>this.forceUpdate();
+    ['ae:ready','ae:progress'].forEach(n=>window.addEventListener(n,this._u));
+    this._mq=window.matchMedia('(min-width: 64.001em)'); this._mqf=()=>{ if(this._mq.matches&&this.state.open) this.closeMenu(); }; this._mq.addEventListener('change',this._mqf);
+    setTimeout(()=>this.observe(),600);
+  }
+  componentWillUnmount(){ ['ae:ready','ae:progress'].forEach(n=>window.removeEventListener(n,this._u)); this._mq.removeEventListener('change',this._mqf); if(this._io) this._io.disconnect(); document.body.style.overflow=''; }
+  observe(){
+    const L=this.lesson(); if(!L||!window.IntersectionObserver) return;
+    this._io=new IntersectionObserver(es=>{ const vis=es.filter(e=>e.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top); if(vis[0]) this.setState({active:vis[0].target.id}); },{rootMargin:'-20% 0px -65% 0px'});
+    L.sections.forEach(s=>{ const el=document.getElementById(s.id); if(el) this._io.observe(el); });
+  }
+  lesson(){ const AE=window.AE; return AE?AE.lessons[Number(this.props.current||1)-1]:null; }
+  openMenu(){
+    const r=this.barRef.current&&this.barRef.current.getBoundingClientRect();
+    this.setState({open:true,menuTop:(r?Math.max(0,r.bottom):56)+'px'},()=>{ requestAnimationFrame(()=>requestAnimationFrame(()=>this.setState({shown:true}))); });
+    document.body.style.overflow='hidden';
+  }
+  closeMenu(){
+    this.setState({shown:false}); document.body.style.overflow='';
+    const rm=window.AE&&window.AE.prefs.reducedMotion();
+    clearTimeout(this._t); this._t=setTimeout(()=>this.setState({open:false}),rm?0:300);
+  }
+  renderVals(){
+    const AE=window.AE; const cur=Number(this.props.current||1);
+    if(!AE) return { items:[], closed:true };
+    const pr=AE.progress.get(); const done=AE.progress.doneCount(); const shown=this.state.shown;
+    const L=AE.lessons[cur-1];
+    const items=AE.lessons.map((l,i)=>{
+      const isCur=l.n===cur, isDone=!!(pr.lessons[l.n]&&pr.lessons[l.n].done);
+      return { n:l.n, file:l.file, title:l.title, meta:(isDone?'Complete · ':'')+l.mins+' min', isCurrent:isCur, current:isCur?'page':undefined,
+        bg:isCur?'var(--accent-soft)':'transparent', weight:isCur?700:500,
+        dotBg:isDone?'var(--ok)':(isCur?'var(--accent)':'var(--surface)'), dotInk:(isDone||isCur)?'#fff':'var(--muted)', dotLine:isDone?'var(--ok)':(isCur?'var(--accent)':'var(--line)'),
+        dotIcon:isDone?'fa-check':'fa-circle', iconDisp:isDone?'inline':'none', numDisp:isDone?'none':'inline',
+        mColor:isCur?'var(--accent-text)':'var(--ink)', mOp:shown?1:0, mTf:shown?'none':'translateY(-.6rem)', delay:(0.04+i*0.04)+'s',
+        secs:isCur?l.sections.map(s=>{ const on=this.state.active===s.id; return {href:'#'+s.id,title:s.title,cur:on?'location':undefined,color:on?'var(--accent-text)':'var(--muted)',weight:on?700:500,line:on?'var(--accent)':'transparent'}; }):[] };
+    });
+    const open=this.state.open;
+    return {
+      items, done, doneText:done+' of 6 lessons complete', pct:Math.round(done/6*100)+'%',
+      curLabel:'Lesson '+cur+' of 6', curTitle:L?L.title:'',
+      closed:!open, expanded:open?'true':'false', btnLabel:open?'Close course outline':'Open course outline',
+      menuTop:this.state.menuTop, panelOp:shown?1:0,
+      barTop:shown?'translateY(3.5px) rotate(45deg)':'none', barBot:shown?'translateY(-3.5px) rotate(-45deg)':'none',
+      barRef:this.barRef, btnRef:this.btnRef,
+      toggle:()=>open?this.closeMenu():this.openMenu(),
+      closeMenu:()=>this.closeMenu(),
+      onKey:e=>{ if(e.key==='Escape'&&open){ this.closeMenu(); this.btnRef.current&&this.btnRef.current.focus(); } }
+    };
+  }
+}
+</script>
+</body>
+</html>

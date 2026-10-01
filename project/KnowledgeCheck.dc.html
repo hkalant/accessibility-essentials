@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<section id="knowledge-check" aria-labelledby="kc-title" style="padding:2.5rem 0;border-top:1px solid var(--line)">
+  <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:.75rem 1.5rem;margin-bottom:1.25rem">
+    <div>
+      <h2 id="kc-title" style="font-size:1.75rem;margin-bottom:.35rem">Knowledge check</h2>
+      <p style="margin:0;color:var(--muted)">{{ intro }}</p>
+    </div>
+  </div>
+
+  <sc-if value="{{ complete }}" hint-placeholder-val="{{ false }}">
+    <div role="status" data-noread="" style="display:flex;gap:1.1rem;align-items:center;flex-wrap:wrap;padding:1.25rem;border-radius:1rem;background:var(--ok-soft);border:1px solid var(--ok);margin-bottom:1rem">
+      <span aria-hidden="true" data-gamify="" style="flex:none;width:3.75rem;height:3.75rem;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-size:1.4rem;box-shadow:0 0 0 4px var(--surface),0 0 0 6px var(--accent)"><i class="fa-solid {{ icon }}"></i></span>
+      <div style="flex:1;min-width:12rem">
+        <p style="margin:0;font-weight:700;font-size:1.125rem">Lesson complete</p>
+        <p style="margin:0;color:var(--ink)">{{ completeText }}</p>
+      </div>
+      <a href="{{ nextHref }}" style="display:inline-flex;align-items:center;gap:.5rem;min-height:2.75rem;padding:.6rem 1.1rem;border-radius:.65rem;background:var(--accent);color:var(--accent-ink);font-weight:700;text-decoration:none">{{ nextLabel }}<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+    </div>
+  </sc-if>
+
+  <div style="background:var(--surface);border:1px solid var(--line);border-radius:1.25rem;box-shadow:var(--shadow);overflow:hidden">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 1.25rem;border-bottom:1px solid var(--line);flex-wrap:wrap">
+      <p style="margin:0;font-weight:700;font-size:.9375rem;color:var(--muted)">{{ qLabel }}</p>
+      <ol aria-label="Questions" style="list-style:none;margin:0;padding:0;display:flex;gap:.4rem">
+        <sc-for list="{{ steps }}" as="s" hint-placeholder-count="4">
+          <li><button type="button" onClick="{{ s.go }}" aria-label="{{ s.label }}" aria-current="{{ s.cur }}" style="width:2.25rem;height:2.25rem;border-radius:50%;cursor:pointer;font-weight:700;font-size:.875rem;display:grid;place-items:center;background:{{ s.bg }};color:{{ s.ink }};border:2px solid {{ s.line }};transition:background .2s,color .2s"><span style="display:{{ s.numDisp }}">{{ s.n }}</span><i class="fa-solid fa-check" aria-hidden="true" style="display:{{ s.tickDisp }}"></i></button></li>
+        </sc-for>
+      </ol>
+    </div>
+    <div style="padding:1.5rem 1.25rem;display:flex;flex-direction:column;gap:1.1rem">
+      <sc-if value="{{ q.scenario }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;gap:.9rem;align-items:flex-start;padding:1rem 1.1rem;border-radius:.875rem;background:var(--surface-2);border:1px dashed var(--accent-line)">
+          <span aria-hidden="true" style="flex:none;width:2.5rem;height:2.5rem;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center"><i class="fa-solid fa-user-tie"></i></span>
+          <div>
+            <p style="margin:0 0 .15rem;font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-text)">Scenario · {{ q.scenario.who }}</p>
+            <p style="margin:0">{{ q.scenario.text }}</p>
+          </div>
+        </div>
+      </sc-if>
+      <h3 id="kc-q" style="font-family:var(--font-body);font-size:1.1875rem;font-weight:700;line-height:1.4">{{ q.q }}</h3>
+
+      <sc-if value="{{ isMcq }}" hint-placeholder-val="{{ true }}">
+        <fieldset style="border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:.55rem">
+          <legend class="sr-only">{{ q.q }}</legend>
+          <sc-for list="{{ opts }}" as="o" hint-placeholder-count="4">
+            <label style="display:flex;gap:.8rem;align-items:flex-start;padding:.85rem 1rem;border-radius:.75rem;cursor:pointer;border:2px solid {{ o.border }};background:{{ o.bg }};transition:border-color .15s,background .15s">
+              <input type="radio" name="{{ radioName }}" checked="{{ o.checked }}" onChange="{{ o.pick }}" style="accent-color:var(--accent);width:1.15rem;height:1.15rem;margin:.2rem 0 0;flex:none">
+              <span style="flex:1">{{ o.label }}</span>
+              <i class="fa-solid {{ o.icon }}" aria-hidden="true" style="margin-top:.2rem;color:{{ o.iconColor }};display:{{ o.iconDisp }}"></i>
+            </label>
+          </sc-for>
+        </fieldset>
+      </sc-if>
+
+      <sc-if value="{{ isSort }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:1rem">
+          <p style="margin:0;font-size:.9rem;color:var(--muted)"><i class="fa-solid fa-hand-pointer" aria-hidden="true"></i> Drag each card into a group — or select a card, then choose “Place here”. Works with keyboard and touch.</p>
+          <div aria-label="Cards to sort" role="group" onDragOver="{{ allowDrop }}" onDrop="{{ dropTray }}" style="display:flex;flex-wrap:wrap;gap:.5rem;min-height:3.25rem;padding:.75rem;border-radius:.875rem;border:2px dashed var(--line);background:var(--surface-2)">
+            <sc-for list="{{ tray }}" as="c" hint-placeholder-count="4">
+              <button type="button" draggable="true" onDragStart="{{ c.drag }}" onClick="{{ c.pick }}" aria-pressed="{{ c.pressed }}" style="display:inline-flex;align-items:center;gap:.5rem;min-height:2.75rem;padding:.5rem .85rem;border-radius:.6rem;border:2px solid {{ c.border }};background:{{ c.bg }};color:var(--ink);font-weight:600;font-size:.9375rem;cursor:grab;text-align:left;box-shadow:0 1px 2px rgba(0,0,0,.06)"><i class="fa-solid fa-grip-vertical" aria-hidden="true" style="color:var(--muted)"></i>{{ c.t }}</button>
+            </sc-for>
+            <sc-if value="{{ trayEmpty }}" hint-placeholder-val="{{ false }}"><span style="color:var(--muted);font-size:.9rem;align-self:center">All cards placed.</span></sc-if>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(12rem,1fr));gap:.75rem">
+            <sc-for list="{{ bins }}" as="b" hint-placeholder-count="2">
+              <div role="group" aria-label="{{ b.name }}" onDragOver="{{ allowDrop }}" onDrop="{{ b.drop }}" style="display:flex;flex-direction:column;gap:.5rem;padding:.85rem;border-radius:.875rem;border:2px solid {{ b.line }};background:var(--surface);min-height:8rem;transition:border-color .15s">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:.5rem">
+                  <span style="font-weight:700">{{ b.name }}</span>
+                  <button type="button" onClick="{{ b.place }}" disabled="{{ noPick }}" style="min-height:2.25rem;padding:.25rem .65rem;border-radius:.5rem;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent-text);font-weight:700;font-size:.8125rem;cursor:pointer;opacity:{{ placeOp }}">Place here</button>
+                </div>
+                <sc-for list="{{ b.cards }}" as="c" hint-placeholder-count="1">
+                  <button type="button" draggable="true" onDragStart="{{ c.drag }}" onClick="{{ c.pick }}" aria-pressed="{{ c.pressed }}" aria-label="{{ c.aria }}" style="display:flex;align-items:center;gap:.5rem;min-height:2.75rem;padding:.5rem .75rem;border-radius:.6rem;border:2px solid {{ c.border }};background:{{ c.bg }};color:var(--ink);font-weight:600;font-size:.9rem;cursor:grab;text-align:left"><i class="fa-solid {{ c.icon }}" aria-hidden="true" style="color:{{ c.iconColor }}"></i><span style="flex:1">{{ c.t }}</span></button>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <div aria-live="polite" style="min-height:0">
+        <sc-if value="{{ fb.show }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;gap:.75rem;align-items:flex-start;padding:1rem 1.1rem;border-radius:.875rem;background:{{ fb.bg }};border:1px solid {{ fb.line }}">
+            <i class="fa-solid {{ fb.icon }}" aria-hidden="true" style="color:{{ fb.color }};margin-top:.25rem;font-size:1.1rem"></i>
+            <div><p style="margin:0;font-weight:700">{{ fb.title }}</p><p style="margin:0">{{ fb.text }}</p></div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+    <div data-noread="" style="display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:1rem 1.25rem;border-top:1px solid var(--line);background:var(--surface-2);flex-wrap:wrap">
+      <button type="button" onClick="{{ prev }}" disabled="{{ atStart }}" style="display:inline-flex;align-items:center;gap:.5rem;min-height:2.75rem;padding:.55rem 1rem;border-radius:.65rem;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-weight:700;cursor:pointer;opacity:{{ prevOp }}"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Previous</button>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+        <button type="button" onClick="{{ check }}" disabled="{{ cantCheck }}" style="display:inline-flex;align-items:center;gap:.5rem;min-height:2.75rem;padding:.55rem 1.1rem;border-radius:.65rem;border:0;background:var(--accent);color:var(--accent-ink);font-weight:700;cursor:pointer;opacity:{{ checkOp }}"><i class="fa-solid fa-check" aria-hidden="true"></i>Check answer</button>
+        <button type="button" onClick="{{ next }}" disabled="{{ atEnd }}" style="display:inline-flex;align-items:center;gap:.5rem;min-height:2.75rem;padding:.55rem 1rem;border-radius:.65rem;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-weight:700;cursor:pointer;opacity:{{ nextOp }}">Next<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;lesson&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:1,&quot;min&quot;:1,&quot;max&quot;:6,&quot;tsType&quot;:&quot;number&quot;}}">
+class Component extends DCLogic {
+  state = { i:0, ans:{}, pick:null, loaded:false };
+  n(){ return Number(this.props.lesson||1); }
+  qs(){ return (window.AE&&window.AE.kc[this.n()])||[]; }
+  componentDidMount(){
+    this._u=()=>this.forceUpdate();
+    ['ae:progress','ae:prefs'].forEach(e=>window.addEventListener(e,this._u));
+    const load=()=>{ const s=window.AE.progress.lesson(this.n()).kc||{}; this.setState({ans:s.ans||{},i:s.i||0,loaded:true}); };
+    if(window.AE) load(); else window.addEventListener('ae:ready',load,{once:true});
+  }
+  componentWillUnmount(){ ['ae:progress','ae:prefs'].forEach(e=>window.removeEventListener(e,this._u)); this.persist(); }
+  persist(){ if(!window.AE||!this.state.loaded) return; window.AE.progress.update(this.n(),{kc:{ans:this.state.ans,i:this.state.i}}); }
+  isComplete(){ const q=this.qs(); return q.length>0&&q.every((_,k)=>this.state.ans[k]&&this.state.ans[k].correct); }
+  setAns(k,patch,cb){ this.setState(s=>({ans:Object.assign({},s.ans,{[k]:Object.assign({},s.ans[k]||{},patch)})}),()=>{ this.persist(); cb&&cb(); }); }
+  go(k){ this.setState({i:Math.max(0,Math.min(this.qs().length-1,k)),pick:null},()=>{ this.persist(); const h=document.getElementById('kc-q'); if(h){ h.setAttribute('tabindex','-1'); h.focus({preventScroll:true}); } }); }
+  place(item,bin){ const k=this.state.i; const a=this.state.ans[k]||{}; const place=Object.assign({},a.place||{}); if(bin==null) delete place[item]; else place[item]=bin; this.setState({pick:null}); this.setAns(k,{place,checked:false}); }
+  doCheck(){
+    const k=this.state.i, q=this.qs()[k], a=this.state.ans[k]||{}; let correct=false;
+    if(q.type==='mcq') correct=a.sel===q.answer;
+    else correct=q.items.every((it,j)=>a.place&&a.place[j]===it.b);
+    const wasComplete=this.isComplete();
+    this.setAns(k,{checked:true,correct,tries:(a.tries||0)+1},()=>{
+      const AE=window.AE;
+      if(!wasComplete&&this.isComplete()){ const L=AE.lessons[this.n()-1]; if(AE.progress.markDone(this.n())) AE.toast('Badge earned: '+L.badge,'fa-award'); }
+    });
+  }
+  renderVals(){
+    const AE=window.AE; const qs=this.qs(); const n=this.n();
+    if(!AE||!qs.length) return { q:{q:''}, steps:[], opts:[], tray:[], bins:[], fb:{show:false} };
+    const k=Math.min(this.state.i,qs.length-1), q=qs[k], a=this.state.ans[k]||{};
+    const steps=qs.map((_,j)=>{ const cur=j===k, ok=this.state.ans[j]&&this.state.ans[j].correct; return {n:j+1,go:()=>this.go(j),cur:cur?'step':undefined,label:'Question '+(j+1)+(ok?', answered correctly':'')+(cur?', current':''),bg:cur?'var(--accent)':(ok?'var(--ok-soft)':'var(--surface)'),ink:cur?'var(--accent-ink)':(ok?'var(--ok)':'var(--muted)'),line:cur?'var(--accent)':(ok?'var(--ok)':'var(--line)'),numDisp:(ok&&!cur)?'none':'inline',tickDisp:(ok&&!cur)?'inline':'none'}; });
+    let opts=[], tray=[], bins=[], ready=false;
+    const reveal=a.checked&&!a.correct&&(a.tries||0)>=2;
+    if(q.type==='mcq'){
+      ready=a.sel!=null;
+      opts=q.options.map((label,j)=>{ const sel=a.sel===j; const good=a.checked&&((sel&&a.correct)||(reveal&&j===q.answer)); const bad=a.checked&&sel&&!a.correct;
+        return {label,checked:sel,pick:()=>this.setAns(k,{sel:j,checked:false}),border:good?'var(--ok)':bad?'var(--bad)':sel?'var(--accent)':'var(--line)',bg:good?'var(--ok-soft)':bad?'var(--bad-soft)':sel?'var(--accent-soft)':'var(--surface)',icon:good?'fa-circle-check':'fa-circle-xmark',iconColor:good?'var(--ok)':'var(--bad)',iconDisp:(good||bad)?'inline':'none'}; });
+    } else {
+      const place=a.place||{}; const pk=this.state.pick;
+      const card=(it,j)=>{ const inBin=place[j]!=null; const mark=a.checked&&inBin; const right=mark&&place[j]===it.b; const picked=pk===j;
+        return {t:it.t,pressed:picked?'true':'false',pick:()=>this.setState({pick:picked?null:j}),drag:e=>{ e.dataTransfer.setData('text/plain',String(j)); this.setState({pick:j}); },
+          border:picked?'var(--accent)':mark?(right?'var(--ok)':'var(--bad)'):'var(--line)',bg:picked?'var(--accent-soft)':mark?(right?'var(--ok-soft)':'var(--bad-soft)'):'var(--surface)',
+          icon:mark?(right?'fa-circle-check':'fa-circle-xmark'):'fa-grip-vertical',iconColor:mark?(right?'var(--ok)':'var(--bad)'):'var(--muted)',aria:it.t+(mark?(right?' — correct':' — incorrect'):'')+'. Select to move.'}; };
+      tray=q.items.map((it,j)=>place[j]==null?card(it,j):null).filter(Boolean);
+      const getIdx=e=>{ const v=e.dataTransfer.getData('text/plain'); return v!==''?Number(v):this.state.pick; };
+      bins=q.bins.map((name,b)=>({name,line:pk!=null?'var(--accent)':'var(--line)',place:()=>{ if(pk!=null) this.place(pk,b); },drop:e=>{ e.preventDefault(); const j=getIdx(e); if(j!=null) this.place(j,b); },cards:q.items.map((it,j)=>place[j]===b?card(it,j):null).filter(Boolean)}));
+      ready=Object.keys(place).length===q.items.length;
+    }
+    let fb={show:false};
+    if(a.checked){
+      if(a.correct) fb={show:true,title:'Correct',text:q.explain||'Every card is in the right group. Well done.',icon:'fa-circle-check',color:'var(--ok)',bg:'var(--ok-soft)',line:'var(--ok)'};
+      else if(reveal) fb={show:true,title:'Not quite — here’s the answer',text:q.type==='mcq'?q.explain:'The cards marked with a cross are in the wrong group. Move them and check again.',icon:'fa-lightbulb',color:'var(--warn)',bg:'var(--warn-soft)',line:'var(--warn)'};
+      else fb={show:true,title:'Not quite',text:q.type==='mcq'?'Have another look and try again.':'Some cards are in the wrong group — they’re marked with a cross. Move them and check again.',icon:'fa-circle-xmark',color:'var(--bad)',bg:'var(--bad-soft)',line:'var(--bad)'};
+    }
+    const L=AE.lessons[n-1], nextL=AE.lessons[n];
+    const complete=this.isComplete();
+    return {
+      intro:qs.length+' questions. Answer them all correctly to complete the lesson and earn your badge. You can try as many times as you like.',
+      q, isMcq:q.type==='mcq', isSort:q.type==='sort', opts, tray, bins, trayEmpty:q.type==='sort'&&tray.length===0,
+      radioName:'kc-'+n+'-'+k, steps, qLabel:'Question '+(k+1)+' of '+qs.length, fb,
+      noPick:this.state.pick==null, placeOp:this.state.pick==null?.45:1, allowDrop:e=>e.preventDefault(),
+      dropTray:e=>{ e.preventDefault(); const v=e.dataTransfer.getData('text/plain'); if(v!=='') this.place(Number(v),null); },
+      atStart:k===0, atEnd:k===qs.length-1, prevOp:k===0?.45:1, nextOp:k===qs.length-1?.45:1,
+      cantCheck:!ready||(a.checked&&a.correct), checkOp:(!ready||(a.checked&&a.correct))?.45:1,
+      prev:()=>this.go(k-1), next:()=>this.go(k+1), check:()=>this.doCheck(),
+      complete, icon:L.icon, completeText:'You’ve earned the '+L.badge+' badge.',
+      nextHref:nextL?nextL.file:'Badge.dc.html', nextLabel:nextL?'Next lesson':'Claim your course badge'
+    };
+  }
+}
+</script>
+</body>
+</html>

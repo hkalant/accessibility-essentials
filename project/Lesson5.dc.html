@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 5: Video, audio &amp; STEM content · Accessibility Essentials</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&amp;display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="course.css">
+<script src="course.js"></script>
+</helmet>
+<div data-lesson="5" style="min-height:100vh;display:flex;flex-direction:column">
+<dc-import name="Topbar" active="course" hint-size="100%,4rem"></dc-import>
+<div class="ae-lesson-layout" style="flex:1">
+<dc-import name="Sidebar" current="5" hint-size="0,0"></dc-import>
+<main id="main" data-read-root="" tabindex="-1" style="min-width:0;outline:none">
+<dc-import name="LessonIntro" lesson="5" hint-size="100%,26rem"></dc-import>
+<div style="max-width:var(--measure);margin:0 auto;padding:0 1.25rem 2rem">
+
+<section id="media-types" aria-labelledby="h-media" style="padding:2.5rem 0;margin-top:2rem;border-top:1px solid var(--line)">
+  <h2 id="h-media" style="font-size:1.75rem;margin-bottom:.5rem">Four media alternatives</h2>
+  <p style="margin:0 0 1.25rem;font-size:1.0625rem">Pre-recorded video and audio published after 23 September 2020 is covered by PSBAR. Live media is exempt from PSBAR — but not from the Equality Act. Select each alternative to see who it helps and when you need it.</p>
+  <div class="ae-4col" style="gap:.6rem;margin-bottom:.9rem">
+    <sc-for list="{{ mtypes }}" as="m" hint-placeholder-count="4">
+      <button type="button" onClick="{{ m.pick }}" aria-pressed="{{ m.pressed }}" style="display:flex;flex-direction:column;align-items:flex-start;gap:.5rem;padding:1rem;border-radius:1rem;border:2px solid {{ m.line }};background:{{ m.bg }};cursor:pointer;text-align:left;color:var(--ink);min-height:6.5rem">
+        <i class="fa-solid {{ m.icon }}" aria-hidden="true" style="font-size:1.3rem;color:var(--accent)"></i>
+        <span style="font-weight:700;font-size:1.0625rem">{{ m.name }}</span>
+        <span style="font-size:.8125rem;font-weight:700;color:var(--muted)">{{ m.level }}</span>
+      </button>
+    </sc-for>
+  </div>
+  <div aria-live="polite" class="ae-3col" style="gap:1rem;padding:1.25rem;border-radius:1rem;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow)">
+    <div><p style="margin:0 0 .25rem;font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-text)">What it is</p><p style="margin:0">{{ mt.what }}</p></div>
+    <div><p style="margin:0 0 .25rem;font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-text)">Who it helps</p><p style="margin:0">{{ mt.who }}</p></div>
+    <div><p style="margin:0 0 .25rem;font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-text)">When you need it</p><p style="margin:0">{{ mt.when }}</p></div>
+  </div>
+</section>
+
+<section id="captions" aria-labelledby="h-captions" style="padding:2.5rem 0;border-top:1px solid var(--line)">
+  <h2 id="h-captions" style="font-size:1.75rem;margin-bottom:.5rem">Auto vs edited captions</h2>
+  <p style="margin:0 0 1.25rem;font-size:1.0625rem">Automatic captions are a good start, but they struggle most with exactly the words that matter in your subject. Step through this physics clip with each caption track.</p>
+  <div style="background:var(--surface);border:1px solid var(--line);border-radius:1.25rem;box-shadow:var(--shadow);overflow:hidden">
+    <div style="display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid var(--line)">
+      <div role="radiogroup" aria-label="Caption track" style="display:flex;padding:.25rem;border-radius:999px;background:var(--surface-2);border:1px solid var(--line)">
+        <button type="button" role="radio" aria-checked="{{ autoSel }}" onClick="{{ showAuto }}" style="min-height:2.5rem;padding:.4rem 1rem;border-radius:999px;border:0;font-weight:700;cursor:pointer;background:{{ autoBg }};color:{{ autoInk }}">Automatic</button>
+        <button type="button" role="radio" aria-checked="{{ editSel }}" onClick="{{ showEdit }}" style="min-height:2.5rem;padding:.4rem 1rem;border-radius:999px;border:0;font-weight:700;cursor:pointer;background:{{ editBg }};color:{{ editInk }}">Edited</button>
+      </div>
+      <p aria-live="polite" style="margin:0;font-weight:700;color:{{ errInk }}">{{ errText }}</p>
+    </div>
+    <div class="ae-2col" style="gap:0">
+      <div style="padding:1.25rem;display:flex;flex-direction:column;gap:.75rem;border-right:1px solid var(--line)">
+        <div aria-hidden="true" style="aspect-ratio:16/9;border-radius:.875rem;background:linear-gradient(160deg,#1f2330,#10121a);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:.5rem;color:#8e96ab"><i class="fa-solid fa-person-chalkboard" style="font-size:3rem"></i><span style="font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase">PHY2101 · Lecture 7</span></div>
+          <div style="position:absolute;left:6%;right:6%;bottom:8%;display:flex;justify-content:center">
+            <span style="background:rgba(0,0,0,.82);color:#fff;padding:.3rem .6rem;border-radius:.3rem;font-size:clamp(.8rem,1.6vw,1rem);line-height:1.4;text-align:center">{{ capNow }}</span>
+          </div>
+        </div>
+        <p class="sr-only" aria-live="polite">Caption: {{ capNow }}</p>
+        <div style="display:flex;align-items:center;gap:.5rem">
+          <button type="button" onClick="{{ capPrev }}" aria-label="Previous line" style="width:2.75rem;height:2.75rem;border-radius:.6rem;border:1px solid var(--line);background:var(--surface);cursor:pointer;color:var(--ink)"><i class="fa-solid fa-backward-step" aria-hidden="true"></i></button>
+          <button type="button" onClick="{{ capPlay }}" aria-label="{{ capPlayLabel }}" style="width:2.75rem;height:2.75rem;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);cursor:pointer"><i class="fa-solid {{ capPlayIcon }}" aria-hidden="true"></i></button>
+          <button type="button" onClick="{{ capNext }}" aria-label="Next line" style="width:2.75rem;height:2.75rem;border-radius:.6rem;border:1px solid var(--line);background:var(--surface);cursor:pointer;color:var(--ink)"><i class="fa-solid fa-forward-step" aria-hidden="true"></i></button>
+          <span style="margin-left:auto;font-size:.875rem;color:var(--muted);font-weight:600">{{ capPos }}</span>
+        </div>
+      </div>
+      <div style="padding:1.25rem">
+        <h3 style="font-family:var(--font-body);font-size:1.0625rem;font-weight:700;margin-bottom:.75rem">What was actually said</h3>
+        <ol style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.35rem">
+          <sc-for list="{{ said }}" as="l" hint-placeholder-count="6">
+            <li><button type="button" onClick="{{ l.go }}" aria-current="{{ l.cur }}" style="width:100%;text-align:left;display:flex;gap:.6rem;align-items:flex-start;padding:.55rem .7rem;border-radius:.6rem;border:1px solid {{ l.line }};background:{{ l.bg }};cursor:pointer;color:var(--ink);font-size:.9375rem">
+              <i class="fa-solid {{ l.icon }}" aria-hidden="true" style="margin-top:.25rem;color:{{ l.iconInk }}"></i>
+              <span style="display:flex;flex-direction:column;gap:.15rem"><span>{{ l.t }}</span><span style="font-size:.8125rem;color:var(--bad);display:{{ l.autoDisp }}">Auto: “{{ l.auto }}”</span></span>
+            </button></li>
+          </sc-for>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <p style="margin:1rem 0 0;font-size:.9375rem">Tip: most lecture capture systems let you edit captions in the browser. Add your module’s key terms to the platform’s custom vocabulary if it has one.</p>
+</section>
+
+<section id="player" aria-labelledby="h-player" style="padding:2.5rem 0;border-top:1px solid var(--line)">
+  <h2 id="h-player" style="font-size:1.75rem;margin-bottom:.5rem">An accessible lecture player</h2>
+  <p style="margin:0 0 1.25rem;font-size:1.0625rem">This clip has edited captions, audio description and a searchable, interactive transcript. Caption size, font and position follow your settings in the Accessibility panel.</p>
+  <div style="background:var(--surface);border:1px solid var(--line);border-radius:1.25rem;box-shadow:var(--shadow);overflow:hidden">
+    <div style="padding:1.25rem 1.25rem .75rem">
+      <div role="region" aria-label="Video: Supply and demand, 50 seconds" style="aspect-ratio:16/9;border-radius:.875rem;background:linear-gradient(160deg,#1c2433,#0f131b);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
+        <div aria-hidden="true" style="width:58%;height:62%;border-left:2px solid #8e96ab;border-bottom:2px solid #8e96ab;position:relative">
+          <span style="position:absolute;left:-1.6rem;top:0;color:#8e96ab;font-size:.75rem;font-weight:700">P</span>
+          <span style="position:absolute;right:0;bottom:-1.3rem;color:#8e96ab;font-size:.75rem;font-weight:700">Q</span>
+          <span style="position:absolute;left:5%;top:5%;width:95%;height:2px;background:#6fb3ff;transform-origin:left top;transform:rotate(32deg);opacity:{{ demandOp }};transition:opacity .4s"></span>
+          <span style="position:absolute;left:5%;bottom:5%;width:95%;height:2px;background:#ffb86b;transform-origin:left bottom;transform:rotate(-32deg);opacity:{{ supplyOp }};transition:opacity .4s"></span>
+          <span style="position:absolute;left:calc(50% - .9rem);top:calc(50% - .9rem);width:1.8rem;height:1.8rem;border-radius:50%;border:2px solid #ff6b6b;opacity:{{ eqOp }};transition:opacity .4s"></span>
+        </div>
+        <div style="position:absolute;left:5%;right:5%;top:{{ capTop }};bottom:{{ capBottom }};display:flex;justify-content:center;pointer-events:none">
+          <span aria-hidden="true" style="background:var(--cap-bg);color:#fff;padding:.25em .6em;border-radius:.25em;font-family:var(--cap-font);font-size:var(--cap-size);line-height:1.35;text-align:center;opacity:{{ capOp }}">{{ pCap }}</span>
+        </div>
+        <sc-if value="{{ adNow }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;left:4%;top:4%;max-width:70%;background:rgba(209,3,115,.92);color:#fff;padding:.4rem .7rem;border-radius:.5rem;font-size:.8125rem;line-height:1.4"><i class="fa-solid fa-audio-description" aria-hidden="true"></i> {{ adNow }}</div>
+        </sc-if>
+        <p class="sr-only" aria-live="polite">{{ liveText }}</p>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:.6rem;margin-top:.75rem">
+        <button type="button" onClick="{{ pToggle }}" aria-label="{{ pPlayLabel }}" style="width:3rem;height:3rem;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);cursor:pointer;font-size:1.05rem"><i class="fa-solid {{ pPlayIcon }}" aria-hidden="true"></i></button>
+        <input type="range" min="0" max="50" step="0.5" value="{{ pT }}" onChange="{{ pSeek }}" aria-label="Seek" aria-valuetext="{{ pTime }}" style="flex:1 1 10rem;accent-color:var(--accent)">
+        <span style="font-variant-numeric:tabular-nums;font-size:.875rem;font-weight:600;min-width:5.5rem">{{ pTime }}</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.6rem">
+        <button type="button" role="switch" aria-checked="{{ ccSel }}" onClick="{{ ccToggle }}" style="display:inline-flex;align-items:center;gap:.4rem;min-height:2.5rem;padding:.4rem .8rem;border-radius:.6rem;border:1px solid {{ ccLine }};background:{{ ccBg }};font-weight:700;font-size:.875rem;cursor:pointer;color:var(--ink)"><i class="fa-solid fa-closed-captioning" aria-hidden="true"></i>Captions</button>
+        <button type="button" role="switch" aria-checked="{{ adSel }}" onClick="{{ adToggle }}" style="display:inline-flex;align-items:center;gap:.4rem;min-height:2.5rem;padding:.4rem .8rem;border-radius:.6rem;border:1px solid {{ adLine }};background:{{ adBg }};font-weight:700;font-size:.875rem;cursor:pointer;color:var(--ink)"><i class="fa-solid fa-audio-description" aria-hidden="true"></i>Audio description</button>
+        <label style="display:inline-flex;align-items:center;gap:.4rem;font-weight:700;font-size:.875rem">Speed
+          <select value="{{ speed }}" onChange="{{ setSpeed }}" style="min-height:2.5rem;border-radius:.6rem;border:1px solid var(--line);background:var(--surface);padding:0 .4rem"><option value="0.75">0.75×</option><option value="1">1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2×</option></select>
+        </label>
+        <button type="button" onClick="{{ capSettings }}" style="display:inline-flex;align-items:center;gap:.4rem;min-height:2.5rem;padding:.4rem .8rem;border-radius:.6rem;border:1px solid var(--line);background:var(--surface);font-weight:700;font-size:.875rem;cursor:pointer;color:var(--ink)"><i class="fa-solid fa-sliders" aria-hidden="true"></i>Caption style</button>
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--line);padding:1rem 1.25rem 1.25rem">
+      <div style="display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;justify-content:space-between;margin-bottom:.6rem">
+        <h3 style="font-family:var(--font-body);font-size:1.0625rem;font-weight:700">Interactive transcript</h3>
+        <label style="display:flex;align-items:center;gap:.5rem;flex:0 1 16rem"><span class="sr-only">Search transcript</span><i class="fa-solid fa-magnifying-glass" aria-hidden="true" style="color:var(--muted)"></i><input type="search" value="{{ q }}" onInput="{{ setQ }}" placeholder="Search transcript" style="width:100%;min-height:2.5rem;padding:0 .7rem;border-radius:.6rem;border:1px solid var(--line);background:var(--surface)"></label>
+      </div>
+      <p aria-live="polite" style="margin:0 0 .5rem;font-size:.8125rem;color:var(--muted)">{{ qInfo }}</p>
+      <ol ref="{{ trRef }}" style="list-style:none;margin:0;padding:0;max-height:15rem;overflow-y:auto;display:flex;flex-direction:column;gap:.2rem;border-radius:.6rem">
+        <sc-for list="{{ cues }}" as="c" hint-placeholder-count="8">
+          <li data-cue="{{ c.i }}"><button type="button" onClick="{{ c.go }}" aria-current="{{ c.cur }}" style="width:100%;text-align:left;display:flex;gap:.75rem;padding:.45rem .6rem;border-radius:.5rem;border:0;background:{{ c.bg }};cursor:pointer;color:var(--ink);font-size:.9375rem;opacity:{{ c.op }}">
+            <span style="font-variant-numeric:tabular-nums;color:var(--muted);font-size:.8125rem;min-width:2.5rem;padding-top:.1rem">{{ c.ts }}</span>
+            <span style="font-style:{{ c.fs }}"><strong style="display:{{ c.adDisp }};color:var(--accent-text)">Description: </strong>{{ c.t }}<mark style="display:{{ c.hitDisp }};background:var(--accent);color:#fff;border-radius:.2rem;padding:0 .25rem;margin-left:.4rem;font-size:.75rem">match</mark></span>
+          </button></li>
+        </sc-for>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section id="maths" aria-labelledby="h-maths" style="padding:2.5rem 0;border-top:1px solid var(--line)">
+  <h2 id="h-maths" style="font-size:1.75rem;margin-bottom:.5rem">Accessible maths &amp; STEM</h2>
+  <p style="margin:0 0 1.25rem;font-size:1.0625rem">An equation pasted as a picture is a dead end for screen readers, magnifiers and text-to-speech. Choose a version and listen to what a screen reader announces.</p>
+  <div style="background:var(--surface);border:1px solid var(--line);border-radius:1.25rem;box-shadow:var(--shadow);overflow:hidden">
+    <div class="ae-2col" style="gap:0">
+      <div style="padding:1.25rem;display:flex;flex-direction:column;gap:.75rem;border-right:1px solid var(--line)">
+        <sc-for list="{{ mathOpts }}" as="m" hint-placeholder-count="2">
+          <button type="button" onClick="{{ m.pick }}" aria-pressed="{{ m.pressed }}" style="display:flex;flex-direction:column;gap:.6rem;padding:1rem;border-radius:.875rem;border:2px solid {{ m.line }};background:{{ m.bg }};cursor:pointer;text-align:left;color:var(--ink)">
+            <span style="font-weight:700;display:flex;align-items:center;gap:.5rem"><i class="fa-solid {{ m.icon }}" aria-hidden="true" style="color:var(--accent)"></i>{{ m.name }}</span>
+            <span style="font-size:.8125rem;color:var(--muted)">{{ m.how }}</span>
+          </button>
+        </sc-for>
+        <div style="padding:1rem;border-radius:.875rem;background:#fff;color:#111;border:1px solid var(--line);display:flex;justify-content:center;min-height:5rem;align-items:center">
+          <div hidden="{{ hideImg }}" aria-hidden="true" style="filter:blur(.35px);image-rendering:pixelated;font-family:'Times New Roman',serif;font-size:1.35rem;letter-spacing:.02em;position:relative">
+            <math display="block"><mi>x</mi><mo>=</mo><mfrac><mrow><mo>−</mo><mi>b</mi><mo>±</mo><msqrt><msup><mi>b</mi><mn>2</mn></msup><mo>−</mo><mn>4</mn><mi>a</mi><mi>c</mi></msqrt></mrow><mrow><mn>2</mn><mi>a</mi></mrow></mfrac></math>
+            <span style="position:absolute;right:-.5rem;bottom:-1rem;font-family:ui-monospace,monospace;font-size:.625rem;color:#888">equation.png</span>
+          </div>
+          <div hidden="{{ hideMml }}" style="font-size:1.35rem">
+            <math display="block" aria-label="x equals negative b plus or minus the square root of b squared minus 4 a c, all over 2 a"><mi>x</mi><mo>=</mo><mfrac><mrow><mo>−</mo><mi>b</mi><mo>±</mo><msqrt><msup><mi>b</mi><mn>2</mn></msup><mo>−</mo><mn>4</mn><mi>a</mi><mi>c</mi></msqrt></mrow><mrow><mn>2</mn><mi>a</mi></mrow></mfrac></math>
+          </div>
+        </div>
+      </div>
+      <div style="padding:1.25rem;display:flex;flex-direction:column;gap:.75rem">
+        <h3 style="font-family:var(--font-body);font-size:1.0625rem;font-weight:700"><i class="fa-solid fa-volume-high" aria-hidden="true" style="color:var(--accent)"></i> What a screen reader says</h3>
+        <p aria-live="polite" style="margin:0;padding:1rem;border-radius:.75rem;background:var(--ink);color:var(--surface);font-family:ui-monospace,Menlo,monospace;font-size:.9375rem;line-height:1.6">{{ srSays }}</p>
+        <button type="button" onClick="{{ speakMath }}" style="align-self:flex-start;display:inline-flex;align-items:center;gap:.5rem;min-height:2.75rem;padding:.5rem 1rem;border-radius:.65rem;border:0;background:var(--accent);color:var(--accent-ink);font-weight:700;cursor:pointer"><i class="fa-solid fa-play" aria-hidden="true"></i>Hear it</button>
+        <p style="margin:0;font-size:.9375rem">{{ mathNote }}</p>
+      </div>
+    </div>
+  </div>
+  <h3 style="font-family:var(--font-body);font-size:1.1875rem;font-weight:700;margin:2rem 0 .75rem">Quick wins for STEM content</h3>
+  <ul class="ae-2col" style="list-style:none;margin:0;padding:0;gap:.6rem">
+    <li style="display:flex;gap:.75rem;padding:.9rem 1rem;border-radius:.875rem;background:var(--surface);border:1px solid var(--line)"><i class="fa-solid fa-square-root-variable" aria-hidden="true" style="color:var(--accent);margin-top:.25rem"></i><span><strong>Moodle:</strong> write maths in LaTeX between <code>\( … \)</code> and let the MathJax filter render it.</span></li>
+    <li style="display:flex;gap:.75rem;padding:.9rem 1rem;border-radius:.875rem;background:var(--surface);border:1px solid var(--line)"><i class="fa-solid fa-file-word" aria-hidden="true" style="color:var(--accent);margin-top:.25rem"></i><span><strong>Word:</strong> use Insert › Equation, not images. Equations stay editable and readable.</span></li>
+    <li style="display:flex;gap:.75rem;padding:.9rem 1rem;border-radius:.875rem;background:var(--surface);border:1px solid var(--line)"><i class="fa-solid fa-table" aria-hidden="true" style="color:var(--accent);margin-top:.25rem"></i><span><strong>Graphs:</strong> provide the data as a table and state the trend in words.</span></li>
+    <li style="display:flex;gap:.75rem;padding:.9rem 1rem;border-radius:.875rem;background:var(--surface);border:1px solid var(--line)"><i class="fa-solid fa-code" aria-hidden="true" style="color:var(--accent);margin-top:.25rem"></i><span><strong>Code:</strong> share it as text in a code block, never as a screenshot.</span></li>
+    <li style="display:flex;gap:.75rem;padding:.9rem 1rem;border-radius:.875rem;background:var(--surface);border:1px solid var(--line)"><i class="fa-solid fa-comment" aria-hidden="true" style="color:var(--accent);margin-top:.25rem"></i><span><strong>In lectures:</strong> say equations aloud as you write them — “x equals minus b, plus or minus…”.</span></li>
+    <li style="display:flex;gap:.75rem;padding:.9rem 1rem;border-radius:.875rem;background:var(--surface);border:1px solid var(--line)"><i class="fa-solid fa-atom" aria-hidden="true" style="color:var(--accent);margin-top:.25rem"></i><span><strong>Chemistry:</strong> give structures a name or formula in the alt text, and a description of key features.</span></li>
+  </ul>
+</section>
+
+<dc-import name="DosDonts" lesson="5" hint-size="100%,20rem"></dc-import>
+<dc-import name="KnowledgeCheck" lesson="5" hint-size="100%,32rem"></dc-import>
+<dc-import name="LessonEnd" lesson="5" hint-size="100%,24rem"></dc-import>
+</div>
+</main>
+</div>
+<dc-import name="Footer" hint-size="100%,12rem"></dc-import>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { mt:0, edited:false, li:0, cplay:false, t:0, playing:false, cc:true, ad:null, q:'', math:0 };
+  trRef = React.createRef();
+  CUES = [[0,'Welcome back. Today: how markets find a price.'],[5,'A slide shows an empty graph. Price is on the vertical axis, quantity on the horizontal.',1],[10,'Here’s the demand curve — it slopes downwards.'],[15,'As price falls, people buy more.'],[20,'A second line appears, sloping upwards, labelled “Supply”.',1],[24,'Supply slopes upwards: higher prices bring in more producers.'],[29,'Where the two lines cross is the equilibrium price.'],[34,'The crossing point is circled in red and labelled “P star”.',1],[38,'[Pen tapping] So — at P star, the market clears.'],[44,'Next week, we’ll shift these curves and see what happens.']];
+  componentDidMount(){
+    this._u=()=>this.forceUpdate(); ['ae:ready','ae:prefs'].forEach(n=>window.addEventListener(n,this._u));
+    this._iv=setInterval(()=>{
+      const AE=window.AE;
+      if(this.state.playing){ const sp=AE?AE.prefs.get().speed:1; const nt=Math.min(50,this.state.t+0.25*sp); const prevIdx=this.cueAt(this.state.t); this.setState({t:nt,playing:nt<50}); const idx=this.cueAt(nt); if(idx!==prevIdx){ this.onCue(idx); } }
+    },250);
+    this._c=setInterval(()=>{ if(this.state.cplay) this.setState(s=>({li:s.li<5?s.li+1:5,cplay:s.li<4})); },3200);
+  }
+  componentWillUnmount(){ ['ae:ready','ae:prefs'].forEach(n=>window.removeEventListener(n,this._u)); clearInterval(this._iv); clearInterval(this._c); if('speechSynthesis' in window) speechSynthesis.cancel(); }
+  adOn(){ return this.state.ad!=null?this.state.ad:!!(window.AE&&window.AE.prefs.get().ad); }
+  cueAt(t){ let k=0; this.CUES.forEach((c,i)=>{ if(t>=c[0]) k=i; }); return k; }
+  onCue(idx){
+    const c=this.CUES[idx]; const AE=window.AE;
+    if(c[2]&&this.adOn()&&'speechSynthesis' in window){ this.setState({playing:false}); const u=new SpeechSynthesisUtterance(c[1]); u.lang='en-GB'; u.rate=AE?AE.prefs.get().speed:1; u.onend=()=>this.setState({playing:true}); speechSynthesis.cancel(); speechSynthesis.speak(u); }
+    const box=this.trRef.current; const p=AE?AE.prefs.get():{transcriptScroll:true};
+    if(box&&p.transcriptScroll){ const li=box.querySelector('[data-cue="'+idx+'"]'); if(li) box.scrollTo({top:li.offsetTop-box.offsetTop-40,behavior:AE&&AE.prefs.reducedMotion()?'auto':'smooth'}); }
+  }
+  fmt(t){ const s=Math.floor(t); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+  renderVals(){
+    const s=this.state, on=b=>b?'true':'false', AE=window.AE, P=AE?AE.prefs.get():{speed:1,capPos:'bottom'};
+    const MT=[['Captions','fa-closed-captioning','Level A','Synchronised text of all speech and meaningful sounds, like [laughter] or [alarm].','Deaf and hard of hearing students, people watching without sound, non-native speakers, and anyone taking notes.','All pre-recorded video with speech. For live sessions, arrange live captions when a student needs them.'],
+      ['Subtitles','fa-language','Not a WCAG term','A translation of dialogue into another language. Usually leaves out sound effects.','Viewers who don’t speak the language of the video.','When your video is in another language. Subtitles don’t replace captions.'],
+      ['Transcripts','fa-file-lines','Level A for audio-only','A full text version of the audio, ideally with key visuals described.','Deafblind braille users, people who prefer reading, and anyone searching for a quote.','All audio-only content, like podcasts. Very helpful alongside video too.'],
+      ['Audio description','fa-audio-description','Level AA','Extra narration describing important visuals not covered by the speech.','Blind and partially sighted students.','When visuals carry meaning that isn’t spoken. Describing as you teach often removes the need.']];
+    const mtypes=MT.map((m,i)=>{ const sel=i===s.mt; return {name:m[0],icon:m[1],level:m[2],pressed:on(sel),pick:()=>this.setState({mt:i}),line:sel?'var(--accent)':'var(--line)',bg:sel?'var(--accent-soft)':'var(--surface)'}; });
+    const L=[['today we\'re looking at the shrewd injure equation','Today we’re looking at the Schrödinger equation.'],['it describes how a quantum state evolves over time','It describes how a quantum state evolves over time.'],['when we measure the system it collapses into an I can state','When we measure the system, it collapses into an eigenstate.'],['the probability is given by the square of the way function','The probability is given by the square of the wave function.'],['any questions so far','[Students laugh] Right — any questions so far?'],['ah yes plank\'s constant is H bar','Yes — Planck’s constant, h-bar.']];
+    const wrong=i=>L[i][0].replace(/[^a-z ]/gi,'').toLowerCase()!==L[i][1].replace(/[^a-z ]/gi,'').toLowerCase()&&i!==1;
+    const said=L.map((l,i)=>{ const cur=i===s.li, bad=wrong(i); return {t:l[1],auto:l[0],autoDisp:(!s.edited&&bad)?'block':'none',cur:cur?'true':undefined,go:()=>this.setState({li:i,cplay:false}),line:cur?'var(--accent)':'var(--line)',bg:cur?'var(--accent-soft)':'var(--surface)',icon:s.edited||!bad?'fa-circle-check':'fa-triangle-exclamation',iconInk:s.edited||!bad?'var(--ok)':'var(--bad)'}; });
+    const errs=L.filter((_,i)=>wrong(i)).length;
+    const seg=(b)=>({bg:b?'var(--accent)':'transparent',ink:b?'var(--accent-ink)':'var(--ink)'});
+    const AU=seg(!s.edited), ED=seg(s.edited);
+    const idx=this.cueAt(s.t); const c=this.CUES[idx]; const ad=this.adOn();
+    const lastSpeech=(()=>{ for(let i=idx;i>=0;i--) if(!this.CUES[i][2]) return this.CUES[i][1]; return ''; })();
+    const q=s.q.trim().toLowerCase();
+    const cues=this.CUES.map((cu,i)=>{ const isAd=!!cu[2]; const hit=q&&cu[1].toLowerCase().includes(q); const cur=i===idx&&s.t>0;
+      return {i,ts:this.fmt(cu[0]),t:cu[1],cur:cur?'true':undefined,go:()=>{ this.setState({t:cu[0]+0.01}); },bg:cur?'var(--accent-soft)':'transparent',op:(isAd&&!ad)?.55:1,adDisp:isAd?'inline':'none',fs:isAd?'italic':'normal',hitDisp:hit?'inline':'none'}; });
+    const hits=q?this.CUES.filter(cu=>cu[1].toLowerCase().includes(q)).length:0;
+    const pl=(b)=>({line:b?'var(--accent)':'var(--line)',bg:b?'var(--accent-soft)':'var(--surface)'});
+    const CC=pl(s.cc), ADp=pl(ad);
+    const top=P.capPos==='top';
+    const MM=[['As an image','fa-image','A screenshot of the equation pasted into a slide or Moodle page.','“Image. equation dot p n g.”','The equation is lost. Even with alt text, students can’t explore it term by term or zoom it without blurring.'],
+      ['As MathML (via LaTeX)','fa-square-root-variable','Typed in LaTeX and rendered by MathJax in Moodle, or with Word’s equation editor.','“x equals, fraction, negative b plus or minus, square root of b squared minus 4 a c, end root, over 2 a, end fraction.”','Screen readers can read it aloud and step through each part. It also scales cleanly and can be copied into other tools.']];
+    const mathOpts=MM.map((m,i)=>{ const sel=i===s.math; return {name:m[0],icon:m[1],how:m[2],pressed:on(sel),pick:()=>this.setState({math:i}),line:sel?'var(--accent)':'var(--line)',bg:sel?'var(--accent-soft)':'var(--surface)'}; });
+    return {
+      mtypes, mt:{what:MT[s.mt][3],who:MT[s.mt][4],when:MT[s.mt][5]},
+      autoSel:on(!s.edited), editSel:on(s.edited), autoBg:AU.bg, autoInk:AU.ink, editBg:ED.bg, editInk:ED.ink,
+      showAuto:()=>this.setState({edited:false}), showEdit:()=>this.setState({edited:true}),
+      errText:s.edited?'0 errors — ready to publish':errs+' of 6 lines have errors', errInk:s.edited?'var(--ok)':'var(--bad)',
+      capNow:s.edited?L[s.li][1]:L[s.li][0], said, capPos:'Line '+(s.li+1)+' of 6',
+      capPrev:()=>this.setState({li:Math.max(0,s.li-1),cplay:false}), capNext:()=>this.setState({li:Math.min(5,s.li+1),cplay:false}),
+      capPlay:()=>this.setState({cplay:!s.cplay,li:(!s.cplay&&s.li===5)?0:s.li}), capPlayIcon:s.cplay?'fa-pause':'fa-play', capPlayLabel:s.cplay?'Pause':'Play',
+      pCap:s.cc?lastSpeech:'', capOp:s.cc&&lastSpeech&&(s.t>0||s.playing)?1:0, capTop:top?'6%':'auto', capBottom:top?'auto':'7%',
+      adNow:ad&&c[2]&&s.t>0?c[1]:'', liveText:ad&&c[2]&&s.t>0?'Description: '+c[1]:'',
+      demandOp:s.t>=10?1:0, supplyOp:s.t>=20?1:0, eqOp:s.t>=34?1:0,
+      pT:s.t, pTime:this.fmt(s.t)+' / 0:50', pPlayIcon:s.playing?'fa-pause':'fa-play', pPlayLabel:s.playing?'Pause video':'Play video',
+      pToggle:()=>{ if('speechSynthesis' in window) speechSynthesis.cancel(); this.setState({playing:!s.playing,t:(!s.playing&&s.t>=50)?0:s.t}); },
+      pSeek:e=>this.setState({t:Number(e.target.value)}),
+      ccSel:on(s.cc), ccLine:CC.line, ccBg:CC.bg, ccToggle:()=>this.setState({cc:!s.cc}),
+      adSel:on(ad), adLine:ADp.line, adBg:ADp.bg, adToggle:()=>this.setState({ad:!ad}),
+      speed:String(P.speed), setSpeed:e=>AE&&AE.prefs.set({speed:Number(e.target.value)}), capSettings:()=>AE&&AE.openPanel(),
+      q:s.q, setQ:e=>this.setState({q:e.target.value}), qInfo:q?(hits+' line'+(hits===1?'':'s')+' match “'+s.q.trim()+'”'):'Select a line to jump to that point in the video.', cues, trRef:this.trRef,
+      mathOpts, hideImg:s.math!==0, hideMml:s.math!==1, srSays:MM[s.math][3], mathNote:MM[s.math][4],
+      speakMath:()=>{ if(!('speechSynthesis' in window)) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(MM[s.math][3].replace(/[“”]/g,'')); u.lang='en-GB'; speechSynthesis.speak(u); }
+    };
+  }
+}
+</script>
+</body>
+</html>
