@@ -262,25 +262,8 @@ const prefs = {
     ).forEach(([a, on]) => (on ? h.setAttribute(a, '') : h.removeAttribute(a)));
     if (!h.getAttribute('lang')) h.setAttribute('lang', 'en-GB');
     ruler.set(p.ruler);
-    syncThemeColor();
   },
 };
-
-// Safari tints its browser bar with <meta name="theme-color">. Match it to the
-// accent of whichever theme is showing (light, dark, sepia or high contrast).
-function syncThemeColor() {
-  const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
-  if (!accent) return;
-  let metas = document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]');
-  if (!metas.length) {
-    const m = document.createElement('meta');
-    m.name = 'theme-color';
-    document.head.appendChild(m);
-    metas = document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]');
-  }
-  // The page ships one tag per colour scheme; once the theme is known, both carry the same colour.
-  metas.forEach((m) => (m.content = accent));
-}
 
 // ---------- Reading ruler / line mask ----------
 const ruler = {
@@ -836,9 +819,6 @@ export const AE = {
 };
 
 prefs.apply();
-['(prefers-reduced-motion: reduce)', '(prefers-color-scheme: dark)', '(prefers-contrast: more)'].forEach((q) => {
-  matchMedia(q).addEventListener('change', () => {
-    syncThemeColor();
-    emit('ae:prefs', prefs.get());
-  });
+['(prefers-reduced-motion: reduce)', '(prefers-color-scheme: dark)'].forEach((q) => {
+  matchMedia(q).addEventListener('change', () => emit('ae:prefs', prefs.get()));
 });
