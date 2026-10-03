@@ -74,13 +74,14 @@ export default class Topbar extends Component<any, any> {
               ))}
             </nav>
             <button
-              className="ae-desk flex-none flex items-center gap-2 min-h-11 py-2 px-[.9rem] rounded-full border border-line bg-surface text-ink font-bold text-[.9375rem] cursor-pointer hover:bg-accent-soft! hover:border-accent-soft! hover:text-accent-text!"
+              className="group ae-desk flex-none flex items-center gap-2 min-h-11 py-2 px-[.9rem] rounded-full border border-line bg-surface text-ink font-bold text-[.9375rem] cursor-pointer hover:bg-accent-soft! hover:border-accent-soft! hover:text-accent-text!"
               type="button"
               onClick={v.openPanel}
               aria-expanded={v.panelOpen}
               aria-controls="ae-panel"
             >
-              <i className="fa-solid fa-sliders text-accent" aria-hidden="true"></i>
+              {/* Same colour as the label (white over the home photo), pink on hover. */}
+              <i className="fa-solid fa-sliders text-current group-hover:text-accent" aria-hidden="true"></i>
               <span>Display</span>
             </button>
           </div>
