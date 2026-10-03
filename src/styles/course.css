@@ -166,7 +166,10 @@
     }
   }
 
+  /* Both roots carry an opaque theme colour: Safari 26+ samples it for its toolbars,
+     and a transparent root can fall back to white behind them. */
   html {
+    background: var(--bg);
     font-size: calc(100% * var(--scale));
     -webkit-text-size-adjust: 100%;
     scroll-padding-top: 5rem;
@@ -178,6 +181,10 @@
   }
   body {
     margin: 0;
+    /* viewport-fit=cover lets the page run under the status bar, notch and home indicator. */
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-left: env(safe-area-inset-left, 0px);
+    padding-right: env(safe-area-inset-right, 0px);
     background: var(--bg);
     color: var(--ink);
     font-family: var(--font-body);
@@ -267,7 +274,8 @@
   }
   html[data-cursor],
   html[data-cursor] * {
-    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Cpath d='M4 2 L4 36 L13 28 L19 42 L25 39 L19 26 L31 26 Z' fill='%23000' stroke='%23fff' stroke-width='2.5'/%3E%3C/svg%3E")
+    cursor:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Cpath d='M4 2 L4 36 L13 28 L19 42 L25 39 L19 26 L31 26 Z' fill='%23000' stroke='%23fff' stroke-width='2.5'/%3E%3C/svg%3E")
         4 2,
       auto !important;
   }
@@ -360,7 +368,7 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
     body {
-      padding-bottom: 6.5rem;
+      padding-bottom: calc(6.5rem + env(safe-area-inset-bottom, 0px));
     }
   }
   /* Desktop: sidebar fixed below the top bar; lesson and footer sit in the column beside it. */
@@ -468,18 +476,21 @@
       --muted: #f1eff3;
       --line: rgba(255, 255, 255, 0.28);
       --surface-2: rgba(255, 255, 255, 0.12);
-      background: transparent !important;
       border-bottom-color: transparent !important;
-      transition:
-        background-color 0.25s ease,
-        border-color 0.25s ease;
+      transition: border-color 0.25s ease;
+    }
+    .ae-home header[data-chrome='topbar'] > .ae-topbar-bg {
+      background: transparent !important;
+      transition: background-color 0.25s ease;
     }
     html[data-home-past-hero] .ae-home header[data-chrome='topbar'] {
+      border-bottom-color: rgba(255, 255, 255, 0.14) !important;
+      color: #fff;
+    }
+    html[data-home-past-hero] .ae-home header[data-chrome='topbar'] > .ae-topbar-bg {
       background: rgba(66, 74, 82, 0.8) !important;
       -webkit-backdrop-filter: blur(14px);
       backdrop-filter: blur(14px);
-      border-bottom-color: rgba(255, 255, 255, 0.14) !important;
-      color: #fff;
     }
     .ae-home .ae-home-hero {
       --ink: #fff;
@@ -518,7 +529,11 @@
       --surface-2: #fff;
       --accent-text: #86004a;
       color: #000;
+    }
+    html[data-theme='hc'] .ae-home .ae-home-hero,
+    html[data-theme='hc'] .ae-home header[data-chrome='topbar'] > .ae-topbar-bg {
       background: var(--surface) !important;
+      -webkit-backdrop-filter: none;
       backdrop-filter: none;
     }
     html[data-theme='hc'] .ae-home .ae-home-hero li i {
@@ -536,10 +551,15 @@
       --line: inherit;
       --accent-text: inherit;
       color: var(--ink);
+      border-bottom: 1px solid var(--line) !important;
+    }
+    html[data-focusmode] .ae-home .ae-home-hero,
+    html[data-focusmode] .ae-home header[data-chrome='topbar'] > .ae-topbar-bg,
+    html[data-reader] .ae-home .ae-home-hero,
+    html[data-reader] .ae-home header[data-chrome='topbar'] > .ae-topbar-bg {
       background: var(--surface) !important;
       -webkit-backdrop-filter: none;
       backdrop-filter: none;
-      border-bottom: 1px solid var(--line) !important;
     }
     html[data-focusmode] .ae-home .ae-home-hero,
     html[data-reader] .ae-home .ae-home-hero {

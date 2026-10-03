@@ -277,14 +277,19 @@ const ruler = {
     this.els = [];
     if (m === 'off' || !document.body) return;
     const band = 2.4;
+    // Fixed full-width bars keep no fill of their own (Safari 26+ samples a fixed element's own
+    // background for its toolbar tint); the visible tint is an absolutely positioned child.
+    const tint = (el: HTMLElement, css: string) => {
+      const f = document.createElement('div');
+      f.style.cssText = 'position:absolute;inset:0;' + css;
+      el.appendChild(f);
+    };
     if (m === 'ruler') {
       const r = document.createElement('div');
       r.setAttribute('aria-hidden', 'true');
       r.setAttribute('data-chrome', 'ruler');
-      r.style.cssText =
-        'position:fixed;left:0;right:0;height:' +
-        band +
-        'em;pointer-events:none;z-index:9998;border-top:2px solid var(--accent);border-bottom:2px solid var(--accent);background:rgba(209,3,115,.07);transform:translateY(-50%)';
+      r.style.cssText = 'position:fixed;left:0;right:0;height:' + band + 'em;pointer-events:none;z-index:9998;transform:translateY(-50%)';
+      tint(r, 'border-top:2px solid var(--accent);border-bottom:2px solid var(--accent);background:rgba(209,3,115,.07)');
       document.body.appendChild(r);
       this.els = [r];
     } else {
@@ -293,7 +298,8 @@ const ruler = {
       [t, b].forEach((e) => {
         e.setAttribute('aria-hidden', 'true');
         e.setAttribute('data-chrome', 'ruler');
-        e.style.cssText = 'position:fixed;left:0;right:0;pointer-events:none;z-index:9998;background:rgba(10,5,10,.55)';
+        e.style.cssText = 'position:fixed;left:0;right:0;pointer-events:none;z-index:9998';
+        tint(e, 'background:rgba(10,5,10,.55)');
         document.body.appendChild(e);
       });
       t.style.top = '0';

@@ -41,13 +41,16 @@ export default class Topbar extends Component<any, any> {
     return (
       <div className="ae-sticky-desk z-[60]">
         <a
-          className="fixed left-4 top-[-8rem] z-[300] bg-ink text-surface py-3 px-[1.1rem] rounded-[.6rem] font-bold no-underline focus:top-4!"
+          className="fixed left-4 top-[-8rem] z-[300] text-surface py-3 px-[1.1rem] rounded-[.6rem] font-bold no-underline focus:top-4!"
           href="#main"
           data-chrome="skip"
         >
+          <span className="absolute inset-0 -z-10 rounded-[.6rem] bg-ink" aria-hidden="true"></span>
           Skip to main content
         </a>
-        <header className="ae-sticky-desk z-[60] bg-surface border-b border-b-line" data-chrome="topbar">
+        <header className="ae-sticky-desk z-[60] border-b border-b-line" data-chrome="topbar">
+          {/* The fill lives on a child, not the sticky header: Safari 26+ tints its toolbar from a sticky element's own background. */}
+          <span className="ae-topbar-bg absolute inset-0 -z-10 bg-surface" aria-hidden="true"></span>
           <div className="h-16 py-0 px-5 flex items-center gap-4">
             <a className="flex items-center gap-[.65rem] no-underline text-ink min-w-0" href="index.html">
               <span className="flex-none w-9 h-9 rounded-[.65rem] bg-accent text-accent-ink grid place-items-center text-[1.15rem]" aria-hidden="true">

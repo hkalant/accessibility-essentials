@@ -20,7 +20,6 @@ export default class SearchModal extends Component<any, any> {
   componentWillUnmount() {
     document.removeEventListener('keydown', this._k, true);
     window.removeEventListener('ae:search', this._o);
-    document.documentElement.style.overflow = '';
   }
   focusInput(tries = 0) {
     const i = this.inputRef.current || (document.getElementById('sm-input') as HTMLInputElement | null);
@@ -37,11 +36,9 @@ export default class SearchModal extends Component<any, any> {
       return;
     }
     this._ret = document.activeElement;
-    document.documentElement.style.overflow = 'hidden';
     this.setState({ open: true, all: false }, () => requestAnimationFrame(() => this.focusInput()));
   }
   close(restore = true) {
-    document.documentElement.style.overflow = '';
     this.setState({ open: false });
     if (restore && this._ret && this._ret.focus) setTimeout(() => this._ret.focus(), 0);
   }
@@ -211,10 +208,14 @@ export default class SearchModal extends Component<any, any> {
       <>
         {v.open ? (
           <>
-            <div className="fixed inset-0 z-[2000] flex justify-center items-start pt-[min(12vh,6rem)] px-4 pb-4" data-chrome="search">
-              <div className="absolute inset-0 bg-[rgba(0,0,0,.55)]" onClick={v.close} aria-hidden="true"></div>
+            <div
+              className="fixed inset-0 z-[2000] flex justify-center items-start pt-[max(min(12vh,6rem),env(safe-area-inset-top,0px))] px-4 pb-4"
+              data-chrome="search"
+            >
+              {/* The page stays scrollable (no overflow: hidden, which upsets Safari 26+'s toolbar); touches on the backdrop just don't scroll it. The backdrop bleeds past the screen edges to reach under Safari's floating toolbars. */}
+              <div className="absolute inset-x-0 top-[-6rem] bottom-[-6rem] bg-[rgba(0,0,0,.55)] touch-none" onClick={v.close} aria-hidden="true"></div>
               <div
-                className="relative w-[min(100%,42rem)] max-h-[calc(100vh_-_min(12vh,6rem)_-_1rem)] flex flex-col rounded-[1.25rem] bg-surface border border-line [box-shadow:var(--shadow)] overflow-hidden text-ink"
+                className="relative w-[min(100%,42rem)] max-h-[calc(100dvh_-_min(12vh,6rem)_-_1rem_-_env(safe-area-inset-bottom,0px))] flex flex-col rounded-[1.25rem] bg-surface border border-line [box-shadow:var(--shadow)] overflow-hidden text-ink"
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="sm-title"
@@ -252,7 +253,7 @@ export default class SearchModal extends Component<any, any> {
                     Esc
                   </button>
                 </div>
-                <div className="flex-1 min-h-0 overflow-y-auto pt-4 px-[1.1rem] pb-[1.1rem] flex flex-col gap-[.85rem]">
+                <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain pt-4 px-[1.1rem] pb-[1.1rem] flex flex-col gap-[.85rem]">
                   {v.showChips ? (
                     <>
                       <div className="flex-none flex flex-col gap-[.6rem]">

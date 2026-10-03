@@ -22,7 +22,6 @@ export default class Sidebar extends Component<any, any> {
     clearTimeout(this._ot);
     clearTimeout(this._t);
     if (this._io) this._io.disconnect();
-    document.body.style.overflow = '';
   }
   observe() {
     const L = this.lesson();
@@ -47,11 +46,9 @@ export default class Sidebar extends Component<any, any> {
     this.setState({ open: true, menuTop: (r ? Math.max(0, r.bottom) : 56) + 'px' }, () => {
       requestAnimationFrame(() => requestAnimationFrame(() => this.setState({ shown: true })));
     });
-    document.body.style.overflow = 'hidden';
   }
   closeMenu() {
     this.setState({ shown: false });
-    document.body.style.overflow = '';
     const rm = AE.prefs.reducedMotion();
     clearTimeout(this._t);
     this._t = setTimeout(() => this.setState({ open: false }), rm ? 0 : 300);
@@ -210,11 +207,13 @@ export default class Sidebar extends Component<any, any> {
             </ol>
           </nav>
         </aside>
-        <div className="ae-mob sticky top-0 z-[55]" data-chrome="sidebar" onKeyDown={v.onKey}>
-          <div
-            className="flex items-center gap-3 py-[.55rem] px-4 min-h-14 bg-glass [backdrop-filter:blur(20px)_saturate(1.5)] [-webkit-backdrop-filter:blur(20px)_saturate(1.5)] border-b border-b-line"
-            ref={v.barRef}
-          >
+        <div className="ae-mob sticky top-[env(safe-area-inset-top,0px)] z-[55]" data-chrome="sidebar" onKeyDown={v.onKey}>
+          <div className="relative flex items-center gap-3 py-[.55rem] px-4 min-h-14 border-b border-b-line" ref={v.barRef}>
+            {/* Glass on a child, not the sticky bar: Safari 26+ tints its toolbar from a sticky element's own background. */}
+            <span
+              className="absolute inset-0 -z-10 bg-glass [backdrop-filter:blur(20px)_saturate(1.5)] [-webkit-backdrop-filter:blur(20px)_saturate(1.5)]"
+              aria-hidden="true"
+            ></span>
             <button
               className="flex-none w-11 h-11 rounded-[.65rem] border-0 bg-transparent cursor-pointer relative text-ink"
               type="button"
@@ -245,62 +244,66 @@ export default class Sidebar extends Component<any, any> {
             </span>
           </div>
           <div
-            className="fixed left-0 right-0 bottom-0 z-[56] bg-surface overflow-y-auto pt-5 px-6 pb-32 [transition:opacity_.3s_ease]"
+            className="fixed left-0 right-0 bottom-0 z-[56] [transition:opacity_.3s_ease]"
             id="m-outline"
             hidden={v.closed}
             style={{ top: v.menuTop, opacity: v.panelOp }}
           >
-            <nav aria-label="Course outline">
-              <a
-                className="block text-[.8125rem] font-bold tracking-[.06em] uppercase text-muted no-underline py-2 px-0 [transition:opacity_.4s_ease_.05s]"
-                href="index.html"
-                style={{ opacity: v.panelOp }}
-              >
-                Course outline
-              </a>
-              <ol className="list-none m-0 p-0">
-                {v.items?.map((l: any, i: number) => (
-                  <li
-                    key={i}
-                    style={{
-                      opacity: l.mOp,
-                      transform: l.mTf,
-                      transition: `opacity .45s ease ${l.delay ?? ''},transform .45s cubic-bezier(.2,.8,.2,1) ${l.delay ?? ''}`,
-                    }}
-                  >
-                    <a
-                      className="flex items-baseline gap-3 py-[.55rem] px-0 no-underline"
-                      href={l.file}
-                      aria-current={l.current}
-                      onClick={v.closeMenu}
-                      style={{ color: l.mColor }}
+            <span className="absolute inset-0 -z-10 bg-surface" aria-hidden="true"></span>
+            {/* Scrolling stays inside the menu, so the page itself never needs overflow: hidden. */}
+            <div className="h-full overflow-y-auto overscroll-contain pt-5 pl-[max(1.5rem,env(safe-area-inset-left))] pr-[max(1.5rem,env(safe-area-inset-right))] pb-[calc(8rem_+_env(safe-area-inset-bottom))]">
+              <nav aria-label="Course outline">
+                <a
+                  className="block text-[.8125rem] font-bold tracking-[.06em] uppercase text-muted no-underline py-2 px-0 [transition:opacity_.4s_ease_.05s]"
+                  href="index.html"
+                  style={{ opacity: v.panelOp }}
+                >
+                  Course outline
+                </a>
+                <ol className="list-none m-0 p-0">
+                  {v.items?.map((l: any, i: number) => (
+                    <li
+                      key={i}
+                      style={{
+                        opacity: l.mOp,
+                        transform: l.mTf,
+                        transition: `opacity .45s ease ${l.delay ?? ''},transform .45s cubic-bezier(.2,.8,.2,1) ${l.delay ?? ''}`,
+                      }}
                     >
-                      <span className="text-[.875rem] font-bold text-muted min-w-[1.2rem]">{l.n}</span>
-                      <span className="font-display text-[1.5rem] font-bold leading-[1.2] flex-1">{l.title}</span>
-                      <i className="fa-solid fa-circle-check text-ok" aria-hidden="true" style={{ display: l.iconDisp }}></i>
-                    </a>
-                    {l.isCurrent ? (
-                      <>
-                        <ol className="list-none mt-0 mr-0 mb-3 ml-8 p-0 flex flex-col" aria-label="On this page">
-                          {l.secs?.map((s: any, j: number) => (
-                            <li key={j}>
-                              <a
-                                className="block py-[.45rem] px-0 text-[1rem] no-underline"
-                                href={s.href}
-                                onClick={v.closeMenu}
-                                style={{ color: s.color, fontWeight: s.weight }}
-                              >
-                                {s.title}
-                              </a>
-                            </li>
-                          ))}
-                        </ol>
-                      </>
-                    ) : null}
-                  </li>
-                ))}
-              </ol>
-            </nav>
+                      <a
+                        className="flex items-baseline gap-3 py-[.55rem] px-0 no-underline"
+                        href={l.file}
+                        aria-current={l.current}
+                        onClick={v.closeMenu}
+                        style={{ color: l.mColor }}
+                      >
+                        <span className="text-[.875rem] font-bold text-muted min-w-[1.2rem]">{l.n}</span>
+                        <span className="font-display text-[1.5rem] font-bold leading-[1.2] flex-1">{l.title}</span>
+                        <i className="fa-solid fa-circle-check text-ok" aria-hidden="true" style={{ display: l.iconDisp }}></i>
+                      </a>
+                      {l.isCurrent ? (
+                        <>
+                          <ol className="list-none mt-0 mr-0 mb-3 ml-8 p-0 flex flex-col" aria-label="On this page">
+                            {l.secs?.map((s: any, j: number) => (
+                              <li key={j}>
+                                <a
+                                  className="block py-[.45rem] px-0 text-[1rem] no-underline"
+                                  href={s.href}
+                                  onClick={v.closeMenu}
+                                  style={{ color: s.color, fontWeight: s.weight }}
+                                >
+                                  {s.title}
+                                </a>
+                              </li>
+                            ))}
+                          </ol>
+                        </>
+                      ) : null}
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            </div>
           </div>
         </div>
       </>

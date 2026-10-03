@@ -61,11 +61,16 @@ export default class FloatingBar extends Component<any, any> {
     const v: any = this.renderVals ? this.renderVals() : {};
     return (
       <nav
-        className="ae-mob fixed left-1/2 bottom-[calc(1rem_+_env(safe-area-inset-bottom))] [transform:translateX(-50%)] z-[70] w-[min(26rem,calc(100vw_-_1.5rem))] p-1.5 rounded-full bg-glass [backdrop-filter:blur(20px)_saturate(1.6)] [-webkit-backdrop-filter:blur(20px)_saturate(1.6)] border border-[color:var(--fab-line,rgba(255,255,255,.55))] [box-shadow:0_12px_32px_rgba(20,10,20,.18),inset_0_1px_0_var(--fab-hl,rgba(255,255,255,.6))]"
+        className="ae-mob fixed left-1/2 bottom-[calc(1rem_+_env(safe-area-inset-bottom))] [transform:translateX(-50%)] z-[70] w-[min(26rem,calc(100vw_-_1.5rem))] p-1.5 rounded-full border border-transparent"
         aria-label="Quick navigation"
         data-chrome="fab"
         onMouseLeave={v.leave}
       >
+        {/* The glass lives on a child, not the fixed bar: Safari 26+ samples a fixed element's own background and blur for its toolbar tint. */}
+        <span
+          className="absolute inset-[-1px] -z-10 rounded-full bg-glass [backdrop-filter:blur(20px)_saturate(1.6)] [-webkit-backdrop-filter:blur(20px)_saturate(1.6)] border border-[color:var(--fab-line,rgba(255,255,255,.55))] [box-shadow:0_12px_32px_rgba(20,10,20,.18),inset_0_1px_0_var(--fab-hl,rgba(255,255,255,.6))]"
+          aria-hidden="true"
+        ></span>
         <div className="relative grid grid-cols-[repeat(5,minmax(0,1fr))]">
           <span
             className="absolute top-0 bottom-0 left-0 w-[20%] rounded-full bg-accent [transition:transform_.55s_cubic-bezier(.34,1.5,.5,1),opacity_.25s_ease] [box-shadow:inset_0_1px_0_rgba(255,255,255,.4),inset_0_-1px_0_rgba(0,0,0,.12),0_6px_16px_rgba(209,3,115,.35)]"

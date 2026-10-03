@@ -276,13 +276,13 @@ export default class A11yPanel extends Component<any, any> {
           : 'transform .34s cubic-bezier(.22,.9,.24,1),opacity .24s ease,visibility 0s linear ' + (this.state.anim ? '0s' : '.34s'),
       pTop: mob ? 'auto' : '0',
       pW: mob ? '100%' : 'min(27rem,100vw)',
-      pMaxH: mob ? '88vh' : 'none',
+      // Whole pixels, so the sheet's top edge never lands on a fractional pixel row.
+      pMaxH: mob ? 'round(down, 88vh, 1px)' : 'none',
       pRad: mob ? '1.25rem 1.25rem 0 0' : '0',
       pBorder: mob ? '1px solid var(--line)' : '0',
       ariaModal: mob ? 'true' : 'false',
       scrimOp: mob && this.state.anim ? Math.max(0, 1 - this.state.drag / 400) : 0,
       scrimVis: mob && this.state.shown ? 'visible' : 'hidden',
-      scrimDelay: this.state.anim ? '0s' : '.3s',
       dStart: (e) => {
         if (!mob) return;
         this._y0 = e.touches[0].clientY;
@@ -348,13 +348,21 @@ export default class A11yPanel extends Component<any, any> {
     return (
       <>
         <div
-          className="fixed inset-0 z-[190] bg-[rgba(20,10,20,.38)]"
+          className="fixed inset-0 z-[190]"
           aria-hidden="true"
           onClick={v.close}
-          style={{ opacity: v.scrimOp, visibility: v.scrimVis, transition: `opacity .3s ease,visibility 0s linear ${v.scrimDelay ?? ''}` }}
-        ></div>
+          style={{
+            // display: none when closed: a transparent fixed overlay can still tint Safari 26+'s toolbar.
+            display: v.scrimVis === 'visible' ? 'block' : 'none',
+            opacity: v.scrimOp,
+            transition: 'opacity .3s ease',
+          }}
+        >
+          {/* The dimming is a child that bleeds past the screen edges, so it also fills the area under Safari's floating toolbars. */}
+          <span className="absolute inset-x-0 top-[-6rem] bottom-[-6rem] bg-[rgba(20,10,20,.38)]"></span>
+        </div>
         <aside
-          className="[will-change:transform] fixed z-[200] border-x border-x-line overflow-hidden bg-surface text-ink [box-shadow:0_0_60px_rgba(20,10,20,.22)] flex flex-col"
+          className="[will-change:transform] fixed z-[200] border-x border-x-line overflow-hidden text-ink [box-shadow:0_0_60px_rgba(20,10,20,.22)] flex flex-col"
           id="ae-panel"
           data-chrome="panel"
           role="dialog"
@@ -379,6 +387,8 @@ export default class A11yPanel extends Component<any, any> {
             borderBottom: v.pBorder,
           }}
         >
+          {/* The sheet's fill lives on a child: Safari 26+ samples a fixed element's own background for its toolbar tint. */}
+          <span className="absolute inset-0 -z-10 bg-surface" aria-hidden="true"></span>
           <div
             className="ae-mob flex-none pt-[.6rem] px-0 pb-[.1rem] touch-none"
             aria-hidden="true"
@@ -389,7 +399,7 @@ export default class A11yPanel extends Component<any, any> {
             <div className="w-10 h-[.3rem] rounded-full bg-line my-0 mx-auto"></div>
           </div>
           <div
-            className="flex-none pt-[1.1rem] px-5 pb-4 border-b border-b-line flex flex-col gap-3"
+            className="flex-none pt-[1.1rem] pl-[max(1.25rem,env(safe-area-inset-left))] pr-[max(1.25rem,env(safe-area-inset-right))] pb-4 border-b border-b-line flex flex-col gap-3"
             onTouchStart={v.dStart}
             onTouchMove={v.dMove}
             onTouchEnd={v.dEnd}
@@ -425,7 +435,7 @@ export default class A11yPanel extends Component<any, any> {
               is built to work with it.
             </p>
           </div>
-          <div className="flex-1 overflow-y-auto overscroll-contain pt-4 px-5 pb-[calc(2rem_+_env(safe-area-inset-bottom))] flex flex-col gap-4">
+          <div className="flex-1 overflow-y-auto overscroll-contain pt-4 pl-[max(1.25rem,env(safe-area-inset-left))] pr-[max(1.25rem,env(safe-area-inset-right))] pb-[calc(2rem_+_env(safe-area-inset-bottom))] flex flex-col gap-4">
             <section className="flex flex-col gap-[.6rem]" aria-labelledby="ps-title">
               <h3 className="font-ui text-[.8125rem] font-bold tracking-[.06em] uppercase text-muted" id="ps-title">
                 Quick settings
@@ -593,7 +603,7 @@ export default class A11yPanel extends Component<any, any> {
               </details>
             ))}
           </div>
-          <div className="flex-none py-[.9rem] px-5 border-t border-t-line flex items-center gap-3 flex-wrap">
+          <div className="flex-none py-[.9rem] pl-[max(1.25rem,env(safe-area-inset-left))] pr-[max(1.25rem,env(safe-area-inset-right))] border-t border-t-line flex items-center gap-3 flex-wrap">
             <p className="m-0 flex-1 min-w-[10rem] text-[.8125rem] text-muted">Display preferences are saved to your browser.</p>
             <button
               className="flex items-center gap-2 min-h-11 py-2 px-[.9rem] rounded-[.6rem] border border-line bg-surface text-ink font-bold cursor-pointer"
