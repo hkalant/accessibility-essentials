@@ -46,6 +46,10 @@ export default class FloatingBar extends Component<any, any> {
       topColor: pos === 4 ? '#fff' : 'var(--ink)',
       topEnter: () => this.setHover(4),
       leave: () => this.setHover(null),
+      // Tapping the field focuses it first, so iOS raises the keyboard inside the tap; the search pop-up
+      // then takes focus from it. Typing into the field (e.g. after tabbing to it) carries over too.
+      openSearch: () => window.dispatchEvent(new CustomEvent('ae:search')),
+      typeSearch: (e) => window.dispatchEvent(new CustomEvent('ae:search', { detail: { q: e.target.value } })),
       toTop: () => {
         const rm = AE.prefs.reducedMotion();
         window.scrollTo({ top: 0, behavior: rm ? 'auto' : 'smooth' });
@@ -60,66 +64,93 @@ export default class FloatingBar extends Component<any, any> {
   render() {
     const v: any = this.renderVals ? this.renderVals() : {};
     return (
-      <nav
-        className="ae-mob fixed left-1/2 bottom-[calc(1rem_+_env(safe-area-inset-bottom))] [transform:translateX(-50%)] z-[70] w-[min(26rem,calc(100vw_-_1.5rem))] p-1.5 rounded-full border border-transparent"
-        aria-label="Quick navigation"
+      // One fixed stack on phones and tablets: the floating bar, with the search field beneath it at the same width.
+      <div
+        className="ae-mob fixed left-1/2 bottom-[calc(1rem_+_env(safe-area-inset-bottom))] [transform:translateX(-50%)] z-[70] w-[min(26rem,calc(100vw_-_1.5rem))] flex flex-col gap-2"
         data-chrome="fab"
-        onMouseLeave={v.leave}
       >
-        {/* The glass lives on a child, not the fixed bar: Safari 26+ samples a fixed element's own background and blur for its toolbar tint. */}
-        <span
-          className="absolute inset-[-1px] -z-10 rounded-full bg-glass [backdrop-filter:blur(20px)_saturate(1.6)] [-webkit-backdrop-filter:blur(20px)_saturate(1.6)] border border-[color:var(--fab-line,rgba(255,255,255,.55))] [box-shadow:0_12px_32px_rgba(20,10,20,.18),inset_0_1px_0_var(--fab-hl,rgba(255,255,255,.6))]"
-          aria-hidden="true"
-        ></span>
-        <div className="relative grid grid-cols-[repeat(5,minmax(0,1fr))]">
+        <nav className="relative isolate p-1.5 rounded-full border border-transparent" aria-label="Quick navigation" onMouseLeave={v.leave}>
+          {/* The glass lives on a child, not the fixed bar: Safari 26+ samples a fixed element's own background and blur for its toolbar tint. */}
           <span
-            className="absolute top-0 bottom-0 left-0 w-[20%] rounded-full bg-accent [transition:transform_.55s_cubic-bezier(.34,1.5,.5,1),opacity_.25s_ease] [box-shadow:inset_0_1px_0_rgba(255,255,255,.4),inset_0_-1px_0_rgba(0,0,0,.12),0_6px_16px_rgba(209,3,115,.35)]"
+            className="absolute inset-[-1px] -z-10 rounded-full bg-glass [backdrop-filter:blur(20px)_saturate(1.6)] [-webkit-backdrop-filter:blur(20px)_saturate(1.6)] border border-[color:var(--fab-line,rgba(255,255,255,.55))] [box-shadow:0_12px_32px_rgba(20,10,20,.18),inset_0_1px_0_var(--fab-hl,rgba(255,255,255,.6))]"
             aria-hidden="true"
-            style={{ opacity: v.pillOp, transform: v.pillTf }}
           ></span>
-          {v.links?.map((it: any, i: number) => (
-            <a
-              key={i}
-              className="relative z-[1] flex flex-col items-center justify-center gap-[.2rem] min-h-13 py-[.4rem] px-0 no-underline text-[.75rem] font-bold rounded-full [transition:color_.3s_ease]"
-              href={it.href}
-              aria-current={it.current}
-              onMouseEnter={it.enter}
-              onFocus={it.enter}
+          <div className="relative grid grid-cols-[repeat(5,minmax(0,1fr))]">
+            <span
+              className="absolute top-0 bottom-0 left-0 w-[20%] rounded-full bg-accent [transition:transform_.55s_cubic-bezier(.34,1.5,.5,1),opacity_.25s_ease] [box-shadow:inset_0_1px_0_rgba(255,255,255,.4),inset_0_-1px_0_rgba(0,0,0,.12),0_6px_16px_rgba(209,3,115,.35)]"
+              aria-hidden="true"
+              style={{ opacity: v.pillOp, transform: v.pillTf }}
+            ></span>
+            {v.links?.map((it: any, i: number) => (
+              <a
+                key={i}
+                className="relative z-[1] flex flex-col items-center justify-center gap-[.2rem] min-h-13 py-[.4rem] px-0 no-underline text-[.75rem] font-bold rounded-full [transition:color_.3s_ease]"
+                href={it.href}
+                aria-current={it.current}
+                onMouseEnter={it.enter}
+                onFocus={it.enter}
+                onBlur={v.leave}
+                style={{ color: it.color }}
+              >
+                <i className={`fa-solid ${it.icon ?? ''} text-[1.1rem]`} aria-hidden="true"></i>
+                <span>{it.label}</span>
+              </a>
+            ))}
+            <button
+              className="relative z-[1] flex flex-col items-center justify-center gap-[.2rem] min-h-13 py-[.4rem] px-0 border-0 [background:none] cursor-pointer text-[.75rem] font-bold rounded-full [transition:color_.3s_ease]"
+              type="button"
+              onClick={v.openPanel}
+              aria-expanded={v.panelOpen}
+              aria-controls="ae-panel"
+              onMouseEnter={v.dispEnter}
+              onFocus={v.dispEnter}
               onBlur={v.leave}
-              style={{ color: it.color }}
+              style={{ color: v.dispColor }}
             >
-              <i className={`fa-solid ${it.icon ?? ''} text-[1.1rem]`} aria-hidden="true"></i>
-              <span>{it.label}</span>
-            </a>
-          ))}
-          <button
-            className="relative z-[1] flex flex-col items-center justify-center gap-[.2rem] min-h-13 py-[.4rem] px-0 border-0 [background:none] cursor-pointer text-[.75rem] font-bold rounded-full [transition:color_.3s_ease]"
-            type="button"
-            onClick={v.openPanel}
-            aria-expanded={v.panelOpen}
-            aria-controls="ae-panel"
-            onMouseEnter={v.dispEnter}
-            onFocus={v.dispEnter}
-            onBlur={v.leave}
-            style={{ color: v.dispColor }}
-          >
-            <i className="fa-solid fa-universal-access text-[1.1rem]" aria-hidden="true"></i>
-            <span>Display</span>
-          </button>
-          <button
-            className="relative z-[1] flex flex-col items-center justify-center gap-[.2rem] min-h-13 py-[.4rem] px-0 border-0 [background:none] cursor-pointer text-[.75rem] font-bold rounded-full [transition:color_.3s_ease]"
-            type="button"
-            onClick={v.toTop}
-            onMouseEnter={v.topEnter}
-            onFocus={v.topEnter}
-            onBlur={v.leave}
-            style={{ color: v.topColor }}
-          >
-            <i className="fa-solid fa-circle-arrow-up text-[1.1rem]" aria-hidden="true"></i>
-            <span>Top</span>
-          </button>
+              <i className="fa-solid fa-universal-access text-[1.1rem]" aria-hidden="true"></i>
+              <span>Display</span>
+            </button>
+            <button
+              className="relative z-[1] flex flex-col items-center justify-center gap-[.2rem] min-h-13 py-[.4rem] px-0 border-0 [background:none] cursor-pointer text-[.75rem] font-bold rounded-full [transition:color_.3s_ease]"
+              type="button"
+              onClick={v.toTop}
+              onMouseEnter={v.topEnter}
+              onFocus={v.topEnter}
+              onBlur={v.leave}
+              style={{ color: v.topColor }}
+            >
+              <i className="fa-solid fa-circle-arrow-up text-[1.1rem]" aria-hidden="true"></i>
+              <span>Top</span>
+            </button>
+          </div>
+        </nav>
+        <div className="relative isolate" role="search">
+          {/* Same glass as the floating bar, on a child for Safari 26+'s toolbar tinting. */}
+          <span
+            className="absolute inset-[-1px] -z-10 rounded-full bg-glass [backdrop-filter:blur(20px)_saturate(1.6)] [-webkit-backdrop-filter:blur(20px)_saturate(1.6)] border border-[color:var(--fab-line,rgba(255,255,255,.55))] [box-shadow:0_12px_32px_rgba(20,10,20,.18),inset_0_1px_0_var(--fab-hl,rgba(255,255,255,.6))]"
+            aria-hidden="true"
+          ></span>
+          <label htmlFor="fab-search" className="sr-only">
+            Search the course
+          </label>
+          <i
+            className="fa-solid fa-magnifying-glass absolute left-[1.15rem] top-1/2 -translate-y-1/2 text-[1.15rem] text-ink pointer-events-none"
+            aria-hidden="true"
+          ></i>
+          <input
+            id="fab-search"
+            className="w-full min-h-12 rounded-full border-0 bg-transparent pl-12 pr-5 text-[1.0625rem] text-ink placeholder:text-muted [-webkit-appearance:none] [appearance:none]"
+            type="search"
+            placeholder="Search"
+            autoComplete="off"
+            enterKeyHint="search"
+            aria-haspopup="dialog"
+            value=""
+            onClick={v.openSearch}
+            onChange={v.typeSearch}
+          />
         </div>
-      </nav>
+      </div>
     );
   }
 }

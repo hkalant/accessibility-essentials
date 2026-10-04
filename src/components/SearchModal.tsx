@@ -13,7 +13,8 @@ export default class SearchModal extends Component<any, any> {
         this.state.open ? this.close() : this.openIt();
       }
     };
-    this._o = () => this.openIt();
+    // Other controls open search with `ae:search`; `detail.q` carries anything already typed.
+    this._o = (e) => this.openIt(e.detail?.q);
     document.addEventListener('keydown', this._k, true);
     window.addEventListener('ae:search', this._o);
   }
@@ -21,22 +22,25 @@ export default class SearchModal extends Component<any, any> {
     document.removeEventListener('keydown', this._k, true);
     window.removeEventListener('ae:search', this._o);
   }
-  focusInput(tries = 0) {
+  focusInput(tries = 0, select = true) {
     const i = this.inputRef.current || (document.getElementById('sm-input') as HTMLInputElement | null);
     if (i) {
       i.focus();
-      i.select();
+      if (select) i.select();
+      else i.setSelectionRange(i.value.length, i.value.length);
       if (document.activeElement === i) return;
     }
-    if (tries < 20) requestAnimationFrame(() => this.focusInput(tries + 1));
+    if (tries < 20) requestAnimationFrame(() => this.focusInput(tries + 1, select));
   }
-  openIt() {
+  openIt(q?: string) {
+    const typed = typeof q === 'string' && q !== '';
     if (this.state.open) {
-      this.focusInput();
+      if (typed) this.setState({ q, all: false });
+      this.focusInput(0, !typed);
       return;
     }
     this._ret = document.activeElement;
-    this.setState({ open: true, all: false }, () => requestAnimationFrame(() => this.focusInput()));
+    this.setState({ open: true, all: false, ...(typed ? { q } : {}) }, () => requestAnimationFrame(() => this.focusInput(0, !typed)));
   }
   close(restore = true) {
     this.setState({ open: false });

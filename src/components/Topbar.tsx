@@ -34,6 +34,7 @@ export default class Topbar extends Component<any, any> {
       active,
       panelOpen: this.state.panelOpen ? 'true' : 'false',
       openPanel: () => window.dispatchEvent(new CustomEvent('ae:panel', { detail: { toggle: true } })),
+      openSearch: () => window.dispatchEvent(new CustomEvent('ae:search')),
     };
   }
   render() {
@@ -73,6 +74,18 @@ export default class Topbar extends Component<any, any> {
                 </a>
               ))}
             </nav>
+            <button
+              className="group ae-desk flex-none grid place-items-center w-11 h-11 rounded-full border border-line bg-surface text-ink cursor-pointer hover:bg-accent-soft! hover:border-accent-soft! hover:text-accent-text!"
+              type="button"
+              onClick={v.openSearch}
+              aria-label="Search the course"
+              aria-haspopup="dialog"
+              aria-keyshortcuts="Control+K Meta+K"
+              title="Search (Ctrl + K)"
+            >
+              {/* Same colour as the Display label (white over the home photo), pink on hover. */}
+              <i className="fa-solid fa-magnifying-glass text-current group-hover:text-accent" aria-hidden="true"></i>
+            </button>
             <button
               className="group ae-desk flex-none flex items-center gap-2 min-h-11 py-2 px-[.9rem] rounded-full border border-line bg-surface text-ink font-bold text-[.9375rem] cursor-pointer hover:bg-accent-soft! hover:border-accent-soft! hover:text-accent-text!"
               type="button"
