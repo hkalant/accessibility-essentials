@@ -593,17 +593,19 @@
     }
   }
 
-  /* Search pop-up entrance: the backdrop fades in; the box fades in with a slight drift and scale.
-     Switched off with the other animations when motion is reduced. */
-  @keyframes ae-fade-in {
+  /* Search pop-up entrance: the backdrop fades in while blurring the page; the box fades in as it
+     rises into place. Switched off with the other animations when motion is reduced. */
+  @keyframes ae-backdrop-in {
     from {
       opacity: 0;
+      -webkit-backdrop-filter: blur(0);
+      backdrop-filter: blur(0);
     }
   }
-  @keyframes ae-pop-in {
+  @keyframes ae-rise-in {
     from {
       opacity: 0;
-      transform: translateY(-0.5rem) scale(0.98);
+      transform: translateY(0.5rem);
     }
   }
 }

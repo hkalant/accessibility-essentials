@@ -218,12 +218,12 @@ export default class SearchModal extends Component<any, any> {
             >
               {/* The page stays scrollable (no overflow: hidden, which upsets Safari 26+'s toolbar); touches on the backdrop just don't scroll it. The backdrop bleeds past the screen edges to reach under Safari's floating toolbars. */}
               <div
-                className="absolute inset-x-0 top-[-6rem] bottom-[-6rem] bg-[rgba(0,0,0,.55)] touch-none [animation:ae-fade-in_.2s_ease-out]"
+                className="absolute inset-x-0 top-[-6rem] bottom-[-6rem] bg-[rgba(0,0,0,.55)] [-webkit-backdrop-filter:blur(6px)] [backdrop-filter:blur(6px)] touch-none [animation:ae-backdrop-in_.25s_ease-out]"
                 onClick={v.close}
                 aria-hidden="true"
               ></div>
               <div
-                className="relative [animation:ae-pop-in_.22s_cubic-bezier(.2,.8,.2,1)] w-[min(100%,42rem)] max-h-[calc(100dvh_-_min(12vh,6rem)_-_1rem_-_env(safe-area-inset-bottom,0px))] flex flex-col rounded-[1.25rem] bg-surface border border-line [box-shadow:var(--shadow)] overflow-hidden text-ink"
+                className="relative [animation:ae-rise-in_.25s_cubic-bezier(.2,.8,.2,1)] w-[min(100%,42rem)] max-h-[calc(100dvh_-_min(12vh,6rem)_-_1rem_-_env(safe-area-inset-bottom,0px))] flex flex-col rounded-[1.25rem] bg-surface border border-line [box-shadow:var(--shadow)] overflow-hidden text-ink"
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="sm-title"
