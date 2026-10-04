@@ -368,8 +368,7 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
     body {
-      /* Clears the floating bar and search field stacked at the bottom. */
-      padding-bottom: calc(10.5rem + env(safe-area-inset-bottom, 0px));
+      padding-bottom: calc(6.5rem + env(safe-area-inset-bottom, 0px));
     }
   }
   /* Desktop: sidebar fixed below the top bar; lesson and footer sit in the column beside it. */
