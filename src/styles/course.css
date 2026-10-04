@@ -592,4 +592,18 @@
       transform: translateX(100%);
     }
   }
+
+  /* Search pop-up entrance: the backdrop fades in; the box fades in with a slight drift and scale.
+     Switched off with the other animations when motion is reduced. */
+  @keyframes ae-fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes ae-pop-in {
+    from {
+      opacity: 0;
+      transform: translateY(-0.5rem) scale(0.98);
+    }
+  }
 }
