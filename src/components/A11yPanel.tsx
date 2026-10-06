@@ -93,6 +93,7 @@ export default class A11yPanel extends Component<any, any> {
         hint,
         aria: on ? 'true' : 'false',
         toggle: () => set(id, !on),
+        on,
         track: on ? 'var(--accent)' : 'var(--line)',
         knob: on ? '1.475rem' : '.225rem',
       };
@@ -555,6 +556,12 @@ export default class A11yPanel extends Component<any, any> {
                         aria-hidden="true"
                         style={{ background: t.track }}
                       >
+                        {/* On/off marks (as on iOS) so the state doesn't rest on colour alone: | when on, ○ when off. */}
+                        {t.on ? (
+                          <span className="absolute left-[.68rem] top-1/2 -translate-y-1/2 w-[2px] h-[.6rem] rounded-full bg-accent-ink"></span>
+                        ) : (
+                          <span className="absolute right-[.5rem] top-1/2 -translate-y-1/2 w-[.55rem] h-[.55rem] rounded-[50%] border-[1.5px] border-muted ae-switch-off-mark"></span>
+                        )}
                         <span
                           className="absolute top-[.225rem] w-[1.2rem] h-[1.2rem] rounded-[50%] bg-white [box-shadow:0_1px_3px_rgba(0,0,0,.35)] [transition:left_.2s]"
                           style={{ left: t.knob }}

@@ -155,7 +155,14 @@
       color-scheme: dark;
     }
   }
+  /* The off mark in a panel switch sits on the --line track, which is black in high contrast. */
+  html[data-theme='hc'] .ae-switch-off-mark {
+    border-color: #fff !important;
+  }
   @media (prefers-contrast: more) {
+    html[data-theme='auto'] .ae-switch-off-mark {
+      border-color: #fff !important;
+    }
     html[data-theme='auto'] {
       --ink: #000;
       --muted: #1a1a1a;
