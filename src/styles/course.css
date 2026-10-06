@@ -512,10 +512,50 @@
       padding-top: 4rem;
       color: #fff;
       border-bottom: 0 !important;
+      /* Behind the text: the cover image's own gradient colours, under the dark layer. */
+      background:
+        linear-gradient(rgba(12, 6, 12, 0.58), rgba(12, 6, 12, 0.58)), linear-gradient(100deg, #7baed5 0%, #9a90c6 30%, #c179a6 55%, #c0587c 75%, #b06aa6 100%) !important;
+      container-type: inline-size;
+    }
+    /* The text column stops at 42rem (the subtitle's width), so the artwork has room on the right. */
+    .ae-home .ae-hero-inner > ul {
+      max-width: 42rem;
+    }
+    /* The artwork sits in the space right of the text column. The ring and figure occupy
+       34.5%-78.5% of the image's width and 29%-77% of its height; the image is scaled so that
+       area fills --gw, centred in the free space, and a soft mask fades it into the gradient. */
+    .ae-home .ae-home-hero::before {
+      --text-right: calc(max(0px, (100cqw - 72rem) / 2) + 1.25rem + 42rem);
+      --free: calc(100cqw - var(--text-right) - 3.25rem);
+      --gw: clamp(12rem, var(--free), 36rem);
+      --img: calc(var(--gw) / 0.44);
+      --gx: calc(var(--text-right) + 2rem + (var(--free) - var(--gw)) / 2);
+      --cy: calc(50% + 2rem);
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
       background:
         linear-gradient(rgba(12, 6, 12, 0.58), rgba(12, 6, 12, 0.58)),
-        url('../assets/home-cover.jpg') center/cover no-repeat,
-        #2a1020 !important;
+        url('../assets/home-cover.jpg') no-repeat;
+      background-size:
+        auto,
+        var(--img) auto;
+      background-position:
+        0 0,
+        calc(var(--gx) - 0.345 * var(--img)) calc(var(--cy) - 0.03 * var(--img) / 1.581);
+      -webkit-mask-image: radial-gradient(
+        calc(var(--gw) * 0.72) calc(var(--gw) * 0.58) at calc(var(--gx) + var(--gw) / 2) var(--cy),
+        #000 60%,
+        transparent 100%
+      );
+      mask-image: radial-gradient(calc(var(--gw) * 0.72) calc(var(--gw) * 0.58) at calc(var(--gx) + var(--gw) / 2) var(--cy), #000 60%, transparent 100%);
+    }
+    html[data-theme='hc'] .ae-home .ae-home-hero::before,
+    html[data-focusmode] .ae-home .ae-home-hero::before,
+    html[data-reader] .ae-home .ae-home-hero::before {
+      display: none;
     }
     .ae-home .ae-home-hero li i {
       color: #ffc2e0 !important;
